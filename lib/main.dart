@@ -1,5 +1,8 @@
+import 'package:easy_language/core/constants.dart';
+import 'package:easy_language/core/view/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() {
   runApp(EasyLanguage());
@@ -8,73 +11,72 @@ void main() {
 class EasyLanguage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      themeMode: ThemeMode.system,
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primarySwatch: Colors.deepPurple,
-        primaryColor: Colors.deepPurple,
-        accentColor: Colors.lightGreenAccent,
-        backgroundColor: Color(0xffC3DD94),
-        scaffoldBackgroundColor: Colors.white,
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        primarySwatch: Colors.deepPurple,
-        primaryColor: Colors.deepPurple,
-        accentColor: Colors.lightGreenAccent,
-        backgroundColor: Colors.black12,
-        scaffoldBackgroundColor: Colors.black12,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Easy Language'),
-        ),
-        body: Container(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'How are you doing!',
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'I bet you are doing well!',
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-                SizedBox(
-                  height: 50,
-                ),
-                Container(
-                  width: 200,
-                  height: 55,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(40),
+    return ScreenUtilInit(
+      designSize: SCREEN_SIZE,
+      builder: () => MaterialApp(
+        title: 'Easy Language',
+        themeMode: ThemeMode.light,
+        theme: buildLight(context),
+        darkTheme: buildDark(context),
+        home: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Easy Language',
+            ),
+            centerTitle: true,
+            foregroundColor: Colors.white,
+          ),
+          body: Builder(
+            builder: (context) {
+              print('Width: ${MediaQuery.of(context).size.width}');
+              print('Height: ${MediaQuery.of(context).size.height}');
+              return Container(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'How are you doing!',
+                        style: TextStyle(
+                          fontSize: 30.sp,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                    child: Text(
-                      'Hello',
-                      style: TextStyle(fontSize: 20),
-                    ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Text(
+                        'I bet you are doing well!',
+                        style: TextStyle(
+                          fontSize: 20.sp,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 50.h,
+                      ),
+                      Container(
+                        width: 200.w,
+                        height: 55.h,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(40.r),
+                              ),
+                            ),
+                          ),
+                          child: Text(
+                            'Hello',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              );
+            },
           ),
         ),
       ),
