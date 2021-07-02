@@ -51,13 +51,10 @@ class IntroductionPage extends StatelessWidget {
         footer: ElevatedButton(
           onPressed: () {},
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(
-              Colors.green,
-            ),
+            backgroundColor: MaterialStateProperty.all(Colors.green),
             shape: MaterialStateProperty.all(
               RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(40.w
-                ),
+                borderRadius: BorderRadius.circular(40.w),
               ),
             ),
           ),

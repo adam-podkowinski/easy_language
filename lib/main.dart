@@ -16,10 +16,10 @@ class EasyLanguage extends StatelessWidget {
       designSize: SCREEN_SIZE,
       builder: () => MaterialApp(
         title: 'Easy Language',
-        themeMode: ThemeMode.system,
+        themeMode: ThemeMode.dark,
         theme: buildLight(context),
-        debugShowCheckedModeBanner: false,
         darkTheme: buildDark(context),
+        debugShowCheckedModeBanner: false,
         home: SafeArea(child: IntroductionPage()),
       ),
     );
