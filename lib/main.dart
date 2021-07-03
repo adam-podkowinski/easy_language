@@ -13,14 +13,14 @@ class EasyLanguage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: SCREEN_SIZE,
+      designSize: screenSize,
       builder: () => MaterialApp(
         title: 'Easy Language',
         themeMode: ThemeMode.dark,
         theme: buildLight(context),
         darkTheme: buildDark(context),
         debugShowCheckedModeBanner: false,
-        home: SafeArea(child: IntroductionPage()),
+        home: const SafeArea(child: IntroductionPage()),
       ),
     );
   }

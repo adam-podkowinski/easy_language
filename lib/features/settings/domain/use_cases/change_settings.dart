@@ -11,19 +11,21 @@ class ChangeSettings implements Usecase<Settings, SettingsParams> {
 
   ChangeSettings(this.repository);
 
-  Future<Either<Failure, Settings>> call(SettingsParams params) async {
-    return await repository.changeSettings(
-      isStartup: params.isStartup,
-      themeMode: params.themeMode,
-    );
-  }
+
+@override
+Future<Either<Failure, Settings>> call(SettingsParams params) async {
+  return repository.changeSettings(
+    isStartup: params.isStartup,
+    themeMode: params.themeMode,
+  );
+}
 }
 
 class SettingsParams extends Equatable {
   final bool? isStartup;
   final ThemeMode? themeMode;
 
-  SettingsParams({this.isStartup, this.themeMode});
+  const SettingsParams({this.isStartup, this.themeMode});
 
   @override
   List<Object?> get props => [isStartup, themeMode];

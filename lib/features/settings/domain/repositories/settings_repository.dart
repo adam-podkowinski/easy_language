@@ -8,4 +8,6 @@ abstract class SettingsRepository {
     bool? isStartup,
     ThemeMode? themeMode,
   });
+
+  Future<Either<Failure, Settings>> getSettings();
 }

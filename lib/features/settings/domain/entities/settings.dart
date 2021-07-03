@@ -5,7 +5,7 @@ class Settings extends Equatable {
   final bool isStartup;
   final ThemeMode themeMode;
 
-  Settings({this.isStartup = true, this.themeMode = ThemeMode.system});
+  const Settings({this.isStartup = true, this.themeMode = ThemeMode.system});
 
   @override
   List<Object?> get props => [isStartup, themeMode];

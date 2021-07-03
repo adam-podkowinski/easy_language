@@ -5,9 +5,9 @@ import 'package:introduction_screen/introduction_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class IntroductionPage extends StatelessWidget {
-  static const SVG_PREFIX = 'assets/svgs';
+  static const svgPrefix = 'assets/svgs';
 
-  IntroductionPage({Key? key}) : super(key: key);
+  const IntroductionPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,13 +15,11 @@ class IntroductionPage extends StatelessWidget {
       body: IntroductionScreen(
         pages: _buildPages(context),
         onDone: () {},
-        showDoneButton: true,
-        showNextButton: true,
         showSkipButton: true,
         color: Theme.of(context).primaryColor,
-        skip: Text('Skip'),
-        next: Text('Next'),
-        done: Text('Done'),
+        skip: const Text('Skip'),
+        next: const Text('Next'),
+        done: const Text('Done'),
         dotsDecorator: DotsDecorator(
           activeColor: Theme.of(context).primaryColor,
         ),
@@ -34,19 +32,19 @@ class IntroductionPage extends StatelessWidget {
       _buildPage(
         context,
         'Learn new languages',
-        '$SVG_PREFIX/learning_primary_first.svg',
+        '$svgPrefix/learning_primary_first.svg',
         'Memorize new vocabulary easily with our help',
       ),
       _buildPage(
         context,
         'Minimal and simple',
-        '$SVG_PREFIX/learning_primary_clean.svg',
+        '$svgPrefix/learning_primary_clean.svg',
         'Translate new words and store them fast',
       ),
       _buildPage(
         context,
         'Save your progress',
-        '$SVG_PREFIX/learning_primary_save.svg',
+        '$svgPrefix/learning_primary_save.svg',
         'Log in using Google Play to remember your progress',
         footer: ElevatedButton(
           onPressed: () {},
@@ -58,13 +56,21 @@ class IntroductionPage extends StatelessWidget {
               ),
             ),
           ),
-          child: Padding(
-            padding: EdgeInsets.all(8.w),
-            child: SvgPicture.asset(
-              '$SVG_PREFIX/google_play.svg',
-              width: 125.w,
-              allowDrawingOutsideViewBox: true,
-            ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(
+                '$svgPrefix/google_play.svg',
+                height: 40.h,
+              ),
+              SizedBox(
+                width: 5.w,
+              ),
+              Text(
+                'Log in',
+                style: TextStyle(fontSize: 18.sp),
+              ),
+            ],
           ),
         ),
       ),

@@ -25,7 +25,7 @@ ThemeData buildLight(BuildContext context) {
   );
 
   return ThemeData.from(
-    colorScheme: ColorScheme(
+    colorScheme: const ColorScheme(
       brightness: brightness,
       primary: primary,
       primaryVariant: primaryVariant,
@@ -69,7 +69,7 @@ ThemeData buildDark(BuildContext context) {
   );
 
   return ThemeData.from(
-    colorScheme: ColorScheme(
+    colorScheme: const ColorScheme(
       brightness: brightness,
       primary: primary,
       primaryVariant: primaryVariant,
