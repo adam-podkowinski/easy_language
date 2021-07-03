@@ -20,7 +20,7 @@ ThemeData buildLight(BuildContext context) {
     headline5: TextStyle(
       fontSize: 30.sp,
       fontWeight: FontWeight.bold,
-      color: primaryVariant,
+      color: primary,
     ),
   );
 
@@ -65,6 +65,7 @@ ThemeData buildDark(BuildContext context) {
     headline5: TextStyle(
       fontSize: 30.sp,
       fontWeight: FontWeight.bold,
+      color: primary,
     ),
   );
 

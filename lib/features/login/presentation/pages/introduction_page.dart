@@ -43,6 +43,17 @@ class IntroductionPage extends StatelessWidget {
       ),
       _buildPage(
         context,
+        'Light or dark?',
+        '$svgPrefix/dark_mode.svg',
+        'Choose your preferable theme for an application',
+        footer: Switch(
+          value: true,
+          onChanged: (isTrue) {},
+          activeColor: Theme.of(context).primaryColor,
+        ),
+      ),
+      _buildPage(
+        context,
         'Save your progress',
         '$svgPrefix/learning_primary_save.svg',
         'Log in using Google Play to remember your progress',
