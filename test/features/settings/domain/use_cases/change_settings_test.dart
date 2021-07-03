@@ -22,7 +22,7 @@ void main() {
     () async {
       const tNewThemeMode = ThemeMode.dark;
       const tNewIsStartup = false;
-      const tNewSettings = Settings(
+      final tNewSettings = Settings(
         themeMode: tNewThemeMode,
         isStartup: tNewIsStartup,
       );
@@ -32,7 +32,7 @@ void main() {
           themeMode: any(named: 'themeMode'),
           isStartup: any(named: 'isStartup'),
         ),
-      ).thenAnswer((_) async => const Right(tNewSettings));
+      ).thenAnswer((_) async => Right(tNewSettings));
 
       await usecase(
           const SettingsParams(themeMode: tNewThemeMode, isStartup: tNewIsStartup));

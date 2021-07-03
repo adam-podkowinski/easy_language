@@ -1,1 +1,1 @@
-// TODO: write tests for SettingsModel
+void main() {}

@@ -17,17 +17,17 @@ void main() {
     usecase = GetSettings(mockSettingsRepository);
   });
 
-  const tSettings = Settings();
+  final tSettings = Settings();
 
   test(
     'should get settings from the repository',
     () async {
       when(() => mockSettingsRepository.getSettings())
-          .thenAnswer((_) async => const Right(tSettings));
+          .thenAnswer((_) async => Right(tSettings));
 
       final result = await usecase(NoParams());
 
-      expect(result, const Right(tSettings));
+      expect(result, Right(tSettings));
       verify(() => mockSettingsRepository.getSettings());
       verifyNoMoreInteractions(mockSettingsRepository);
     },

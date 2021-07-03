@@ -10,7 +10,7 @@ class GetSettings implements Usecase<Settings, NoParams> {
   GetSettings(this.repository);
 
   @override
-  Future<Either<Failure, Settings>> call(NoParams params) async {
+  Future<Either<Failure, Settings>> call(NoParams params) {
     return repository.getSettings();
   }
 }
