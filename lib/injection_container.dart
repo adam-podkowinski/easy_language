@@ -10,7 +10,8 @@ import 'features/settings/data/repositories/settings_repository_impl.dart';
 
 final sl = GetIt.instance;
 
-Future init() async {
+Future registerSettings() async {
+  //bloc
   sl.registerLazySingleton(
     () => SettingsBloc(
       getSettings: sl(),
@@ -18,20 +19,28 @@ Future init() async {
     ),
   );
 
+  // use cases
   sl.registerLazySingleton(() => GetSettings(sl()));
   sl.registerLazySingleton(() => ChangeSettings(sl()));
 
+  // repositories
   sl.registerLazySingleton<SettingsRepository>(
     () => SettingsRepositoryImpl(localDataSource: sl()),
   );
 
-  //Data sources
+  // data sources
   sl.registerLazySingleton<SettingsLocalDataSource>(
     () => SettingsLocalDataSourceImpl(
       sharedPreferences: sl(),
     ),
   );
 
+  // external
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPreferences);
+}
+
+Future init() async {
+  // Features
+  registerSettings();
 }

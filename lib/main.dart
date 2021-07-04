@@ -28,25 +28,23 @@ class EasyLanguage extends StatelessWidget {
               );
               return const CircularProgressIndicator();
             } else if (state is SettingsInitialized) {
-              return MaterialApp(
-                title: 'Easy Language',
-                themeMode: state.settings.themeMode,
-                theme: buildLight(context),
-                darkTheme: buildDark(context),
-                debugShowCheckedModeBanner: false,
-                home: const SafeArea(child: IntroductionPage()),
-              );
+              return _buildMaterialApp(context, state.settings.themeMode);
             }
-            return MaterialApp(
-              title: 'Easy Language',
-              theme: buildLight(context),
-              darkTheme: buildDark(context),
-              debugShowCheckedModeBanner: false,
-              home: const SafeArea(child: IntroductionPage()),
-            );
+            return _buildMaterialApp(context, null);
           },
         ),
       ),
+    );
+  }
+
+  Widget _buildMaterialApp(BuildContext context, ThemeMode? themeMode) {
+    return MaterialApp(
+      title: 'Easy Language',
+      themeMode: themeMode,
+      theme: buildLight(context),
+      darkTheme: buildDark(context),
+      debugShowCheckedModeBanner: false,
+      home: const SafeArea(child: IntroductionPage()),
     );
   }
 }

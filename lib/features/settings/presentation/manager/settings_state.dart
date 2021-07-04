@@ -6,6 +6,8 @@ abstract class SettingsState {
 
 class SettingsInitial extends SettingsState {}
 
+class SettingsLoading extends SettingsState {}
+
 class SettingsInitialized extends SettingsState {
   final Settings settings;
 
