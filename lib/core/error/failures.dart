@@ -8,10 +8,15 @@ abstract class Failure extends Equatable {
 
 class UnknownFailure extends Failure {}
 
-class CacheFailure extends Failure {
+abstract class SettingsFailure extends Failure {
   final Settings settings;
-  CacheFailure(this.settings);
+
+  SettingsFailure(this.settings);
 
   @override
   List<Object?> get props => [settings];
+}
+
+class SettingsCacheFailure extends SettingsFailure {
+  SettingsCacheFailure(Settings settings) : super(settings);
 }

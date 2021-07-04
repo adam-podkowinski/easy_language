@@ -12,11 +12,10 @@ class GetSettingsEvent extends SettingsEvent {
 }
 
 class ChangeSettingsEvent extends SettingsEvent {
-  final bool? isStartup;
-  final ThemeMode? themeMode;
+  final Map<String, Object> changedSettings;
 
-  const ChangeSettingsEvent({this.isStartup, this.themeMode});
+  const ChangeSettingsEvent({required this.changedSettings});
 
   @override
-  List<Object?> get props => [isStartup, themeMode];
+  List<Object?> get props => [changedSettings];
 }

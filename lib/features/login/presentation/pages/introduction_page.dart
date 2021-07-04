@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/features/settings/presentation/manager/settings_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +19,9 @@ class IntroductionPage extends StatelessWidget {
         pages: _buildPages(context),
         onDone: () {
           BlocProvider.of<SettingsBloc>(context).add(
-            const ChangeSettingsEvent(isStartup: false),
+            const ChangeSettingsEvent(
+              changedSettings: {isStartupId: false},
+            ),
           );
         },
         showSkipButton: true,
@@ -51,14 +54,16 @@ class IntroductionPage extends StatelessWidget {
         context,
         'Light or dark?',
         '${IntroductionPage.svgPrefix}/dark_mode.svg',
-        'Choose your preferable theme for an application',
+        'Choose your preferable theme for this application',
         footer: Switch(
           value: Theme.of(context).brightness == Brightness.dark,
           activeColor: Theme.of(context).primaryColor,
           onChanged: (isDark) {
             BlocProvider.of<SettingsBloc>(context).add(
               ChangeSettingsEvent(
-                themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+                changedSettings: {
+                  themeModeId: isDark ? darkThemeId : lightThemeId,
+                },
               ),
             );
           },

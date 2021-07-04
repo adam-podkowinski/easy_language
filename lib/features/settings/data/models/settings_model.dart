@@ -1,31 +1,39 @@
+import 'package:dartz/dartz.dart';
+import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:flutter/material.dart';
 
 class SettingsModel extends Settings {
-  bool initial = false;
-  SettingsModel({
+  const SettingsModel({
     bool isStartup = true,
     ThemeMode themeMode = ThemeMode.system,
-    this.initial = false,
   }) : super(themeMode: themeMode, isStartup: isStartup);
 
-  factory SettingsModel.fromMap(Map<String, dynamic> map) {
+  /// Takes map and returns a [SettingsModel]
+  /// Map's object should be a basic type (int, string, bool) and NOT ENUM
+  factory SettingsModel.fromMap(Map<String, Object> map) {
     return SettingsModel(
-      isStartup: map['isStartup'] as bool,
-      themeMode: mapStringToThemeMode(map['themeMode'] as String),
+      isStartup: cast(map[isStartupId]) ?? true,
+      themeMode:
+          mapStringToThemeMode(cast(map[themeModeId])),
     );
   }
 
-  Map<String, dynamic> toMap() => {
+  SettingsModel newFromMap(Map<String, Object> map) {
+    final Map<String, Object> newMap = {...toMap(), ...map};
+    return SettingsModel.fromMap(newMap);
+  }
+
+  Map<String, Object> toMap() => {
         'isStartup': isStartup,
         'themeMode': mapThemeModeToString(themeMode),
       };
 
-  static ThemeMode mapStringToThemeMode(String theme) {
+  static ThemeMode mapStringToThemeMode(String? theme) {
     switch (theme) {
-      case 'light':
+      case lightThemeId:
         return ThemeMode.light;
-      case 'dark':
+      case darkThemeId:
         return ThemeMode.dark;
       default:
         return ThemeMode.system;
@@ -35,11 +43,11 @@ class SettingsModel extends Settings {
   static String mapThemeModeToString(ThemeMode theme) {
     switch (theme) {
       case ThemeMode.light:
-        return 'light';
+        return lightThemeId;
       case ThemeMode.dark:
-        return 'dark';
+        return darkThemeId;
       default:
-        return 'system';
+        return systemThemeId;
     }
   }
 }

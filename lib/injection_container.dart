@@ -12,7 +12,7 @@ final sl = GetIt.instance;
 
 Future registerSettings() async {
   //bloc
-  sl.registerLazySingleton(
+  sl.registerFactory(
     () => SettingsBloc(
       getSettings: sl(),
       changeSettings: sl(),
@@ -42,5 +42,5 @@ Future registerSettings() async {
 
 Future init() async {
   // Features
-  registerSettings();
+  await registerSettings();
 }

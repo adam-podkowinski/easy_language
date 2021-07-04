@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/features/settings/data/data_sources/settings_local_data_source.dart';
@@ -18,15 +19,15 @@ void main() {
   setUp(() {
     mockLocalDataSource = MockSettingsLocalDataSource();
     repository = SettingsRepositoryImpl(localDataSource: mockLocalDataSource);
-    registerFallbackValue(SettingsModel());
+    registerFallbackValue(const SettingsModel());
   });
 
   group('getSettings', () {
-    final tSettings = SettingsModel(
+    const tSettings = SettingsModel(
       isStartup: false,
       themeMode: ThemeMode.dark,
     );
-    final tBlankSettings = SettingsModel();
+    const tBlankSettings = SettingsModel();
 
     test(
       '''
@@ -39,7 +40,7 @@ void main() {
         final result = await repository.getSettings();
         verify(() => mockLocalDataSource.getLocalSettings());
         verifyNoMoreInteractions(mockLocalDataSource);
-        expect(result, equals(Right(tSettings)));
+        expect(result, equals(const Right(tSettings)));
       },
     );
 
@@ -52,19 +53,20 @@ void main() {
             .thenThrow(CacheException());
 
         final result = await repository.getSettings();
-        expect(result, equals(Left(CacheFailure(tBlankSettings))));
+        expect(result, equals(Left(SettingsCacheFailure(tBlankSettings))));
       },
     );
   });
 
   group('changeSettings', () {
-    final tBlankSettings = SettingsModel();
-    const tNewThemeMode = ThemeMode.dark;
+    const tBlankSettings = SettingsModel();
+    final tNewThemeMode = SettingsModel.mapThemeModeToString(ThemeMode.dark);
     const tNewIsStartup = false;
-    final tNewSettings = SettingsModel(
-      isStartup: tNewIsStartup,
-      themeMode: tNewThemeMode,
-    );
+    final tNewSettingsMap = {
+      isStartupId: tNewIsStartup,
+      themeModeId: tNewThemeMode,
+    };
+    final tNewSettings = tBlankSettings.newFromMap(tNewSettingsMap);
 
     test(
       'should change settings parameters',
@@ -73,10 +75,7 @@ void main() {
             .thenAnswer((_) async => tBlankSettings);
         when(() => mockLocalDataSource.cacheSettings(any()))
             .thenAnswer((_) async => tNewSettings);
-        await repository.changeSettings(
-          themeMode: tNewThemeMode,
-          isStartup: tNewIsStartup,
-        );
+        await repository.changeSettings(settingsMap: tNewSettingsMap);
         final result = await repository.getSettings();
         expect(result, equals(Right(tNewSettings)));
       },

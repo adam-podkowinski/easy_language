@@ -7,7 +7,6 @@ import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:easy_language/features/settings/domain/use_cases/change_settings.dart';
 import 'package:easy_language/features/settings/domain/use_cases/get_settings.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 part 'settings_event.dart';
 
@@ -16,6 +15,7 @@ part 'settings_state.dart';
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final GetSettings getSettings;
   final ChangeSettings changeSettings;
+  Settings? blocStoredSettings;
 
   SettingsBloc({required this.getSettings, required this.changeSettings})
       : super(SettingsInitial());
@@ -25,26 +25,36 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     SettingsEvent event,
   ) async* {
     if (event is GetSettingsEvent) {
+      yield SettingsLoading();
       final settings = await getSettings(NoParams());
       yield* settings.fold(
         (l) async* {
-          yield SettingsInitialized(settings: (l as CacheFailure).settings);
+          if (l is SettingsCacheFailure) {
+            blocStoredSettings = l.settings;
+            yield SettingsInitialized(settings: l.settings, failure: l);
+          }
         },
         (r) async* {
+          blocStoredSettings = r;
           yield SettingsInitialized(settings: r);
         },
       );
     }
 
     if (event is ChangeSettingsEvent) {
+      yield SettingsLoading();
       final settings = await changeSettings(
-        SettingsParams(themeMode: event.themeMode, isStartup: event.isStartup),
+        SettingsParams(settingsMap: event.changedSettings),
       );
       yield* settings.fold(
         (l) async* {
-          yield SettingsInitialized(settings: (l as CacheFailure).settings);
+          if (l is SettingsCacheFailure) {
+            blocStoredSettings = l.settings;
+            yield SettingsInitialized(settings: l.settings, failure: l);
+          }
         },
         (r) async* {
+          blocStoredSettings = r;
           yield SettingsInitialized(settings: r);
         },
       );

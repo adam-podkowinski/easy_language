@@ -4,7 +4,6 @@ import 'package:easy_language/core/use_cases/use_case.dart';
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:easy_language/features/settings/domain/repositories/settings_repository.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 class ChangeSettings implements Usecase<Settings, SettingsParams> {
   final SettingsRepository repository;
@@ -14,18 +13,16 @@ class ChangeSettings implements Usecase<Settings, SettingsParams> {
   @override
   Future<Either<Failure, Settings>> call(SettingsParams params) async {
     return repository.changeSettings(
-      isStartup: params.isStartup,
-      themeMode: params.themeMode,
+      settingsMap: params.settingsMap,
     );
   }
 }
 
 class SettingsParams extends Equatable {
-  final bool? isStartup;
-  final ThemeMode? themeMode;
+  final Map<String, Object> settingsMap;
 
-  const SettingsParams({this.isStartup, this.themeMode});
+  const SettingsParams({required this.settingsMap});
 
   @override
-  List<Object?> get props => [isStartup, themeMode];
+  List<Object?> get props => [settingsMap];
 }

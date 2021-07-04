@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:easy_language/features/settings/domain/repositories/settings_repository.dart';
 import 'package:easy_language/features/settings/domain/use_cases/change_settings.dart';
@@ -22,25 +23,29 @@ void main() {
     () async {
       const tNewThemeMode = ThemeMode.dark;
       const tNewIsStartup = false;
-      final tNewSettings = Settings(
+      const tNewSettings = Settings(
         themeMode: tNewThemeMode,
         isStartup: tNewIsStartup,
       );
 
       when(
         () => mockSettingsRepository.changeSettings(
-          themeMode: any(named: 'themeMode'),
-          isStartup: any(named: 'isStartup'),
+          settingsMap: any(named: 'settingsMap'),
         ),
-      ).thenAnswer((_) async => Right(tNewSettings));
+      ).thenAnswer((_) async => const Right(tNewSettings));
 
-      await usecase(const SettingsParams(
-          themeMode: tNewThemeMode, isStartup: tNewIsStartup));
+      await usecase(
+        const SettingsParams(
+          settingsMap: {themeModeId: tNewThemeMode, isStartupId: tNewIsStartup},
+        ),
+      );
 
       verify(
         () => mockSettingsRepository.changeSettings(
-          themeMode: tNewThemeMode,
-          isStartup: tNewIsStartup,
+          settingsMap: {
+            themeModeId: tNewThemeMode,
+            isStartupId: tNewIsStartup,
+          },
         ),
       );
       verifyNoMoreInteractions(mockSettingsRepository);

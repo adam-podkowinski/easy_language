@@ -10,7 +10,7 @@ abstract class SettingsLocalDataSource {
   Future<void> cacheSettings(SettingsModel settingsToCache);
 }
 
-const cachedSettingsString = 'settings';
+const cachedSettingsId = 'settings';
 
 class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
   final SharedPreferences sharedPreferences;
@@ -19,10 +19,12 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
 
   @override
   Future<SettingsModel> getLocalSettings() {
-    final jsonString = sharedPreferences.getString(cachedSettingsString);
+    final jsonString = sharedPreferences.getString(cachedSettingsId);
     if (jsonString != null) {
       return Future.value(
-        SettingsModel.fromMap(jsonDecode(jsonString) as Map<String, dynamic>),
+        SettingsModel.fromMap(
+          jsonDecode(jsonString).cast<String, Object>() as Map<String, Object>,
+        ),
       );
     } else {
       throw CacheException();
@@ -33,7 +35,7 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
   Future<void> cacheSettings(SettingsModel settingsToCache) {
     try {
       return sharedPreferences.setString(
-        cachedSettingsString,
+        cachedSettingsId,
         jsonEncode(
           settingsToCache.toMap(),
         ),
