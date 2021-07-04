@@ -25,7 +25,6 @@ void main() {
     final tSettings = SettingsModel(
       isStartup: false,
       themeMode: ThemeMode.dark,
-      initial: false,
     );
     final tBlankSettings = SettingsModel();
 
@@ -59,15 +58,12 @@ void main() {
   });
 
   group('changeSettings', () {
-    final tBlankSettings = SettingsModel(
-      initial: false,
-    );
+    final tBlankSettings = SettingsModel();
     const tNewThemeMode = ThemeMode.dark;
     const tNewIsStartup = false;
     final tNewSettings = SettingsModel(
       isStartup: tNewIsStartup,
       themeMode: tNewThemeMode,
-      initial: false,
     );
 
     test(

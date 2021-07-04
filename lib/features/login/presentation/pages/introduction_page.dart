@@ -1,5 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:easy_language/features/settings/presentation/manager/settings_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,7 +16,11 @@ class IntroductionPage extends StatelessWidget {
     return Scaffold(
       body: IntroductionScreen(
         pages: _buildPages(context),
-        onDone: () {},
+        onDone: () {
+          BlocProvider.of<SettingsBloc>(context).add(
+            const ChangeSettingsEvent(isStartup: false),
+          );
+        },
         showSkipButton: true,
         color: Theme.of(context).primaryColor,
         skip: const Text('Skip'),
@@ -32,30 +38,36 @@ class IntroductionPage extends StatelessWidget {
       _buildPage(
         context,
         'Learn new languages',
-        '$svgPrefix/learning_primary_first.svg',
+        '${IntroductionPage.svgPrefix}/learning_primary_first.svg',
         'Memorize new vocabulary easily with our help',
       ),
       _buildPage(
         context,
         'Minimal and simple',
-        '$svgPrefix/learning_primary_clean.svg',
+        '${IntroductionPage.svgPrefix}/learning_primary_clean.svg',
         'Translate new words and store them fast',
       ),
       _buildPage(
         context,
         'Light or dark?',
-        '$svgPrefix/dark_mode.svg',
+        '${IntroductionPage.svgPrefix}/dark_mode.svg',
         'Choose your preferable theme for an application',
         footer: Switch(
-          value: true,
-          onChanged: (isTrue) {},
+          value: Theme.of(context).brightness == Brightness.dark,
           activeColor: Theme.of(context).primaryColor,
+          onChanged: (isDark) {
+            BlocProvider.of<SettingsBloc>(context).add(
+              ChangeSettingsEvent(
+                themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+              ),
+            );
+          },
         ),
       ),
       _buildPage(
         context,
         'Save your progress',
-        '$svgPrefix/learning_primary_save.svg',
+        '${IntroductionPage.svgPrefix}/learning_primary_save.svg',
         'Log in using Google Play to remember your progress',
         footer: ElevatedButton(
           onPressed: () {},
@@ -71,7 +83,7 @@ class IntroductionPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               SvgPicture.asset(
-                '$svgPrefix/google_play.svg',
+                '${IntroductionPage.svgPrefix}/google_play.svg',
                 height: 40.h,
               ),
               SizedBox(

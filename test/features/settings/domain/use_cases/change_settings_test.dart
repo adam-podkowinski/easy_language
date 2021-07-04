@@ -34,8 +34,8 @@ void main() {
         ),
       ).thenAnswer((_) async => Right(tNewSettings));
 
-      await usecase(
-          const SettingsParams(themeMode: tNewThemeMode, isStartup: tNewIsStartup));
+      await usecase(const SettingsParams(
+          themeMode: tNewThemeMode, isStartup: tNewIsStartup));
 
       verify(
         () => mockSettingsRepository.changeSettings(

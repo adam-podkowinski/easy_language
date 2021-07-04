@@ -2,18 +2,17 @@ import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:flutter/material.dart';
 
 class SettingsModel extends Settings {
-  bool initial = true;
+  bool initial = false;
   SettingsModel({
     bool isStartup = true,
     ThemeMode themeMode = ThemeMode.system,
-    this.initial = true,
+    this.initial = false,
   }) : super(themeMode: themeMode, isStartup: isStartup);
 
   factory SettingsModel.fromMap(Map<String, dynamic> map) {
     return SettingsModel(
       isStartup: map['isStartup'] as bool,
       themeMode: mapStringToThemeMode(map['themeMode'] as String),
-      initial: false,
     );
   }
 

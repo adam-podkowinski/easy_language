@@ -11,14 +11,13 @@ class ChangeSettings implements Usecase<Settings, SettingsParams> {
 
   ChangeSettings(this.repository);
 
-
-@override
-Future<Either<Failure, Settings>> call(SettingsParams params) async {
-  return repository.changeSettings(
-    isStartup: params.isStartup,
-    themeMode: params.themeMode,
-  );
-}
+  @override
+  Future<Either<Failure, Settings>> call(SettingsParams params) async {
+    return repository.changeSettings(
+      isStartup: params.isStartup,
+      themeMode: params.themeMode,
+    );
+  }
 }
 
 class SettingsParams extends Equatable {

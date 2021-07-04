@@ -8,7 +8,7 @@ import 'package:easy_language/features/settings/domain/repositories/settings_rep
 import 'package:flutter/material.dart';
 
 class SettingsRepositoryImpl implements SettingsRepository {
-  SettingsModel _settings = SettingsModel();
+  SettingsModel _settings = SettingsModel(initial: true);
   final SettingsLocalDataSource localDataSource;
 
   SettingsRepositoryImpl({required this.localDataSource});
