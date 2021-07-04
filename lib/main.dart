@@ -37,8 +37,7 @@ class EasyLanguage extends StatelessWidget {
                 failure: state.failure,
               );
             } else if (state is SettingsLoading) {
-              final Settings? blocSettings =
-                  settingsBloc.blocStoredSettings;
+              final Settings? blocSettings = settingsBloc.blocStoredSettings;
 
               if (blocSettings != null) {
                 return _buildMaterialApp(context, blocSettings.themeMode);

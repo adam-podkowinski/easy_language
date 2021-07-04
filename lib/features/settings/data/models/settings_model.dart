@@ -14,8 +14,7 @@ class SettingsModel extends Settings {
   factory SettingsModel.fromMap(Map<String, Object> map) {
     return SettingsModel(
       isStartup: cast(map[isStartupId]) ?? true,
-      themeMode:
-          mapStringToThemeMode(cast(map[themeModeId])),
+      themeMode: mapStringToThemeMode(cast(map[themeModeId])),
     );
   }
 

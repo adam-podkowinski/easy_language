@@ -11,7 +11,7 @@ import 'features/settings/data/repositories/settings_repository_impl.dart';
 final sl = GetIt.instance;
 
 Future registerSettings() async {
-  //bloc
+  // bloc
   sl.registerFactory(
     () => SettingsBloc(
       getSettings: sl(),
