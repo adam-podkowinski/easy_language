@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/features/settings/presentation/manager/settings_bloc.dart';
+import 'package:easy_language/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,7 +19,7 @@ class IntroductionPage extends StatelessWidget {
       body: IntroductionScreen(
         pages: _buildPages(context),
         onDone: () {
-          BlocProvider.of<SettingsBloc>(context).add(
+          sl<SingletonSettingsBloc>().add(
             const ChangeSettingsEvent(
               changedSettings: {isStartupId: false},
             ),
@@ -59,7 +60,7 @@ class IntroductionPage extends StatelessWidget {
           value: Theme.of(context).brightness == Brightness.dark,
           activeColor: Theme.of(context).primaryColor,
           onChanged: (isDark) {
-            BlocProvider.of<SettingsBloc>(context).add(
+            sl<SingletonSettingsBloc>().add(
               ChangeSettingsEvent(
                 changedSettings: {
                   themeModeId: isDark ? darkThemeId : lightThemeId,

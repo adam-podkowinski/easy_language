@@ -18,12 +18,12 @@ Future<void> main() async {
 class EasyLanguage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final settingsBloc = di.sl<SettingsBloc>();
+    final settingsBloc = di.sl<SingletonSettingsBloc>();
     return ScreenUtilInit(
       designSize: screenSize,
       builder: () => BlocProvider(
         create: (context) => settingsBloc,
-        child: BlocBuilder<SettingsBloc, SettingsState>(
+        child: BlocBuilder<SingletonSettingsBloc, SettingsState>(
           builder: (context, state) {
             if (state is SettingsInitial) {
               settingsBloc.add(

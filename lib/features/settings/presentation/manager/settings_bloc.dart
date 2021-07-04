@@ -61,3 +61,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     }
   }
 }
+
+class SingletonSettingsBloc extends SettingsBloc {
+  SingletonSettingsBloc({
+    required GetSettings getSettings,
+    required ChangeSettings changeSettings,
+  }) : super(getSettings: getSettings, changeSettings: changeSettings);
+}
