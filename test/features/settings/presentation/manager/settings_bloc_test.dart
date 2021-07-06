@@ -53,7 +53,7 @@ void main() {
 
     blocTest(
       '''
-      should emit [SettingsLoading, SettingsInitialized(Settings)] 
+      should emit [SettingsInitialized(Settings)] 
       when the data is gotten successfully''',
       build: () {
         setUpGetSettingsSuccess();
@@ -64,7 +64,6 @@ void main() {
       },
       expect: () {
         return [
-          SettingsLoading(),
           const SettingsInitialized(settings: settings),
         ];
       },
@@ -72,7 +71,7 @@ void main() {
 
     blocTest(
       '''
-      should emit [SettingsLoading, SettingsInitialized(Settings, Failure)] 
+      should emit [SettingsInitialized(Settings, Failure)] 
       when there was an error while caching''',
       build: () {
         setUpGetSettingsFailure();
@@ -83,7 +82,6 @@ void main() {
       },
       expect: () {
         return [
-          SettingsLoading(),
           SettingsInitialized(
             settings: settings,
             failure: SettingsCacheFailure(settings),

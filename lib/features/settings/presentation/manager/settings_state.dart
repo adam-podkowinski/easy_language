@@ -9,11 +9,6 @@ class SettingsInitial extends SettingsState {
   List<Object?> get props => [];
 }
 
-class SettingsLoading extends SettingsState {
-  @override
-  List<Object?> get props => [];
-}
-
 class SettingsInitialized extends SettingsState {
   final Settings settings;
   final SettingsCacheFailure? failure;

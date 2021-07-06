@@ -2,7 +2,6 @@ import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/view/styles.dart';
 import 'package:easy_language/features/login/presentation/pages/introduction_page.dart';
-import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:easy_language/features/settings/presentation/manager/settings_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,23 +28,18 @@ class EasyLanguage extends StatelessWidget {
               settingsBloc.add(
                 const GetSettingsEvent(),
               );
-              return const CircularProgressIndicator();
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
             } else if (state is SettingsInitialized) {
               return _buildMaterialApp(
                 context,
                 state.settings.themeMode,
+                state.settings.isStartup,
                 failure: state.failure,
               );
-            } else if (state is SettingsLoading) {
-              final Settings? blocSettings = settingsBloc.blocStoredSettings;
-
-              if (blocSettings != null) {
-                return _buildMaterialApp(context, blocSettings.themeMode);
-              } else {
-                return const CircularProgressIndicator();
-              }
             }
-            return _buildMaterialApp(context, null);
+            return _buildMaterialApp(context, null, true);
           },
         ),
       ),
@@ -54,7 +48,8 @@ class EasyLanguage extends StatelessWidget {
 
   Widget _buildMaterialApp(
     BuildContext context,
-    ThemeMode? themeMode, {
+    ThemeMode? themeMode,
+    bool showIntroduction, {
     Failure? failure,
   }) {
     return MaterialApp(
@@ -66,18 +61,32 @@ class EasyLanguage extends StatelessWidget {
       home: Builder(
         builder: (context) {
           if (failure != null) {
-            WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+            WidgetsBinding.instance?.addPostFrameCallback((_) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
                     "Failure detected when saving settings!: $failure",
                     style: const TextStyle(color: Colors.black),
                   ),
+                  backgroundColor: Theme.of(context).errorColor,
                 ),
               );
             });
           }
-          return const SafeArea(child: IntroductionPage());
+          if (showIntroduction) {
+            return const SafeArea(child: IntroductionPage());
+          } else {
+            return OutlinedButton(
+              onPressed: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => const IntroductionPage(),
+                  ),
+                );
+              },
+              child: const Text('hello'),
+            );
+          }
         },
       ),
     );
