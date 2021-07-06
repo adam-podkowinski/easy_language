@@ -9,7 +9,7 @@ ThemeData buildLight(BuildContext context) {
   const secondaryVariant = Color(0xfff85f18);
   const surface = primary;
   const background = Colors.white;
-  const error = Colors.red;
+  const error = Colors.deepOrange;
   const onPrimary = Colors.white;
   const onSecondary = Colors.white;
   const onSurface = Colors.white;
@@ -54,7 +54,7 @@ ThemeData buildDark(BuildContext context) {
   const secondaryVariant = Color(0xfff85f18);
   const surface = primary;
   const background = Color(0xFF191919);
-  const error = Colors.red;
+  const error = Colors.deepOrange;
   const onPrimary = Colors.white;
   const onSecondary = Colors.white;
   const onSurface = Colors.white;

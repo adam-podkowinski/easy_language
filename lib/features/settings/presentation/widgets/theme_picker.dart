@@ -4,14 +4,9 @@ import 'package:easy_language/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ThemePicker extends StatefulWidget {
+class ThemePicker extends StatelessWidget {
   const ThemePicker({Key? key}) : super(key: key);
 
-  @override
-  _ThemePickerState createState() => _ThemePickerState();
-}
-
-class _ThemePickerState extends State<ThemePicker> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SingletonSettingsBloc, SettingsState>(

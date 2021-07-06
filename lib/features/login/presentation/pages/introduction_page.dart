@@ -3,6 +3,7 @@ import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:easy_language/features/settings/presentation/manager/settings_bloc.dart';
 import 'package:easy_language/features/settings/presentation/widgets/theme_picker.dart';
 import 'package:easy_language/injection_container.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:introduction_screen/introduction_screen.dart';
@@ -15,31 +16,29 @@ class IntroductionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IntroductionScreen(
-        pages: _buildPages(context),
-        onDone: () {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) {
-                return const IntroductionPage();
-              },
-            ),
-          ).then((value) => {
-                sl<SingletonSettingsBloc>().add(
-                  const ChangeSettingsEvent(
-                    changedSettings: {Settings.isStartupId: false},
-                  ),
-                ),
-              });
-        },
-        showSkipButton: true,
-        color: Theme.of(context).primaryColor,
-        skip: const Text('Skip'),
-        next: const Text('Next'),
-        done: const Text('Done'),
-        dotsDecorator: DotsDecorator(
-          activeColor: Theme.of(context).primaryColor,
+    return SafeArea(
+      child: Scaffold(
+        body: IntroductionScreen(
+          pages: _buildPages(context),
+          onDone: () {
+            Navigator.of(context).pushReplacementNamed('/').then(
+                  (_) => {
+                    sl<SingletonSettingsBloc>().add(
+                      const ChangeSettingsEvent(
+                        changedSettings: {Settings.isStartupId: false},
+                      ),
+                    ),
+                  },
+                );
+          },
+          showSkipButton: true,
+          color: Theme.of(context).primaryColor,
+          skip: const Text('Skip'),
+          next: const Text('Next'),
+          done: const Text('Done'),
+          dotsDecorator: DotsDecorator(
+            activeColor: Theme.of(context).primaryColor,
+          ),
         ),
       ),
     );
