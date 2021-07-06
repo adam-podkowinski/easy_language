@@ -15,6 +15,10 @@ class SettingsInitialized extends SettingsState {
 
   const SettingsInitialized({required this.settings, this.failure});
 
+  String get themeModeString => SettingsModel.mapThemeModeToString(
+        settings.themeMode,
+      );
+
   @override
   List<Object?> get props => [settings, failure];
 }

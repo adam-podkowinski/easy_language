@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:easy_language/core/constants.dart';
+import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:easy_language/features/settings/presentation/manager/settings_bloc.dart';
+import 'package:easy_language/features/settings/presentation/widgets/theme_picker.dart';
 import 'package:easy_language/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -27,7 +28,7 @@ class IntroductionPage extends StatelessWidget {
           ).then((value) => {
                 sl<SingletonSettingsBloc>().add(
                   const ChangeSettingsEvent(
-                    changedSettings: {isStartupId: false},
+                    changedSettings: {Settings.isStartupId: false},
                   ),
                 ),
               });
@@ -63,19 +64,7 @@ class IntroductionPage extends StatelessWidget {
         'Light or dark?',
         '${IntroductionPage.svgPrefix}/dark_mode.svg',
         'Choose your preferable theme for this application',
-        footer: Switch(
-          value: Theme.of(context).brightness == Brightness.dark,
-          activeColor: Theme.of(context).primaryColor,
-          onChanged: (isDark) {
-            sl<SingletonSettingsBloc>().add(
-              ChangeSettingsEvent(
-                changedSettings: {
-                  themeModeId: isDark ? darkThemeId : lightThemeId,
-                },
-              ),
-            );
-          },
-        ),
+        footer: const ThemePicker(),
       ),
       _buildPage(
         context,

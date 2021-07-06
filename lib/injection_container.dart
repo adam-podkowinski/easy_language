@@ -20,7 +20,7 @@ Future registerSettings() async {
   );
 
   sl.registerLazySingleton(
-        () => SingletonSettingsBloc(
+    () => SingletonSettingsBloc(
       getSettings: sl(),
       changeSettings: sl(),
     ),

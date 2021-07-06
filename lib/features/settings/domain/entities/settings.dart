@@ -7,6 +7,13 @@ class Settings extends Equatable {
 
   const Settings({required this.isStartup, required this.themeMode});
 
+  static const isStartupId = 'isStartup';
+  static const themeModeId = 'themeMode';
+  static const darkThemeId = 'Dark';
+  static const lightThemeId = 'Light';
+  static const systemThemeId = 'System';
+  static const availableThemesIds = [systemThemeId, lightThemeId, darkThemeId];
+
   @override
   List<Object?> get props => [isStartup, themeMode];
 }

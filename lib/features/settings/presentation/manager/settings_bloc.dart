@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/use_cases/use_case.dart';
+import 'package:easy_language/features/settings/data/models/settings_model.dart';
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:easy_language/features/settings/domain/use_cases/change_settings.dart';
 import 'package:easy_language/features/settings/domain/use_cases/get_settings.dart';

@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:flutter/material.dart';
 
@@ -13,8 +12,8 @@ class SettingsModel extends Settings {
   /// Map's object should be a basic type (int, string, bool) and NOT ENUM
   factory SettingsModel.fromMap(Map<String, Object> map) {
     return SettingsModel(
-      isStartup: cast(map[isStartupId]) ?? true,
-      themeMode: mapStringToThemeMode(cast(map[themeModeId])),
+      isStartup: cast(map[Settings.isStartupId]) ?? true,
+      themeMode: mapStringToThemeMode(cast(map[Settings.themeModeId])),
     );
   }
 
@@ -30,9 +29,9 @@ class SettingsModel extends Settings {
 
   static ThemeMode mapStringToThemeMode(String? theme) {
     switch (theme) {
-      case lightThemeId:
+      case Settings.lightThemeId:
         return ThemeMode.light;
-      case darkThemeId:
+      case Settings.darkThemeId:
         return ThemeMode.dark;
       default:
         return ThemeMode.system;
@@ -42,11 +41,11 @@ class SettingsModel extends Settings {
   static String mapThemeModeToString(ThemeMode theme) {
     switch (theme) {
       case ThemeMode.light:
-        return lightThemeId;
+        return Settings.lightThemeId;
       case ThemeMode.dark:
-        return darkThemeId;
+        return Settings.darkThemeId;
       default:
-        return systemThemeId;
+        return Settings.systemThemeId;
     }
   }
 }

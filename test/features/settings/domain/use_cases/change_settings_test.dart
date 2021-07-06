@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:easy_language/features/settings/domain/repositories/settings_repository.dart';
 import 'package:easy_language/features/settings/domain/use_cases/change_settings.dart';
@@ -36,15 +35,18 @@ void main() {
 
       await usecase(
         const SettingsParams(
-          settingsMap: {themeModeId: tNewThemeMode, isStartupId: tNewIsStartup},
+          settingsMap: {
+            Settings.themeModeId: tNewThemeMode,
+            Settings.isStartupId: tNewIsStartup
+          },
         ),
       );
 
       verify(
         () => mockSettingsRepository.changeSettings(
           settingsMap: {
-            themeModeId: tNewThemeMode,
-            isStartupId: tNewIsStartup,
+            Settings.themeModeId: tNewThemeMode,
+            Settings.isStartupId: tNewIsStartup,
           },
         ),
       );
