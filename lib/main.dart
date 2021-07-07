@@ -73,10 +73,10 @@ class EasyLanguage extends StatelessWidget {
       theme: CustomTheme.buildLight(context),
       darkTheme: CustomTheme.buildDark(context),
       debugShowCheckedModeBanner: false,
-      initialRoute: showIntroduction ? '/introduction' : '/word_bank',
+      initialRoute: showIntroduction ? introductionPageId : wordBankPageId,
       routes: {
-        '/word_bank': (context) => const HomePage(),
-        '/introduction': (context) => const IntroductionPage(),
+        wordBankPageId: (context) => const HomePage(),
+        introductionPageId: (context) => const IntroductionPage(),
       },
     );
   }

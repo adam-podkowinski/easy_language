@@ -1,3 +1,4 @@
+import 'package:easy_language/core/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -23,7 +24,7 @@ class EasyLanguageDrawer extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pushReplacementNamed('/introduction');
+                Navigator.of(context).pushReplacementNamed(introductionPageId);
               },
               child: const Text('Hello'),
             ),

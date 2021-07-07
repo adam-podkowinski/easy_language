@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:easy_language/features/settings/presentation/manager/settings_bloc.dart';
 import 'package:easy_language/features/settings/presentation/widgets/theme_picker.dart';
@@ -21,7 +22,7 @@ class IntroductionPage extends StatelessWidget {
         body: IntroductionScreen(
           pages: _buildPages(context),
           onDone: () {
-            Navigator.of(context).pushReplacementNamed('/').then(
+            Navigator.of(context).pushReplacementNamed(wordBankPageId).then(
                   (_) => {
                     sl<SingletonSettingsBloc>().add(
                       const ChangeSettingsEvent(
