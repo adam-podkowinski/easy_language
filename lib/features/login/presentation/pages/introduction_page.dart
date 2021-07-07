@@ -16,27 +16,29 @@ class IntroductionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IntroductionScreen(
-        pages: _buildPages(context),
-        onDone: () {
-          Navigator.of(context).pushReplacementNamed('/').then(
-                (_) => {
-                  sl<SingletonSettingsBloc>().add(
-                    const ChangeSettingsEvent(
-                      changedSettings: {Settings.isStartupId: false},
+    return SafeArea(
+      child: Scaffold(
+        body: IntroductionScreen(
+          pages: _buildPages(context),
+          onDone: () {
+            Navigator.of(context).pushReplacementNamed('/').then(
+                  (_) => {
+                    sl<SingletonSettingsBloc>().add(
+                      const ChangeSettingsEvent(
+                        changedSettings: {Settings.isStartupId: false},
+                      ),
                     ),
-                  ),
-                },
-              );
-        },
-        showSkipButton: true,
-        color: Theme.of(context).primaryColor,
-        skip: const Text('Skip'),
-        next: const Text('Next'),
-        done: const Text('Done'),
-        dotsDecorator: DotsDecorator(
-          activeColor: Theme.of(context).primaryColor,
+                  },
+                );
+          },
+          showSkipButton: true,
+          color: Theme.of(context).primaryColor,
+          skip: const Text('Skip'),
+          next: const Text('Next'),
+          done: const Text('Done'),
+          dotsDecorator: DotsDecorator(
+            activeColor: Theme.of(context).primaryColor,
+          ),
         ),
       ),
     );
@@ -116,7 +118,10 @@ class IntroductionPage extends StatelessWidget {
       titleWidget: AutoSizeText(
         titleText,
         maxLines: 1,
-        style: Theme.of(context).textTheme.headline5,
+        style: Theme.of(context)
+            .textTheme
+            .headline5
+            ?.copyWith(fontStyle: FontStyle.italic),
       ),
       body: bodyText,
       footer: footer,

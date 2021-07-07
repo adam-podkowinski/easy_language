@@ -31,5 +31,13 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Mulish
+      fonts:
+        - asset: assets/fonts/Mulish-Black.ttf
+          weight: 900
+        - asset: assets/fonts/Mulish-BlackItalic.ttf
+          weight: 900
+          style: italic
   assets:
     - assets/svgs/
