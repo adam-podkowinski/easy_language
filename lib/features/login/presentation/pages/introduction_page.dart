@@ -16,29 +16,27 @@ class IntroductionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: IntroductionScreen(
-          pages: _buildPages(context),
-          onDone: () {
-            Navigator.of(context).pushReplacementNamed('/').then(
-                  (_) => {
-                    sl<SingletonSettingsBloc>().add(
-                      const ChangeSettingsEvent(
-                        changedSettings: {Settings.isStartupId: false},
-                      ),
+    return Scaffold(
+      body: IntroductionScreen(
+        pages: _buildPages(context),
+        onDone: () {
+          Navigator.of(context).pushReplacementNamed('/').then(
+                (_) => {
+                  sl<SingletonSettingsBloc>().add(
+                    const ChangeSettingsEvent(
+                      changedSettings: {Settings.isStartupId: false},
                     ),
-                  },
-                );
-          },
-          showSkipButton: true,
-          color: Theme.of(context).primaryColor,
-          skip: const Text('Skip'),
-          next: const Text('Next'),
-          done: const Text('Done'),
-          dotsDecorator: DotsDecorator(
-            activeColor: Theme.of(context).primaryColor,
-          ),
+                  ),
+                },
+              );
+        },
+        showSkipButton: true,
+        color: Theme.of(context).primaryColor,
+        skip: const Text('Skip'),
+        next: const Text('Next'),
+        done: const Text('Done'),
+        dotsDecorator: DotsDecorator(
+          activeColor: Theme.of(context).primaryColor,
         ),
       ),
     );

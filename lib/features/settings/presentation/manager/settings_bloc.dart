@@ -21,9 +21,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       : super(SettingsInitial());
 
   @override
-  Stream<SettingsState> mapEventToState(
-    SettingsEvent event,
-  ) async* {
+  Stream<SettingsState> mapEventToState(SettingsEvent event) async* {
     if (event is GetSettingsEvent) {
       final settings = await getSettings(NoParams());
       yield* settings.fold(

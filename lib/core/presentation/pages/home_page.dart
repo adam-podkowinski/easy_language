@@ -7,45 +7,38 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        drawer: Drawer(
-          child: Center(
-            child: Text(
-              'Hello in drawer',
-              style: TextStyle(fontSize: 20.sp),
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        backwardsCompatibility: false,
+        centerTitle: true,
+        elevation: 0,
+        title: const Text('hello'),
+      ),
+      drawer: Drawer(
+        child: Center(
+          child: Text(
+            'Hello in drawer',
+            style: TextStyle(fontSize: 20.sp),
           ),
         ),
-        body: Builder(
-          builder: (context) => Stack(
+      ),
+      body: Builder(
+        builder: (context) => Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Positioned(
-                top: 25.h,
-                left: 25.w,
-                child: IconButton(
-                  icon: const Icon(Icons.menu),
-                  onPressed: () => Scaffold.of(context).openDrawer(),
-                ),
+              Text(
+                'Hello in home page!',
+                style: TextStyle(fontSize: 20.sp),
               ),
-              Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Hello in home page!',
-                      style: TextStyle(fontSize: 20.sp),
-                    ),
-                    SizedBox(
-                      height: 8.h,
-                    ),
-                    ElevatedButton(
-                      onPressed: () => Navigator.of(context)
-                          .pushReplacementNamed('/introduction'),
-                      child: const Text('Hello'),
-                    ),
-                  ],
-                ),
+              SizedBox(
+                height: 8.h,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pushReplacementNamed('/introduction');
+                },
+                child: const Text('Hello'),
               ),
             ],
           ),

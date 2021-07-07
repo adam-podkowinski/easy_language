@@ -17,6 +17,7 @@ Future<void> main() async {
   runApp(EasyLanguage());
 }
 
+// TODO: add loading screen
 class EasyLanguage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -31,17 +32,18 @@ class EasyLanguage extends StatelessWidget {
               settingsBloc.add(
                 const GetSettingsEvent(),
               );
-              return const Center(
-                child: CircularProgressIndicator(),
+              return Container(
+                color: Colors.blueAccent,
+                child: const Center(
+                  child: CircularProgressIndicator(color: Colors.white),
+                ),
               );
             } else if (state is SettingsInitialized) {
-              return Builder(
-                builder: (context) => _buildMaterialApp(
-                  context,
-                  state.settings.themeMode,
-                  state.settings.isStartup,
-                  failure: state.failure,
-                ),
+              return _buildMaterialApp(
+                context,
+                state.settings.themeMode,
+                state.settings.isStartup,
+                failure: state.failure,
               );
             }
             return _buildMaterialApp(context, null, true);
