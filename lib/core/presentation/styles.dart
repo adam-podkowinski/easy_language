@@ -26,13 +26,13 @@ class CustomTheme {
   static TextTheme buildTextTheme(BuildContext context) {
     return TextTheme(
       headline5: TextStyle(
-        fontSize: 25.sp,
+        fontSize: 24.sp,
         fontWeight: FontWeight.w900,
         color: primary,
         fontFamily: 'Mulish',
       ),
       headline6: TextStyle(
-        fontSize: 25.sp,
+        fontSize: 24.sp,
         fontWeight: FontWeight.w900,
         color: primary,
         fontFamily: 'Mulish',
@@ -109,11 +109,10 @@ class CustomTheme {
     return AppBarTheme(
       backwardsCompatibility: false,
       elevation: 0.0,
-      centerTitle: true,
       backgroundColor: background,
       foregroundColor: onBackground,
       titleTextStyle: TextStyle(
-        fontSize: 25.sp,
+        fontSize: 24.sp,
         fontWeight: FontWeight.w900,
         color: onBackground,
         fontFamily: 'Mulish',

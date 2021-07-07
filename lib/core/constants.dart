@@ -1,3 +1,3 @@
 import 'package:flutter/material.dart';
 
-const Size screenSize = Size(393, 759);
+const Size screenSize = Size(393, 781);

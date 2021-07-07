@@ -1,6 +1,6 @@
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
-import 'package:easy_language/core/presentation/pages/home_page.dart';
+import 'package:easy_language/features/word_bank/presentation/pages/word_bank_page.dart';
 import 'package:easy_language/core/presentation/styles.dart';
 import 'package:easy_language/features/login/presentation/pages/introduction_page.dart';
 import 'package:easy_language/features/settings/presentation/manager/settings_bloc.dart';
@@ -73,9 +73,9 @@ class EasyLanguage extends StatelessWidget {
       theme: CustomTheme.buildLight(context),
       darkTheme: CustomTheme.buildDark(context),
       debugShowCheckedModeBanner: false,
-      initialRoute: showIntroduction ? '/introduction' : '/',
+      initialRoute: showIntroduction ? '/introduction' : '/word_bank',
       routes: {
-        '/': (context) => const HomePage(),
+        '/word_bank': (context) => const HomePage(),
         '/introduction': (context) => const IntroductionPage(),
       },
     );
