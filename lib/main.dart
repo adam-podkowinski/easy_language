@@ -70,8 +70,8 @@ class EasyLanguage extends StatelessWidget {
     return MaterialApp(
       title: 'Easy Language',
       themeMode: themeMode,
-      theme: buildLight(context),
-      darkTheme: buildDark(context),
+      theme: CustomTheme.buildLight(context),
+      darkTheme: CustomTheme.buildDark(context),
       debugShowCheckedModeBanner: false,
       initialRoute: showIntroduction ? '/introduction' : '/',
       routes: {
