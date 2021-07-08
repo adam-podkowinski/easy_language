@@ -11,44 +11,27 @@ class WordBankControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Currently remembering:',
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-            SizedBox(
-              width: 11.w,
-            ),
-            DropdownButton<String>(
-              value: 'English',
-              onChanged: (value) {},
-              items: ['English', 'Polish', 'Spanish']
-                  .map(
-                    (e) => DropdownMenuItem<String>(
-                      value: e,
-                      child: Text(e),
-                    ),
-                  )
-                  .toList(),
-            ),
-          ],
+        Text(
+          'Currently remembering:',
+          style: Theme.of(context).textTheme.subtitle1,
         ),
-        ElevatedButton(
-          onPressed: () {},
-          style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all(Theme.of(context).accentColor),
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(radius),
-              ),
-            ),
-          ),
-          child: const Text('Add a new language'),
+        SizedBox(
+          width: 11.w,
+        ),
+        DropdownButton<String>(
+          value: 'English',
+          onChanged: (value) {},
+          items: ['English', 'Polish', 'Spanish', 'New...']
+              .map(
+                (e) => DropdownMenuItem<String>(
+                  value: e,
+                  child: Text(e),
+                ),
+              )
+              .toList(),
         ),
       ],
     );

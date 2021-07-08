@@ -28,12 +28,10 @@ class WordBankPage extends StatelessWidget {
           ],
         ),
         drawer: const EasyLanguageDrawer(),
-        body: Stack(
+        body: Column(
           children: [
-            Align(
-              alignment: Alignment.topCenter,
-              child: WordBankControls(radius: radius),
-            ),
+            Center(child: WordBankControls(radius: radius)),
+            SizedBox(height: 10.h),
             WordBankSheet(radius: radius),
           ],
         ),

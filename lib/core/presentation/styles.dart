@@ -18,7 +18,7 @@ class CustomTheme {
   static const brightnessDark = Brightness.dark;
 
   static const backgroundLight = Colors.white;
-  static const onBackgroundLight = Colors.black;
+  static const onBackgroundLight = backgroundDark;
 
   static const backgroundDark = Color(0xFF191919);
   static const onBackgroundDark = Colors.white;
