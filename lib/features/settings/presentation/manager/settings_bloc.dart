@@ -26,7 +26,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       final settings = await getSettings(NoParams());
       yield* settings.fold(
         (l) async* {
-          if (l is SettingsCacheFailure) {
+          if (l is SettingsFailure) {
             yield SettingsInitialized(settings: l.settings, failure: l);
           }
         },
@@ -42,7 +42,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       );
       yield* settings.fold(
         (l) async* {
-          if (l is SettingsCacheFailure) {
+          if (l is SettingsFailure) {
             yield SettingsInitialized(settings: l.settings, failure: l);
           }
         },

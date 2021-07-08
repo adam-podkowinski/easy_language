@@ -20,3 +20,7 @@ abstract class SettingsFailure extends Failure {
 class SettingsCacheFailure extends SettingsFailure {
   SettingsCacheFailure(Settings settings) : super(settings);
 }
+
+class SettingsGetFailure extends SettingsFailure {
+  SettingsGetFailure(Settings settings) : super(settings);
+}

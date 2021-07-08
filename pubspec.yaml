@@ -25,6 +25,7 @@ dependencies:
 
 dev_dependencies:
   bloc_test: ^8.0.2
+  flutter_native_splash: ^1.2.0
   flutter_test:
     sdk: flutter
   lint: ^1.5.3
@@ -42,3 +43,6 @@ flutter:
         - asset: assets/fonts/Mulish-BlackItalic.ttf
   assets:
     - assets/svgs/
+
+flutter_native_splash:
+  color: "#1863f8"

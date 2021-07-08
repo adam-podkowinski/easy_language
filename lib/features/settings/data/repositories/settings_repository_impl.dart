@@ -41,7 +41,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
       return Right(_settings);
     } on CacheException {
       _initial = false;
-      return Left(SettingsCacheFailure(_settings));
+      return Left(SettingsGetFailure(_settings));
     }
   }
 }

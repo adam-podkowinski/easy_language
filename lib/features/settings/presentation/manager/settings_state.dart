@@ -11,13 +11,12 @@ class SettingsInitial extends SettingsState {
 
 class SettingsInitialized extends SettingsState {
   final Settings settings;
-  final SettingsCacheFailure? failure;
+  final SettingsFailure? failure;
 
   const SettingsInitialized({required this.settings, this.failure});
 
-  String get themeModeString => SettingsModel.mapThemeModeToString(
-        settings.themeMode,
-      );
+  String get themeModeString =>
+      SettingsModel.mapThemeModeToString(settings.themeMode);
 
   @override
   List<Object?> get props => [settings, failure];
