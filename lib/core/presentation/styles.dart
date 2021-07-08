@@ -104,7 +104,7 @@ class CustomTheme {
       backwardsCompatibility: false,
       elevation: 0.0,
       backgroundColor: background,
-      foregroundColor: onBackground,
+      foregroundColor: secondary,
       titleTextStyle: TextStyle(
         fontSize: 24.sp,
         fontWeight: FontWeight.w900,

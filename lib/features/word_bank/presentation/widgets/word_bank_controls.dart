@@ -18,12 +18,11 @@ class WordBankControls extends StatelessWidget {
           'Currently remembering:',
           style: Theme.of(context).textTheme.subtitle1,
         ),
-        SizedBox(
-          width: 11.w,
-        ),
+        SizedBox(width: 11.w),
         DropdownButton<String>(
           value: 'English',
           onChanged: (value) {},
+          iconEnabledColor: Theme.of(context).accentColor,
           items: ['English', 'Polish', 'Spanish', 'New...']
               .map(
                 (e) => DropdownMenuItem<String>(

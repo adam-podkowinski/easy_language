@@ -10,7 +10,7 @@ class WordBankPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final radius = 30.r;
+    final radius = 35.r;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -28,12 +28,15 @@ class WordBankPage extends StatelessWidget {
           ],
         ),
         drawer: const EasyLanguageDrawer(),
-        body: Column(
-          children: [
-            Center(child: WordBankControls(radius: radius)),
-            SizedBox(height: 10.h),
-            WordBankSheet(radius: radius),
-          ],
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10.w),
+          child: Column(
+            children: [
+              Center(child: WordBankControls(radius: radius)),
+              SizedBox(height: 10.h),
+              WordBankSheet(radius: radius),
+            ],
+          ),
         ),
       ),
     );
