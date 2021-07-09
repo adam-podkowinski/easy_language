@@ -17,7 +17,7 @@ class SettingsModel extends Settings {
     );
   }
 
-  SettingsModel newFromMap(Map<String, Object> map) {
+  SettingsModel copyWithMap(Map<String, Object> map) {
     final Map<String, Object> newMap = {...toMap(), ...map};
     return SettingsModel.fromMap(newMap);
   }

@@ -1,13 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/use_cases/use_case.dart';
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
-import 'package:easy_language/features/settings/domain/repositories/settings_repository.dart';
 import 'package:easy_language/features/settings/domain/use_cases/get_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockSettingsRepository extends Mock implements SettingsRepository {}
+import '../repositories/mock_settings_repository.dart';
+
 
 void main() {
   late GetSettings usecase;

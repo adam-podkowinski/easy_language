@@ -34,7 +34,7 @@ class WordBankSheet extends StatelessWidget {
                       style: const TextStyle(color: Colors.white),
                     ),
                     subtitle: Text(
-                      'Dolor sit amet, $index',
+                      'Dolor sit amet, ${index + 1} hello',
                       style: const TextStyle(
                         color: Colors.white70,
                       ),

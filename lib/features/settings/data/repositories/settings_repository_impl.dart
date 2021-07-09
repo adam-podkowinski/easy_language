@@ -22,7 +22,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
         await getSettings();
       }
 
-      _settings = _settings.newFromMap(settingsMap);
+      _settings = _settings.copyWithMap(settingsMap);
 
       localDataSource.cacheSettings(_settings);
       return Right(_settings);

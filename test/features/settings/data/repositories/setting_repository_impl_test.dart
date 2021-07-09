@@ -66,7 +66,7 @@ void main() {
       Settings.isStartupId: tNewIsStartup,
       Settings.themeModeId: tNewThemeMode,
     };
-    final tNewSettings = tBlankSettings.newFromMap(tNewSettingsMap);
+    final tNewSettings = tBlankSettings.copyWithMap(tNewSettingsMap);
 
     test(
       'should change settings parameters',

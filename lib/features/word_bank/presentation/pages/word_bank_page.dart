@@ -29,7 +29,7 @@ class WordBankPage extends StatelessWidget {
         ),
         drawer: const EasyLanguageDrawer(),
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.w),
+          padding: EdgeInsets.symmetric(horizontal: 11.w),
           child: Column(
             children: [
               Center(child: WordBankControls(radius: radius)),
