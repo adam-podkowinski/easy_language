@@ -6,6 +6,9 @@ class Word extends Equatable {
 
   const Word({required this.wordForeign, required this.wordTranslation});
 
+  static const wordForeignId = 'wordForeign';
+  static const wordTranslationId = 'wordTranslation';
+
   @override
   List<Object?> get props => [wordForeign, wordTranslation];
 }

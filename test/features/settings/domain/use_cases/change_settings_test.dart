@@ -7,7 +7,6 @@ import 'package:mocktail/mocktail.dart';
 
 import '../repositories/mock_settings_repository.dart';
 
-
 void main() {
   late ChangeSettings usecase;
   late MockSettingsRepository mockSettingsRepository;

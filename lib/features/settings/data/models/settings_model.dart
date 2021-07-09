@@ -9,7 +9,7 @@ class SettingsModel extends Settings {
   }) : super(themeMode: themeMode, isStartup: isStartup);
 
   /// Takes map and returns a [SettingsModel]
-  /// Map's object should be a basic type (int, string, bool) and NOT ENUM
+  /// Map's object should be a basic type (int, string, bool) and NOT enum
   factory SettingsModel.fromMap(Map<String, Object> map) {
     return SettingsModel(
       isStartup: cast(map[Settings.isStartupId]) ?? true,
@@ -23,8 +23,8 @@ class SettingsModel extends Settings {
   }
 
   Map<String, Object> toMap() => {
-        'isStartup': isStartup,
-        'themeMode': mapThemeModeToString(themeMode),
+        Settings.isStartupId: isStartup,
+        Settings.themeModeId: mapThemeModeToString(themeMode),
       };
 
   static ThemeMode mapStringToThemeMode(String? theme) {
