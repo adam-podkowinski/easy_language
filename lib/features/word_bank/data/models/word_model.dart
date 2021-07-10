@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:easy_language/features/word_bank/domain/entities/word.dart';
 
 class WordModel extends Word {
@@ -6,25 +7,25 @@ class WordModel extends Word {
     required String wordTranslation,
   }) : super(wordForeign: wordForeign, wordTranslation: wordTranslation);
 
-  factory WordModel.fromMap(Map<String, String> map) {
+  factory WordModel.fromMap(Map<String, dynamic> map) {
     return WordModel(
-      wordForeign: map[Word.wordForeignId] ?? '',
-      wordTranslation: map[Word.wordTranslationId] ?? '',
+      wordForeign: cast(map[Word.wordForeignId]) ?? '',
+      wordTranslation: cast(map[Word.wordTranslationId]) ?? '',
     );
   }
 
-  WordModel copyWithMap(Map<String, String> map) {
+  WordModel copyWithMap(Map<String, dynamic> map) {
     final newMap = {...toMap(), ...map};
     return WordModel.fromMap(newMap);
   }
 
   Map<String, String> toMap() => {
-        'wordForeign': wordForeign,
-        'wordTranslation': wordTranslation,
+        Word.wordForeignId: wordForeign,
+        Word.wordTranslationId: wordTranslation,
       };
 
-  static Map<String, String> wordToMap(Word word) => {
-        'wordForeign': word.wordForeign,
-        'wordTranslation': word.wordTranslation,
+  static Map<String, dynamic> wordToMap(Word word) => {
+        Word.wordForeignId: word.wordForeign,
+        Word.wordTranslationId: word.wordTranslation,
       };
 }

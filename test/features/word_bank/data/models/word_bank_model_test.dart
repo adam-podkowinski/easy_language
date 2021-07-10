@@ -1,2 +1,51 @@
-//TODO: write tests for WordBankModel
-void main() {}
+import 'dart:convert';
+
+import 'package:dartz/dartz.dart';
+import 'package:easy_language/features/word_bank/data/models/word_bank_model.dart';
+import 'package:easy_language/features/word_bank/data/models/word_model.dart';
+import 'package:easy_language/features/word_bank/domain/entities/word.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:language_picker/languages.dart';
+
+import '../../../../fixtures/fixture_reader.dart';
+
+void main() {
+  final tWordBank = WordBankModel(dictionaries: {
+    Languages.polish: const [
+      WordModel(wordForeign: 'gracias', wordTranslation: 'hello'),
+      WordModel(wordForeign: 'dzień', wordTranslation: 'day')
+    ],
+  });
+
+  group('fromMap', () {
+    test(
+      'should return a valid WordBankModel from a map',
+      () async {
+        final Map<String, dynamic> tMap =
+            cast(jsonDecode(fixture('word_bank.json')));
+
+        final tNewWordBank = WordBankModel.fromMap(tMap);
+
+        expect(tNewWordBank, tWordBank);
+      },
+    );
+  });
+
+  group('toMap', () {
+    test(
+      'should return a valid map from a WordBankModel',
+      () async {
+        final tMap = {
+          "pl": [
+            {Word.wordForeignId: 'gracias', Word.wordTranslationId: 'hello'},
+            {Word.wordForeignId: 'dzień', Word.wordTranslationId: 'day'},
+          ]
+        };
+
+        final tToMap = tWordBank.toMap();
+
+        expect(tToMap, tMap);
+      },
+    );
+  });
+}

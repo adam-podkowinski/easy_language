@@ -24,15 +24,78 @@ void main() {
     test(
       'should return a valid model',
       () async {
-        print(jsonDecode(fixture('word.json')));
         final Map<String, String> jsonMap = cast(
           jsonDecode(
             fixture('word.json'),
-          ).cast<String, String>() as Map<String, String>,
+          ).cast<String, String>(),
         );
 
         final result = WordModel.fromMap(jsonMap);
         expect(result, tWordModel);
+      },
+    );
+  });
+
+  group('copyWithMap', () {
+    test(
+      'should return a new word model with replaced value from map',
+      () async {
+        const Map<String, String> tMap = {
+          Word.wordForeignId: 'szkola',
+        };
+
+        final tNewWordModel = tWordModel.copyWithMap(tMap);
+
+        expect(
+          tNewWordModel,
+          const WordModel(wordForeign: 'szkola', wordTranslation: 'hello'),
+        );
+
+        const Map<String, String> tMapSecond = {
+          Word.wordForeignId: 'szkola',
+          Word.wordTranslationId: 'school',
+        };
+
+        final tNewWordModelSecond = tWordModel.copyWithMap(tMapSecond);
+        expect(
+          tNewWordModelSecond,
+          const WordModel(wordForeign: 'szkola', wordTranslation: 'school'),
+        );
+      },
+    );
+  });
+
+  group('toMap', () {
+    test(
+      'should return a valid Map<String, String>',
+      () async {
+        const Map<String, String> tValidMap = {
+          Word.wordForeignId: 'gracias',
+          Word.wordTranslationId: 'hello',
+        };
+
+        final newMap = tWordModel.toMap();
+
+        expect(newMap, tValidMap);
+      },
+    );
+  });
+
+  group('wordToMap', () {
+    test(
+      'should return a valid Map<String, String> from passed Word entity',
+      () async {
+        const tWordEntity =
+            Word(wordForeign: 'gracias', wordTranslation: 'hello');
+
+        const tWordMap = {
+          Word.wordForeignId: 'gracias',
+          Word.wordTranslationId: 'hello',
+        };
+
+        final tNewMap = WordModel.wordToMap(tWordEntity);
+
+        expect(tNewMap, tWordMap);
       },
     );
   });

@@ -271,9 +271,11 @@ packages:
   language_picker:
     dependency: "direct main"
     description:
-      name: language_picker
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: "87ce4eb5a773d0a90bd06fcc34683e2377f3074f"
+      url: "https://github.com/adam-podkowinski/flutter_language_pickers"
+    source: git
     version: "0.4.1"
   lint:
     dependency: "direct dev"
@@ -498,7 +500,7 @@ packages:
       name: shelf
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.4"
+    version: "1.2.0"
   shelf_packages_handler:
     dependency: transitive
     description:
@@ -512,7 +514,7 @@ packages:
       name: shelf_static
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.0"
   shelf_web_socket:
     dependency: transitive
     description:
