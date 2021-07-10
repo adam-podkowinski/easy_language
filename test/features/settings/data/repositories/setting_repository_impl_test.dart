@@ -53,7 +53,7 @@ void main() {
             .thenThrow(CacheException());
 
         final result = await repository.getSettings();
-        expect(result, equals(Left(SettingsCacheFailure(tBlankSettings))));
+        expect(result, equals(Left(SettingsGetFailure(tBlankSettings))));
       },
     );
   });

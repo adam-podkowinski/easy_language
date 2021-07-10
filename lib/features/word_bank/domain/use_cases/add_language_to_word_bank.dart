@@ -7,23 +7,24 @@ import 'package:easy_language/features/word_bank/domain/repositories/word_bank_r
 import 'package:equatable/equatable.dart';
 import 'package:language_picker/languages.dart';
 
-class AddWord implements Usecase<WordBank, AddWordParams> {
+class AddLanguageToWordBank
+    implements Usecase<WordBank, AddLanguageToWordBankParams> {
   final WordBankRepository repository;
 
-  AddWord(this.repository);
+  AddLanguageToWordBank(this.repository);
 
   @override
-  Future<Either<Failure, WordBank>> call(AddWordParams params) {
-    return repository.addWord(params.language, word: params.word);
+  Future<Either<Failure, WordBank>> call(AddLanguageToWordBankParams params) {
+    return repository.addLanguageToWordBank(params.language, initialWords: params.initialWords);
   }
 }
 
-class AddWordParams extends Equatable {
+class AddLanguageToWordBankParams extends Equatable {
   final Language language;
-  final Word word;
+  final List<Word>? initialWords;
 
-  const AddWordParams({required this.language, required this.word});
+  const AddLanguageToWordBankParams(this.language, {this.initialWords});
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [language, initialWords];
 }

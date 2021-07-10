@@ -5,32 +5,20 @@ import 'package:easy_language/features/word_bank/domain/entities/word_bank.dart'
 import 'package:language_picker/languages.dart';
 
 abstract class WordBankRepository {
-  Future<Either<Failure, Language>> getCurrentLanguge();
-
-  Future<Either<Failure, WordBank>> addLanguage(
+  Future<Either<Failure, WordBank>> addLanguageToWordBank(
     Language language, {
-    List<Word>? initialWords,
+    required List<Word>? initialWords,
   });
 
-  Future<Either<Failure, WordBank>> changeLanguage({
+  Future<Either<Failure, WordBank>> editWordsList({
     required Language languageFrom,
-    required Language languageTo,
+    required Language? languageTo,
+    required List<Word>? newWordList,
   });
 
-  Future<Either<Failure, WordBank>> addWord(
-    Language language, {
-    required Word word,
-  });
+  Future<Either<Failure, WordBank>> getWordBank();
 
-  Future<Either<Failure, WordBank>> removeWord(
-    Language language, {
-    int index,
-  });
+  Future<Either<Failure, Language>> getCurrentLanguage();
 
-  Future<Either<Failure, WordBank>> sortWordList(Language language);
-
-  Future<Either<Failure, WordBank>> moveWordList(
-    Language language, {
-    List<Word> newWordList,
-  });
+  Future<Either<Failure, Language>> changeCurrentLanguage(Language language);
 }
