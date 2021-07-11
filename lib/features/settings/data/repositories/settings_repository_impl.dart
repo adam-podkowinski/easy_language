@@ -21,7 +21,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
 
   @override
   Future<Either<Failure, Settings>> changeSettings({
-    required Map<String, dynamic> settingsMap,
+    required Map<dynamic, dynamic> settingsMap,
   }) async {
     try {
       await _ensureInitialized();

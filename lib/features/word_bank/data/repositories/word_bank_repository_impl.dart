@@ -11,6 +11,7 @@ import 'package:language_picker/languages.dart';
 class WordBankRepositoryImpl implements WordBankRepository {
   bool _initial = true;
   WordBankModel _wordBank = const WordBankModel(dictionaries: {});
+  Language _currentLanguage = Languages.english;
   final WordBankLocalDataSource localDataSource;
 
   WordBankRepositoryImpl(this.localDataSource);
@@ -18,6 +19,7 @@ class WordBankRepositoryImpl implements WordBankRepository {
   Future<void> _ensureInitialized() async {
     if (_initial) {
       await getWordBank();
+      await getCurrentLanguage();
     }
   }
 

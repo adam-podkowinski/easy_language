@@ -21,7 +21,7 @@ void main() {
     test(
       'should return a valid WordBankModel from a map',
       () async {
-        final Map<String, dynamic> tMap =
+        final Map<dynamic, dynamic> tMap =
             cast(jsonDecode(fixture('word_bank.json')));
 
         final tNewWordBank = WordBankModel.fromMap(tMap);

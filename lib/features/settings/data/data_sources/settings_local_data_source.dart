@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/features/settings/data/models/settings_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
 
 abstract class SettingsLocalDataSource {
   Future<SettingsModel> getLocalSettings();
@@ -10,36 +8,29 @@ abstract class SettingsLocalDataSource {
   Future<void> cacheSettings(SettingsModel settingsToCache);
 }
 
-const cachedSettingsId = 'settings';
-
 class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
-  final SharedPreferences sharedPreferences;
+  final Box settingsBox;
 
-  SettingsLocalDataSourceImpl({required this.sharedPreferences});
+  SettingsLocalDataSourceImpl({required this.settingsBox});
 
   @override
   Future<SettingsModel> getLocalSettings() {
-    final jsonString = sharedPreferences.getString(cachedSettingsId);
-    if (jsonString != null) {
-      return Future.value(
-        SettingsModel.fromMap(
-          jsonDecode(jsonString).cast<String, dynamic>() as Map<String, dynamic>,
-        ),
-      );
-    } else {
+    try {
+      if (settingsBox.isEmpty) {
+        throw CacheException();
+      } else {
+        final dbMap = settingsBox.toMap();
+        return Future.value(SettingsModel.fromMap(dbMap));
+      }
+    } on Exception {
       throw CacheException();
     }
   }
 
   @override
-  Future<void> cacheSettings(SettingsModel settingsToCache) {
+  Future<void> cacheSettings(SettingsModel settingsToCache) async {
     try {
-      return sharedPreferences.setString(
-        cachedSettingsId,
-        jsonEncode(
-          settingsToCache.toMap(),
-        ),
-      );
+      await settingsBox.putAll(settingsToCache.toMap());
     } on Exception {
       throw CacheException();
     }

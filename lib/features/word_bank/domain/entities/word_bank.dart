@@ -7,8 +7,6 @@ class WordBank extends Equatable {
 
   const WordBank({required this.dictionaries});
 
-  static const wordBankId = 'wordBank';
-
   @override
   List<Object?> get props => [dictionaries];
 }

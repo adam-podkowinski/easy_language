@@ -10,19 +10,19 @@ class SettingsModel extends Settings {
 
   /// Takes map and returns a [SettingsModel]
   /// Map's object should be a basic type (int, string, bool) and NOT enum
-  factory SettingsModel.fromMap(Map<String, dynamic> map) {
+  factory SettingsModel.fromMap(Map<dynamic, dynamic> map) {
     return SettingsModel(
       isStartup: cast(map[Settings.isStartupId]) ?? true,
       themeMode: mapStringToThemeMode(cast(map[Settings.themeModeId])),
     );
   }
 
-  SettingsModel copyWithMap(Map<String, dynamic> map) {
-    final Map<String, dynamic> newMap = {...toMap(), ...map};
+  SettingsModel copyWithMap(Map<dynamic, dynamic> map) {
+    final Map<dynamic, dynamic> newMap = {...toMap(), ...map};
     return SettingsModel.fromMap(newMap);
   }
 
-  Map<String, dynamic> toMap() => {
+  Map<dynamic, dynamic> toMap() => {
         Settings.isStartupId: isStartup,
         Settings.themeModeId: mapThemeModeToString(themeMode),
       };

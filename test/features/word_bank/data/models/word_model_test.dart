@@ -24,10 +24,10 @@ void main() {
     test(
       'should return a valid model',
       () async {
-        final Map<String, String> jsonMap = cast(
+        final Map<dynamic, dynamic> jsonMap = cast(
           jsonDecode(
             fixture('word.json'),
-          ).cast<String, String>(),
+          ),
         );
 
         final result = WordModel.fromMap(jsonMap);
@@ -67,7 +67,7 @@ void main() {
 
   group('toMap', () {
     test(
-      'should return a valid Map<String, String>',
+      'should return a valid Map',
       () async {
         const Map<String, String> tValidMap = {
           Word.wordForeignId: 'gracias',
@@ -83,7 +83,7 @@ void main() {
 
   group('wordToMap', () {
     test(
-      'should return a valid Map<String, String> from passed Word entity',
+      'should return a valid Map from passed Word entity',
       () async {
         const tWordEntity =
             Word(wordForeign: 'gracias', wordTranslation: 'hello');

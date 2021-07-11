@@ -7,24 +7,24 @@ class WordModel extends Word {
     required String wordTranslation,
   }) : super(wordForeign: wordForeign, wordTranslation: wordTranslation);
 
-  factory WordModel.fromMap(Map<String, dynamic> map) {
+  factory WordModel.fromMap(Map<dynamic, dynamic> map) {
     return WordModel(
       wordForeign: cast(map[Word.wordForeignId]) ?? '',
       wordTranslation: cast(map[Word.wordTranslationId]) ?? '',
     );
   }
 
-  WordModel copyWithMap(Map<String, dynamic> map) {
+  WordModel copyWithMap(Map<dynamic, dynamic> map) {
     final newMap = {...toMap(), ...map};
     return WordModel.fromMap(newMap);
   }
 
-  Map<String, String> toMap() => {
+  Map<dynamic, dynamic> toMap() => {
         Word.wordForeignId: wordForeign,
         Word.wordTranslationId: wordTranslation,
       };
 
-  static Map<String, dynamic> wordToMap(Word word) => {
+  static Map<dynamic, dynamic> wordToMap(Word word) => {
         Word.wordForeignId: word.wordForeign,
         Word.wordTranslationId: word.wordTranslation,
       };

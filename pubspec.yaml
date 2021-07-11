@@ -18,13 +18,15 @@ dependencies:
   flutter_svg: ^0.22.0
   fluttertoast: ^8.0.7
   get_it: ^7.1.3
+  hive: ^2.0.4
+  hive_flutter: ^1.1.0
   introduction_screen: ^2.1.0
   language_picker:
     git:
       url: https://github.com/adam-podkowinski/flutter_language_pickers
   logger: ^1.0.0
   mocktail: ^0.1.4
-  shared_preferences: ^2.0.6
+  path_provider: ^2.0.2
 
 dev_dependencies:
   bloc_test: ^8.0.2

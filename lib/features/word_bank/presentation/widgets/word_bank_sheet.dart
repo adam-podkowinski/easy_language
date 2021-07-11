@@ -1,4 +1,7 @@
+import 'package:easy_language/features/word_bank/presentation/manager/word_bank_bloc.dart';
+import 'package:easy_language/injection_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WordBankSheet extends StatelessWidget {
@@ -11,42 +14,63 @@ class WordBankSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        clipBehavior: Clip.hardEdge,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryVariant,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(radius),
-            topRight: Radius.circular(radius),
+    final wordBankBloc = sl<WordBankBloc>();
+    return BlocProvider(
+      create: (context) => wordBankBloc,
+      child: Expanded(
+        child: Container(
+          clipBehavior: Clip.hardEdge,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primaryVariant,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(radius),
+              topRight: Radius.circular(radius),
+            ),
           ),
-        ),
-        child: ListView.builder(
-          itemCount: 10,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: EdgeInsets.all(8.w),
-              child: Column(
-                children: [
-                  ListTile(
-                    title: Text(
-                      'Lorem ipsum, $index',
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    subtitle: Text(
-                      'Dolor sit amet, ${index + 1} hello',
-                      style: const TextStyle(
-                        color: Colors.white70,
+          child: BlocBuilder<WordBankBloc, WordBankState>(
+            builder: (context, state) {
+              if (state is WordBankInitial) {
+                wordBankBloc.add(const GetWordBankEvent());
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (state is WordBankLoaded) {
+                final dictionariesList =
+                    state.wordBank.dictionaries.entries.toList();
+                return ListView.builder(
+                  itemCount: state.wordBank.dictionaries.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.all(8.w),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            title: Text(
+                              dictionariesList[index].key.isoCode,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            subtitle: Text(
+                              'Dolor sit amet, ${index + 1} hello',
+                              style: const TextStyle(
+                                color: Colors.white70,
+                              ),
+                            ),
+                          ),
+                          Divider(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ],
                       ),
-                    ),
-                  ),
-                  Divider(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                ],
-              ),
-            );
-          },
+                    );
+                  },
+                );
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          ),
         ),
       ),
     );

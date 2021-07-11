@@ -9,13 +9,17 @@ class WordBankModel extends WordBank {
   }) : super(dictionaries: dictionaries);
 
   factory WordBankModel.fromMap(
-    Map<String, dynamic> dictionariesMap,
+    Map<dynamic, dynamic> dictionariesMap,
   ) {
     final Map<Language, List<WordModel>> dicts = dictionariesMap.map(
       (key, value) {
-        final isoKey = Language.fromIsoCode(key);
+        final isoKey = Language.fromIsoCode(cast(key));
         final List<WordModel> valueMap = [
-          ...value.map((e) => WordModel.fromMap(cast(e)))
+          ...value.map(
+            (e) {
+              return WordModel.fromMap(cast(e));
+            },
+          )
         ];
 
         return MapEntry(isoKey, valueMap);
@@ -25,8 +29,8 @@ class WordBankModel extends WordBank {
     return WordBankModel(dictionaries: dicts);
   }
 
-  Map<String, dynamic> toMap() {
-    final Map<String, dynamic> map = dictionaries.map(
+  Map<dynamic, dynamic> toMap() {
+    final Map<dynamic, dynamic> map = dictionaries.map(
       (key, value) => MapEntry(
         key.isoCode,
         [...value.map((e) => WordModel.wordToMap(e))],

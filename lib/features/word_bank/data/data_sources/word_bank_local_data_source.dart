@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/features/word_bank/data/models/word_bank_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
 
 abstract class WordBankLocalDataSource {
   Future<WordBankModel> getLocalWordBank();
@@ -10,20 +8,15 @@ abstract class WordBankLocalDataSource {
   Future<void> cacheWordBank(WordBankModel wordBankModel);
 }
 
-const cachedWordBankId = 'word_bank';
-
 class WordBankLocalDataSourceImpl implements WordBankLocalDataSource {
-  final SharedPreferences sharedPreferences;
+  final Box wordBankBox;
 
-  WordBankLocalDataSourceImpl({required this.sharedPreferences});
+  WordBankLocalDataSourceImpl({required this.wordBankBox});
 
   @override
-  Future<void> cacheWordBank(WordBankModel wordBankModel) {
+  Future<void> cacheWordBank(WordBankModel wordBankModel) async {
     try {
-      return sharedPreferences.setString(
-        cachedWordBankId,
-        jsonEncode(wordBankModel.toMap()),
-      );
+      await wordBankBox.putAll(wordBankModel.toMap());
     } on Exception {
       throw CacheException();
     }
@@ -31,17 +24,12 @@ class WordBankLocalDataSourceImpl implements WordBankLocalDataSource {
 
   @override
   Future<WordBankModel> getLocalWordBank() {
-    final jsonString = sharedPreferences.getString(cachedWordBankId);
     try {
-      if (jsonString != null) {
-        return Future.value(
-          WordBankModel.fromMap(
-            jsonDecode(jsonString).cast<String, dynamic>()
-                as Map<String, dynamic>,
-          ),
-        );
-      } else {
+      if (wordBankBox.isEmpty) {
         throw CacheException();
+      } else {
+        final dbMap = wordBankBox.toMap();
+        return Future.value(WordBankModel.fromMap(dbMap));
       }
     } on Exception {
       throw CacheException();

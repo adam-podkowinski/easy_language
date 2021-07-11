@@ -1,43 +1,50 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/features/settings/data/data_sources/settings_local_data_source.dart';
 import 'package:easy_language/features/settings/data/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hive/hive.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../fixtures/fixture_reader.dart';
 
-class MockSharedPreferences extends Mock implements SharedPreferences {}
+class MockBox extends Mock implements Box {}
 
 void main() {
   late SettingsLocalDataSourceImpl dataSource;
-  late MockSharedPreferences mockSharedPreferences;
+  late MockBox mockBox;
+
+  setUpAll(() {
+    Hive.init(Directory.systemTemp.path);
+  });
 
   setUp(() {
-    mockSharedPreferences = MockSharedPreferences();
-    dataSource =
-        SettingsLocalDataSourceImpl(sharedPreferences: mockSharedPreferences);
+    mockBox = MockBox();
+    dataSource = SettingsLocalDataSourceImpl(settingsBox: mockBox);
   });
 
   group('getLocalSettings', () {
-    final tSettingsModel = SettingsModel.fromMap(jsonDecode(
-      fixture('settings.json'),
-    ).cast<String, dynamic>() as Map<String, dynamic>);
+    final tSettingsModel = SettingsModel.fromMap(
+      jsonDecode(fixture('settings.json')) as Map,
+    );
 
     test(
       '''
-    should return [SettingsModel] from [SharedPreferences]
+    should return [SettingsModel] from [Box]
     when there is one in the cache''',
       () async {
-        when(() => mockSharedPreferences.getString(any()))
-            .thenReturn(fixture('settings.json'));
+        when(() => mockBox.toMap()).thenReturn(
+          jsonDecode(fixture('settings.json')) as Map,
+        );
+        when(() => mockBox.isEmpty).thenReturn(false);
+        when(() => mockBox.isNotEmpty).thenReturn(true);
 
         final result = await dataSource.getLocalSettings();
 
-        verify(() => mockSharedPreferences.getString(cachedSettingsId));
+        verify(() => mockBox.toMap());
         expect(result, equals(tSettingsModel));
       },
     );
@@ -45,7 +52,9 @@ void main() {
     test(
       'should throw a [CacheException] when there is not a cached value',
       () async {
-        when(() => mockSharedPreferences.getString(any())).thenReturn(null);
+        when(() => mockBox.toMap()).thenReturn({});
+        when(() => mockBox.isEmpty).thenReturn(true);
+        when(() => mockBox.isNotEmpty).thenReturn(false);
 
         final call = dataSource.getLocalSettings;
 
@@ -63,17 +72,13 @@ void main() {
     test(
       'should call SharedPreferences to cache the data',
       () async {
-        when(() => mockSharedPreferences.setString(any(), any()))
-            .thenAnswer((_) => Future.value(true));
+        when(() => mockBox.putAll(any())).thenAnswer((_) => Future.value());
 
         await dataSource.cacheSettings(tSettingsModel);
 
-        final expectedJsonString = jsonEncode(tSettingsModel.toMap());
+        final expectedMap = tSettingsModel.toMap();
         verify(
-          () => mockSharedPreferences.setString(
-            cachedSettingsId,
-            expectedJsonString,
-          ),
+          () => mockBox.putAll(expectedMap),
         );
       },
     );

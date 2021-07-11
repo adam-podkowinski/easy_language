@@ -34,9 +34,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           yield SettingsInitialized(settings: r);
         },
       );
-    }
-
-    if (event is ChangeSettingsEvent) {
+    } else if (event is ChangeSettingsEvent) {
       final settings = await changeSettings(
         SettingsParams(settingsMap: event.changedSettings),
       );
