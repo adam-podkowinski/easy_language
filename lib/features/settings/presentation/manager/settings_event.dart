@@ -12,7 +12,7 @@ class GetSettingsEvent extends SettingsEvent {
 }
 
 class ChangeSettingsEvent extends SettingsEvent {
-  final Map<String, Object> changedSettings;
+  final Map<String, dynamic> changedSettings;
 
   const ChangeSettingsEvent({required this.changedSettings});
 

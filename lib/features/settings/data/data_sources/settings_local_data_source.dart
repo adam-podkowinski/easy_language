@@ -23,7 +23,7 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
     if (jsonString != null) {
       return Future.value(
         SettingsModel.fromMap(
-          jsonDecode(jsonString).cast<String, Object>() as Map<String, Object>,
+          jsonDecode(jsonString).cast<String, dynamic>() as Map<String, dynamic>,
         ),
       );
     } else {

@@ -7,13 +7,13 @@ import 'package:language_picker/languages.dart';
 abstract class WordBankRepository {
   Future<Either<Failure, WordBank>> addLanguageToWordBank(
     Language language, {
-    required List<Word>? initialWords,
+    List<Word>? initialWords,
   });
 
   Future<Either<Failure, WordBank>> editWordsList({
     required Language languageFrom,
-    required Language? languageTo,
-    required List<Word>? newWordList,
+    Language? languageTo,
+    List<Word>? newWordList,
   });
 
   Future<Either<Failure, WordBank>> getWordBank();

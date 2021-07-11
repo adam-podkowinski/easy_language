@@ -13,14 +13,18 @@ class SettingsRepositoryImpl implements SettingsRepository {
 
   SettingsRepositoryImpl({required this.localDataSource});
 
+  Future<void> _ensureInitialized() async {
+    if (_initial) {
+      await getSettings();
+    }
+  }
+
   @override
   Future<Either<Failure, Settings>> changeSettings({
-    required Map<String, Object> settingsMap,
+    required Map<String, dynamic> settingsMap,
   }) async {
     try {
-      if (_initial) {
-        await getSettings();
-      }
+      await _ensureInitialized();
 
       _settings = _settings.copyWithMap(settingsMap);
 

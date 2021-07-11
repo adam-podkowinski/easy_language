@@ -25,7 +25,7 @@ void main() {
   group('getLocalSettings', () {
     final tSettingsModel = SettingsModel.fromMap(jsonDecode(
       fixture('settings.json'),
-    ).cast<String, Object>() as Map<String, Object>);
+    ).cast<String, dynamic>() as Map<String, dynamic>);
 
     test(
       '''

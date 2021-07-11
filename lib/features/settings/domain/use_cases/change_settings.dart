@@ -19,7 +19,7 @@ class ChangeSettings implements Usecase<Settings, SettingsParams> {
 }
 
 class SettingsParams extends Equatable {
-  final Map<String, Object> settingsMap;
+  final Map<String, dynamic> settingsMap;
 
   const SettingsParams({required this.settingsMap});
 
