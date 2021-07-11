@@ -15,7 +15,7 @@ const cachedWordBankId = 'word_bank';
 class WordBankLocalDataSourceImpl implements WordBankLocalDataSource {
   final SharedPreferences sharedPreferences;
 
-  WordBankLocalDataSourceImpl(this.sharedPreferences);
+  WordBankLocalDataSourceImpl({required this.sharedPreferences});
 
   @override
   Future<void> cacheWordBank(WordBankModel wordBankModel) {
