@@ -18,7 +18,7 @@ abstract class WordBankRepository {
 
   Future<Either<Failure, WordBank>> getWordBank();
 
-  Future<Either<Failure, Language>> getCurrentLanguage();
+  Future<Either<Failure, Language?>> getCurrentLanguage();
 
   Future<Either<Failure, Language>> changeCurrentLanguage(Language language);
 }

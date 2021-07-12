@@ -1,8 +1,11 @@
 import 'package:easy_language/core/presentation/drawer.dart';
+import 'package:easy_language/features/word_bank/presentation/manager/word_bank_bloc.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_controls.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_sheet.dart';
+import 'package:easy_language/injection_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WordBankPage extends StatelessWidget {
@@ -30,12 +33,19 @@ class WordBankPage extends StatelessWidget {
         drawer: const EasyLanguageDrawer(),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 11.w),
-          child: Column(
-            children: [
-              Center(child: WordBankControls(radius: radius)),
-              SizedBox(height: 10.h),
-              WordBankSheet(radius: radius),
-            ],
+          child: BlocProvider(
+            create: (context) {
+              final bloc = sl<WordBankBloc>();
+              bloc.add(const GetWordBankEvent());
+              return bloc;
+            },
+            child: Column(
+              children: [
+                Center(child: WordBankControls(radius: radius)),
+                SizedBox(height: 10.h),
+                WordBankSheet(radius: radius),
+              ],
+            ),
           ),
         ),
       ),

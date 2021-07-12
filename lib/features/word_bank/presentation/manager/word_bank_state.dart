@@ -11,10 +11,19 @@ class WordBankInitial extends WordBankState {
 
 class WordBankLoaded extends WordBankState {
   final WordBank wordBank;
-  final WordBankFailure? failure;
+  final Language? currentLanguage;
 
-  const WordBankLoaded({required this.wordBank, this.failure});
+  final WordBankFailure? wordBankFailure;
+  final LanguageFailure? languageFailure;
+
+  const WordBankLoaded({
+    required this.wordBank,
+    required this.currentLanguage,
+    this.wordBankFailure,
+    this.languageFailure,
+  });
 
   @override
-  List<Object?> get props => [wordBank, failure];
+  List<Object?> get props =>
+      [wordBank, currentLanguage, wordBankFailure, languageFailure];
 }

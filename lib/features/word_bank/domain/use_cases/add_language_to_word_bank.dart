@@ -15,8 +15,10 @@ class AddLanguageToWordBank
 
   @override
   Future<Either<Failure, WordBank>> call(AddLanguageToWordBankParams params) {
-    return repository.addLanguageToWordBank(params.language,
-        initialWords: params.initialWords);
+    return repository.addLanguageToWordBank(
+      params.language,
+      initialWords: params.initialWords,
+    );
   }
 }
 

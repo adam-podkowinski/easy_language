@@ -6,3 +6,5 @@ const String wordBankPageId = '/word_bank';
 const String introductionPageId = '/introduction';
 const cachedSettingsId = 'settings';
 const cachedWordBankId = 'word_bank';
+const cachedCurrentLanguageId = 'word_bank';
+const addNewLanguageString = 'New...';

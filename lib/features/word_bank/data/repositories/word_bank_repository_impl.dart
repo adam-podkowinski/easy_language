@@ -7,18 +7,25 @@ import 'package:easy_language/features/word_bank/domain/entities/word.dart';
 import 'package:easy_language/features/word_bank/domain/entities/word_bank.dart';
 import 'package:easy_language/features/word_bank/domain/repositories/word_bank_repository.dart';
 import 'package:language_picker/languages.dart';
+import 'package:language_picker/languages.g.dart';
 
 class WordBankRepositoryImpl implements WordBankRepository {
-  bool _initial = true;
+  bool _initialWordBank = true;
+  bool _initialCurrentLanguage = true;
   WordBankModel _wordBank = const WordBankModel(dictionaries: {});
-  Language _currentLanguage = Languages.english;
+  Language? _currentLanguage;
   final WordBankLocalDataSource localDataSource;
 
   WordBankRepositoryImpl(this.localDataSource);
 
-  Future<void> _ensureInitialized() async {
-    if (_initial) {
+  Future<void> _ensureWordBankInitialized() async {
+    if (_initialWordBank) {
       await getWordBank();
+    }
+  }
+
+  Future<void> _ensureCurrentLanguageInitialized() async {
+    if (_initialCurrentLanguage) {
       await getCurrentLanguage();
     }
   }
@@ -49,24 +56,40 @@ class WordBankRepositoryImpl implements WordBankRepository {
   }
 
   @override
-  Future<Either<Failure, Language>> getCurrentLanguage() {
-    // TODO: implement getCurrentLanguage
-    throw UnimplementedError();
+  Future<Either<Failure, Language?>> getCurrentLanguage() async {
+    try {
+      if (_initialCurrentLanguage) {
+        final dbLang = await localDataSource.getLocalCurrentLanguage();
+        if (dbLang == null) {
+          if (_wordBank.dictionaries.isEmpty) {
+            _currentLanguage = null;
+          } else {
+            _currentLanguage = _wordBank.dictionaries.keys.toList().first;
+          }
+        } else {
+          _currentLanguage = dbLang;
+        }
+        _initialCurrentLanguage = false;
+      }
+    } on CacheException {
+      _initialCurrentLanguage = false;
+      return Left(LanguageGetFailure(_currentLanguage));
+    }
+
+    return Right(_currentLanguage);
   }
 
   @override
   Future<Either<Failure, WordBank>> getWordBank() async {
     try {
-      if (_initial) {
+      if (_initialWordBank) {
         _wordBank = await localDataSource.getLocalWordBank();
-        _initial = false;
-        return Right(_wordBank);
-      } else {
-        return Right(_wordBank);
+        _initialWordBank = false;
       }
     } on CacheException {
-      _initial = false;
+      _initialWordBank = false;
       return Left(WordBankGetFailure(_wordBank));
     }
+    return Right(_wordBank);
   }
 }

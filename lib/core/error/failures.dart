@@ -1,6 +1,7 @@
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:easy_language/features/word_bank/domain/entities/word_bank.dart';
 import 'package:equatable/equatable.dart';
+import 'package:language_picker/languages.dart';
 
 abstract class Failure extends Equatable {
   @override
@@ -41,4 +42,21 @@ class WordBankCacheFailure extends WordBankFailure {
 
 class WordBankGetFailure extends WordBankFailure {
   WordBankGetFailure(WordBank wordBank) : super(wordBank);
+}
+
+abstract class LanguageFailure extends Failure {
+  final Language? currentLanguage;
+
+  LanguageFailure(this.currentLanguage);
+
+  @override
+  List<Object?> get props => [currentLanguage];
+}
+
+class LanguageCacheFailure extends LanguageFailure {
+  LanguageCacheFailure(Language currentLanguage) : super(currentLanguage);
+}
+
+class LanguageGetFailure extends LanguageFailure {
+  LanguageGetFailure(Language? currentLanguage) : super(currentLanguage);
 }

@@ -38,7 +38,7 @@ void main() {
     );
     test(
       '''
-      should return WordBankModel from SharedPreferences
+      should return WordBankModel from Hive
       when there is one in the cache''',
       () async {
         when(() => mockBox.toMap()).thenReturn(
@@ -76,7 +76,7 @@ void main() {
     });
 
     test(
-      'should call SharedPreferences to cache the data',
+      'should call Hive box to cache the data',
       () async {
         when(() => mockBox.putAll(any())).thenAnswer((_) => Future.value());
 
@@ -90,4 +90,7 @@ void main() {
       },
     );
   });
+
+  // TODO: write tests for getLocalCurrentLanguage
+  // TODO: write tests for cacheCurrentLanguage
 }

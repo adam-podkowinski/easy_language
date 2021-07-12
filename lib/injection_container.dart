@@ -59,6 +59,7 @@ Future registerWordBank() async {
   sl.registerFactory(
     () => WordBankBloc(
       getWordBank: sl(),
+      getCurrentLanguage: sl(),
     ),
   );
 

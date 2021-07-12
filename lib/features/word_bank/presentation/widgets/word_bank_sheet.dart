@@ -14,63 +14,54 @@ class WordBankSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final wordBankBloc = sl<WordBankBloc>();
-    return BlocProvider(
-      create: (context) => wordBankBloc,
-      child: Expanded(
-        child: Container(
-          clipBehavior: Clip.hardEdge,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primaryVariant,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(radius),
-              topRight: Radius.circular(radius),
-            ),
+    return Expanded(
+      child: Container(
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primaryVariant,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(radius),
+            topRight: Radius.circular(radius),
           ),
-          child: BlocBuilder<WordBankBloc, WordBankState>(
-            builder: (context, state) {
-              if (state is WordBankInitial) {
-                wordBankBloc.add(const GetWordBankEvent());
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (state is WordBankLoaded) {
-                final dictionariesList =
-                    state.wordBank.dictionaries.entries.toList();
-                return ListView.builder(
-                  itemCount: state.wordBank.dictionaries.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.all(8.w),
-                      child: Column(
-                        children: [
-                          ListTile(
-                            title: Text(
-                              dictionariesList[index].key.isoCode,
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                            subtitle: Text(
-                              'Dolor sit amet, ${index + 1} hello',
-                              style: const TextStyle(
-                                color: Colors.white70,
-                              ),
+        ),
+        child: BlocBuilder<WordBankBloc, WordBankState>(
+          builder: (context, state) {
+            if (state is WordBankLoaded) {
+              final dictionariesList =
+                  state.wordBank.dictionaries[state.currentLanguage] ?? [];
+              return ListView.builder(
+                itemCount: dictionariesList.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: EdgeInsets.all(8.w),
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title: Text(
+                            dictionariesList[index].wordForeign,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          subtitle: Text(
+                            dictionariesList[index].wordTranslation,
+                            style: const TextStyle(
+                              color: Colors.white70,
                             ),
                           ),
-                          Divider(
-                            color: Theme.of(context).colorScheme.onPrimary,
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          ),
+                        ),
+                        Divider(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
         ),
       ),
     );
