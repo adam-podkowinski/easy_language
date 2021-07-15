@@ -24,7 +24,7 @@ class WordBankLocalDataSourceImpl implements WordBankLocalDataSource {
   Future<void> cacheWordBank(WordBankModel wordBankModel) async {
     try {
       await wordBankBox.putAll(wordBankModel.toMap());
-    } on Exception {
+    } catch (_) {
       throw CacheException();
     }
   }
@@ -38,35 +38,33 @@ class WordBankLocalDataSourceImpl implements WordBankLocalDataSource {
         final dbMap = wordBankBox.toMap();
         return Future.value(WordBankModel.fromMap(dbMap));
       }
-    } on Exception {
+    } catch (_) {
       throw CacheException();
     }
   }
 
   @override
-  Future<Language?> getLocalCurrentLanguage() {
+  Future<Language> getLocalCurrentLanguage() {
     try {
       if (wordBankBox.isEmpty) {
         throw CacheException();
       } else {
-        final String? dbLanguageIso = cast(wordBankBox.get(cachedCurrentLanguageId));
+        final String dbLanguageIso = cast(
+          wordBankBox.get(cachedCurrentLanguageId),
+        );
 
-        if (dbLanguageIso != null) {
-          return Future.value(Language.fromIsoCode(dbLanguageIso));
-        } else {
-          return Future.value(null);
-        }
+        return Future.value(Language.fromIsoCode(dbLanguageIso));
       }
-    } on Exception {
+    } catch (_) {
       throw CacheException();
     }
   }
 
   @override
-  Future<void> cacheCurrentLanguage(Language language) async {
+  Future cacheCurrentLanguage(Language language) async {
     try {
       await wordBankBox.put(cachedCurrentLanguageId, language.isoCode);
-    } on Exception {
+    } catch (e) {
       throw CacheException();
     }
   }

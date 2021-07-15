@@ -7,13 +7,13 @@ import 'package:easy_language/features/word_bank/domain/entities/word.dart';
 import 'package:easy_language/features/word_bank/domain/entities/word_bank.dart';
 import 'package:easy_language/features/word_bank/domain/repositories/word_bank_repository.dart';
 import 'package:language_picker/languages.dart';
-import 'package:language_picker/languages.g.dart';
 
 class WordBankRepositoryImpl implements WordBankRepository {
   bool _initialWordBank = true;
   bool _initialCurrentLanguage = true;
   WordBankModel _wordBank = const WordBankModel(dictionaries: {});
   Language? _currentLanguage;
+
   final WordBankLocalDataSource localDataSource;
 
   WordBankRepositoryImpl(this.localDataSource);
@@ -60,15 +60,7 @@ class WordBankRepositoryImpl implements WordBankRepository {
     try {
       if (_initialCurrentLanguage) {
         final dbLang = await localDataSource.getLocalCurrentLanguage();
-        if (dbLang == null) {
-          if (_wordBank.dictionaries.isEmpty) {
-            _currentLanguage = null;
-          } else {
-            _currentLanguage = _wordBank.dictionaries.keys.toList().first;
-          }
-        } else {
-          _currentLanguage = dbLang;
-        }
+        _currentLanguage = dbLang;
         _initialCurrentLanguage = false;
       }
     } on CacheException {

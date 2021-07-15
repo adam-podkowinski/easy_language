@@ -22,7 +22,7 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
         final dbMap = settingsBox.toMap();
         return Future.value(SettingsModel.fromMap(dbMap));
       }
-    } on Exception {
+    } catch (_) {
       throw CacheException();
     }
   }
@@ -31,7 +31,7 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
   Future<void> cacheSettings(SettingsModel settingsToCache) async {
     try {
       await settingsBox.putAll(settingsToCache.toMap());
-    } on Exception {
+    } catch (_) {
       throw CacheException();
     }
   }

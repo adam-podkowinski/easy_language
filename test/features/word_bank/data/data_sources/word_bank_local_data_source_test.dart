@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/features/word_bank/data/data_sources/word_bank_local_data_source.dart';
 import 'package:easy_language/features/word_bank/data/models/word_bank_model.dart';
 import 'package:easy_language/features/word_bank/data/models/word_model.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 import 'package:language_picker/languages.dart';
@@ -91,6 +93,74 @@ void main() {
     );
   });
 
-  // TODO: write tests for getLocalCurrentLanguage
-  // TODO: write tests for cacheCurrentLanguage
+  group(
+    'getLocalCurrentLanguage',
+    () {
+      final tLanguage = Languages.polish;
+      test(
+        'should return a Language when one is cached in box',
+        () async {
+          when(() => mockBox.isEmpty).thenReturn(false);
+          when(() => mockBox.isNotEmpty).thenReturn(true);
+          when(() => mockBox.get(any())).thenReturn(tLanguage.isoCode);
+
+          final result = await dataSource.getLocalCurrentLanguage();
+          expect(result, tLanguage);
+        },
+      );
+
+      test(
+        'should throw a CacheException when there is no cached value',
+        () async {
+          when(() => mockBox.isEmpty).thenReturn(true);
+          when(() => mockBox.isNotEmpty).thenReturn(false);
+          when(() => mockBox.get(any())).thenReturn(null);
+
+          final call = dataSource.getLocalCurrentLanguage;
+          expect(() => call(), throwsA(const TypeMatcher<CacheException>()));
+        },
+      );
+
+      test(
+        '''
+          should throw a CacheException when there is a cached value
+           but its unable to cast it to a valid string''',
+        () async {
+          when(() => mockBox.isEmpty).thenReturn(false);
+          when(() => mockBox.isNotEmpty).thenReturn(true);
+          when(() => mockBox.get(any())).thenReturn(const ButtonStyle());
+
+          final call = dataSource.getLocalCurrentLanguage;
+          expect(() => call(), throwsA(const TypeMatcher<CacheException>()));
+        },
+      );
+
+      test(
+        '''
+          should throw a CacheException when there is a cached value
+           but language is not valid''',
+        () async {
+          when(() => mockBox.isEmpty).thenReturn(false);
+          when(() => mockBox.isNotEmpty).thenReturn(true);
+          when(() => mockBox.get(any())).thenReturn('lol');
+
+          final call = dataSource.getLocalCurrentLanguage;
+          expect(() => call(), throwsA(const TypeMatcher<CacheException>()));
+        },
+      );
+    },
+  );
+
+  group('cacheCurrentLanguage', () {
+    final tLanguage = Languages.polish;
+
+    test(
+      'should cache a language by forwarding a call to a hive box',
+      () async {
+        when(() => mockBox.put(any(), any())).thenAnswer((_) async => Future);
+        await dataSource.cacheCurrentLanguage(tLanguage);
+        verify(() => mockBox.put(cachedCurrentLanguageId, tLanguage.isoCode));
+      },
+    );
+  });
 }
