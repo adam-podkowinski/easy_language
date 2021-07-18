@@ -1,8 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/error/failures.dart';
+import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/word_bank/data/data_sources/word_bank_local_data_source.dart';
 import 'package:easy_language/features/word_bank/data/models/word_bank_model.dart';
-import 'package:easy_language/features/word_bank/domain/entities/word.dart';
 import 'package:easy_language/features/word_bank/domain/entities/word_bank.dart';
 import 'package:easy_language/features/word_bank/domain/repositories/word_bank_repository.dart';
 import 'package:language_picker/languages.dart';
@@ -10,7 +12,7 @@ import 'package:language_picker/languages.dart';
 class WordBankRepositoryImpl implements WordBankRepository {
   bool _initialWordBank = true;
   bool _initialCurrentLanguage = true;
-  WordBankModel _wordBank = const WordBankModel(dictionaries: {});
+  WordBankModel _wordBank = WordBankModel(dictionaries: const {});
   Language? _currentLanguage;
 
   final WordBankLocalDataSource localDataSource;
@@ -36,7 +38,9 @@ class WordBankRepositoryImpl implements WordBankRepository {
   }) async {
     try {
       await _ensureWordBankInitialized();
-      _wordBank.dictionaries[language] = initialWords ?? [];
+      if (_wordBank.dictionaries[language] == null) {
+        _wordBank.dictionaries[language] = initialWords ?? [];
+      }
 
       await localDataSource.cacheWordBank(_wordBank);
 

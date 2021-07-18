@@ -1,4 +1,4 @@
-import 'package:easy_language/features/word_bank/presentation/manager/word_bank_bloc.dart';
+import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,6 +13,7 @@ class WordBankSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final state = context.watch<WordBankProvider>();
     return Expanded(
       child: Container(
         clipBehavior: Clip.hardEdge,
@@ -23,9 +24,9 @@ class WordBankSheet extends StatelessWidget {
             topRight: Radius.circular(radius),
           ),
         ),
-        child: BlocBuilder<WordBankBloc, WordBankState>(
-          builder: (context, state) {
-            if (state is WordBankLoaded) {
+        child: Builder(
+          builder: (context) {
+            if (!state.loading) {
               final dictionariesList =
                   state.wordBank.dictionaries[state.currentLanguage] ?? [];
               return ListView.builder(

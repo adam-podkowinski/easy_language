@@ -1,9 +1,8 @@
 import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
+import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/word_bank/data/models/word_bank_model.dart';
-import 'package:easy_language/features/word_bank/data/models/word_model.dart';
-import 'package:easy_language/features/word_bank/domain/entities/word.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:language_picker/languages.dart';
 
@@ -12,8 +11,8 @@ import '../../../../fixtures/fixture_reader.dart';
 void main() {
   final tWordBank = WordBankModel(dictionaries: {
     Languages.polish: const [
-      WordModel(wordForeign: 'gracias', wordTranslation: 'hello'),
-      WordModel(wordForeign: 'dzień', wordTranslation: 'day')
+      Word(wordForeign: 'gracias', wordTranslation: 'hello'),
+      Word(wordForeign: 'dzień', wordTranslation: 'day')
     ],
   });
 

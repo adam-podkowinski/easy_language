@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/features/settings/data/data_sources/settings_local_data_source.dart';
 import 'package:easy_language/features/settings/data/models/settings_model.dart';

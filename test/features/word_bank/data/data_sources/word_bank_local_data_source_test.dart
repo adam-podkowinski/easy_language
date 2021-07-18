@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/exceptions.dart';
+import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/word_bank/data/data_sources/word_bank_local_data_source.dart';
 import 'package:easy_language/features/word_bank/data/models/word_bank_model.dart';
-import 'package:easy_language/features/word_bank/data/models/word_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
@@ -73,7 +73,7 @@ void main() {
   group('cacheWordBank', () {
     final tWordBankModel = WordBankModel(dictionaries: {
       Languages.polish: const [
-        WordModel(wordForeign: 'gracias', wordTranslation: 'hello')
+        Word(wordForeign: 'gracias', wordTranslation: 'hello')
       ],
     });
 

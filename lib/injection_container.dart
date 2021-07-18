@@ -15,7 +15,7 @@ import 'package:easy_language/features/word_bank/domain/use_cases/change_current
 import 'package:easy_language/features/word_bank/domain/use_cases/edit_word_list.dart';
 import 'package:easy_language/features/word_bank/domain/use_cases/get_current_language.dart';
 import 'package:easy_language/features/word_bank/domain/use_cases/get_word_bank.dart';
-import 'package:easy_language/features/word_bank/presentation/manager/word_bank_bloc.dart';
+import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
@@ -55,12 +55,12 @@ Future registerSettings() async {
 }
 
 Future registerWordBank() async {
-  // bloc
   sl.registerFactory(
-    () => WordBankBloc(
+    () => WordBankProvider(
       getWordBank: sl(),
       getCurrentLanguage: sl(),
       editWordList: sl(),
+      addLanguage: sl(),
     ),
   );
 

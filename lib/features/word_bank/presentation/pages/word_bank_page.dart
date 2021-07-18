@@ -1,5 +1,6 @@
 import 'package:easy_language/core/presentation/drawer.dart';
-import 'package:easy_language/features/word_bank/presentation/manager/word_bank_bloc.dart';
+import 'package:easy_language/core/presentation/show_error.dart';
+import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_controls.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_sheet.dart';
 import 'package:easy_language/injection_container.dart';
@@ -7,6 +8,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:language_picker/languages.dart';
+import 'package:provider/provider.dart';
 
 class WordBankPage extends StatelessWidget {
   const WordBankPage({Key? key}) : super(key: key);
@@ -15,30 +19,31 @@ class WordBankPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final radius = 35.r;
     return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 75.h,
-          title: const Text('Word bank'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {},
-            ),
-          ],
-        ),
-        drawer: const EasyLanguageDrawer(),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 11.w),
-          child: BlocProvider(
-            create: (context) {
-              final bloc = sl<WordBankBloc>();
-              bloc.add(const GetWordBankEvent());
-              return bloc;
-            },
+      child: ChangeNotifierProvider<WordBankProvider>(
+        create: (context) {
+          final provider = sl<WordBankProvider>();
+          provider.initWordBank();
+          return provider;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 75.h,
+            title: const Text('Word bank'),
+            actions: [
+              Builder(
+                builder: (context) {
+                  return _addWordWidget(context);
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: () {},
+              ),
+            ],
+          ),
+          drawer: const EasyLanguageDrawer(),
+          body: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 11.w),
             child: Column(
               children: [
                 Center(child: WordBankControls(radius: radius)),
@@ -49,6 +54,31 @@ class WordBankPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _addWordWidget(BuildContext context) {
+    final state = context.watch<WordBankProvider>();
+    Fluttertoast.cancel();
+    Fluttertoast.showToast(
+      msg: 'Error while changing settings ${state.wordBankFailure.toString()}',
+      backgroundColor: Colors.deepOrange,
+      textColor: Colors.white,
+    );
+    return IconButton(
+      icon: const Icon(Icons.add),
+      onPressed: () {
+        if (state.currentLanguageFailure != null) {
+          showError(context, state.currentLanguageFailure.toString());
+        }
+        if (state.wordBankFailure != null) {
+          showError(context, state.wordBankFailure.toString());
+        }
+
+        state.addLanguageToWordBank(
+          Languages.yoruba,
+        );
+      },
     );
   }
 }

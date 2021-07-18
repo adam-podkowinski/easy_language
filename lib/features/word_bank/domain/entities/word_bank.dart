@@ -1,4 +1,4 @@
-import 'package:easy_language/features/word_bank/domain/entities/word.dart';
+import 'package:easy_language/core/word.dart';
 import 'package:equatable/equatable.dart';
 import 'package:language_picker/languages.dart';
 

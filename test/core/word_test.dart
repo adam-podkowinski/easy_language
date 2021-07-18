@@ -1,14 +1,13 @@
 import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
-import 'package:easy_language/features/word_bank/data/models/word_model.dart';
-import 'package:easy_language/features/word_bank/domain/entities/word.dart';
+import 'package:easy_language/core/word.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../../fixtures/fixture_reader.dart';
+import '../fixtures/fixture_reader.dart';
 
 void main() {
-  const tWordModel = WordModel(
+  const tWord = Word(
     wordForeign: 'gracias',
     wordTranslation: 'hello',
   );
@@ -16,7 +15,7 @@ void main() {
   test(
     'should be a subclass of Word entity',
     () async {
-      expect(tWordModel, isA<Word>());
+      expect(tWord, isA<Word>());
     },
   );
 
@@ -30,8 +29,8 @@ void main() {
           ),
         );
 
-        final result = WordModel.fromMap(jsonMap);
-        expect(result, tWordModel);
+        final result = Word.fromMap(jsonMap);
+        expect(result, tWord);
       },
     );
   });
@@ -44,11 +43,11 @@ void main() {
           Word.wordForeignId: 'szkola',
         };
 
-        final tNewWordModel = tWordModel.copyWithMap(tMap);
+        final tNewWord = tWord.copyWithMap(tMap);
 
         expect(
-          tNewWordModel,
-          const WordModel(wordForeign: 'szkola', wordTranslation: 'hello'),
+          tNewWord,
+          const Word(wordForeign: 'szkola', wordTranslation: 'hello'),
         );
 
         const Map<String, String> tMapSecond = {
@@ -56,10 +55,10 @@ void main() {
           Word.wordTranslationId: 'school',
         };
 
-        final tNewWordModelSecond = tWordModel.copyWithMap(tMapSecond);
+        final tNewWordSecond = tWord.copyWithMap(tMapSecond);
         expect(
-          tNewWordModelSecond,
-          const WordModel(wordForeign: 'szkola', wordTranslation: 'school'),
+          tNewWordSecond,
+          const Word(wordForeign: 'szkola', wordTranslation: 'school'),
         );
       },
     );
@@ -74,7 +73,7 @@ void main() {
           Word.wordTranslationId: 'hello',
         };
 
-        final newMap = tWordModel.toMap();
+        final newMap = tWord.toMap();
 
         expect(newMap, tValidMap);
       },
@@ -93,7 +92,7 @@ void main() {
           Word.wordTranslationId: 'hello',
         };
 
-        final tNewMap = WordModel.wordToMap(tWordEntity);
+        final tNewMap = Word.wordToMap(tWordEntity);
 
         expect(tNewMap, tWordMap);
       },
