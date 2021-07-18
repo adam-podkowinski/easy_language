@@ -30,7 +30,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
 
       localDataSource.cacheSettings(_settings);
       return Right(_settings);
-    } on CacheException {
+    } catch (_) {
       return Left(SettingsCacheFailure(_settings));
     }
   }
@@ -43,7 +43,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
         _initial = false;
       }
       return Right(_settings);
-    } on CacheException {
+    } catch (_) {
       _initial = false;
       return Left(SettingsGetFailure(_settings));
     }

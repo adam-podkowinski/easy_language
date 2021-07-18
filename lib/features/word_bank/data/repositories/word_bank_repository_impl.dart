@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/features/word_bank/data/data_sources/word_bank_local_data_source.dart';
 import 'package:easy_language/features/word_bank/data/models/word_bank_model.dart';
@@ -34,25 +33,82 @@ class WordBankRepositoryImpl implements WordBankRepository {
   Future<Either<Failure, WordBank>> addLanguageToWordBank(
     Language language, {
     List<Word>? initialWords,
-  }) {
-    // TODO: implement addLanguageToWordBank
-    throw UnimplementedError();
+  }) async {
+    try {
+      await _ensureWordBankInitialized();
+      _wordBank.dictionaries[language] = initialWords ?? [];
+
+      await localDataSource.cacheWordBank(_wordBank);
+
+      return Right(_wordBank);
+    } catch (_) {
+      return Left(WordBankCacheFailure(_wordBank));
+    }
   }
 
   @override
-  Future<Either<Failure, Language>> changeCurrentLanguage(Language language) {
-    // TODO: implement changeCurrentLanguage
-    throw UnimplementedError();
+  Future<Either<Failure, Language>> changeCurrentLanguage(
+      Language language) async {
+    try {
+      await _ensureCurrentLanguageInitialized();
+
+      _currentLanguage = language;
+
+      await localDataSource.cacheCurrentLanguage(_currentLanguage!);
+    } catch (_) {
+      // we are sure current language is not null because we asign it previously
+      // with a non-nullable function argument
+      // and _ensureCurrentLanguageInitialized can't throw an error
+      return Left(LanguageCacheFailure(_currentLanguage!));
+    }
+    return Right(_currentLanguage!);
   }
 
+  /// Edit word list of a word bank
+  /// You can change a language and a word list content
   @override
   Future<Either<Failure, WordBank>> editWordsList({
     required Language languageFrom,
     Language? languageTo,
     List<Word>? newWordList,
-  }) {
-    // TODO: implement editWordsList
-    throw UnimplementedError();
+  }) async {
+    try {
+      await _ensureWordBankInitialized();
+
+      // Make sure a word list that we want to change exists
+      if (_wordBank.dictionaries[languageFrom] == null) {
+        return Left(WordBankCacheFailure(_wordBank));
+      }
+
+      // Change words list content
+      if (newWordList != null) {
+        _wordBank.dictionaries[languageFrom] = newWordList;
+      }
+
+      // Change language of a word list
+      if (languageTo != null) {
+        // If new language place in dictionary is null we have to create it
+        if (_wordBank.dictionaries[languageTo] == null) {
+          _wordBank.dictionaries[languageTo] =
+              _wordBank.dictionaries[languageFrom]!;
+        }
+
+        // Otherwise we just append it (so old data from langaugeTo word list
+        // will not be erased
+        else {
+          _wordBank.dictionaries[languageTo]!.addAll(
+            _wordBank.dictionaries[languageFrom]!,
+          );
+        }
+        _wordBank.dictionaries[languageFrom]!.clear();
+      }
+
+      await localDataSource.cacheWordBank(_wordBank);
+    } catch (_) {
+      return Left(WordBankCacheFailure(_wordBank));
+    }
+
+    return Right(_wordBank);
   }
 
   @override
@@ -63,7 +119,7 @@ class WordBankRepositoryImpl implements WordBankRepository {
         _currentLanguage = dbLang;
         _initialCurrentLanguage = false;
       }
-    } on CacheException {
+    } catch (_) {
       _initialCurrentLanguage = false;
       return Left(LanguageGetFailure(_currentLanguage));
     }
@@ -78,7 +134,7 @@ class WordBankRepositoryImpl implements WordBankRepository {
         _wordBank = await localDataSource.getLocalWordBank();
         _initialWordBank = false;
       }
-    } on CacheException {
+    } catch (_) {
       _initialWordBank = false;
       return Left(WordBankGetFailure(_wordBank));
     }

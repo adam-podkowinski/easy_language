@@ -64,7 +64,7 @@ class WordBankLocalDataSourceImpl implements WordBankLocalDataSource {
   Future cacheCurrentLanguage(Language language) async {
     try {
       await wordBankBox.put(cachedCurrentLanguageId, language.isoCode);
-    } catch (e) {
+    } catch (_) {
       throw CacheException();
     }
   }

@@ -60,6 +60,7 @@ Future registerWordBank() async {
     () => WordBankBloc(
       getWordBank: sl(),
       getCurrentLanguage: sl(),
+      editWordList: sl(),
     ),
   );
 

@@ -24,6 +24,10 @@ class WordBankLoaded extends WordBankState {
   });
 
   @override
-  List<Object?> get props =>
-      [wordBank, currentLanguage, wordBankFailure, languageFailure];
+  List<Object?> get props => [
+        wordBank,
+        currentLanguage,
+        wordBankFailure,
+        languageFailure,
+      ];
 }
