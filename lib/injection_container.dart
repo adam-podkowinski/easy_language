@@ -23,7 +23,7 @@ import 'package:path_provider/path_provider.dart';
 final sl = GetIt.instance;
 
 Future registerSettings() async {
-  //provider
+  // Provider
   sl.registerLazySingleton(
     () => SettingsProvider(
       getSettingsUseCase: sl(),
@@ -31,16 +31,16 @@ Future registerSettings() async {
     ),
   );
 
-  // use cases
+  // Use cases
   sl.registerLazySingleton(() => GetSettings(sl()));
   sl.registerLazySingleton(() => ChangeSettings(sl()));
 
-  // repositories
+  // Repositories
   sl.registerLazySingleton<SettingsRepository>(
     () => SettingsRepositoryImpl(localDataSource: sl()),
   );
 
-  // data sources
+  // Data sources
   final settingsBox = await Hive.openBox(cachedSettingsId);
   sl.registerLazySingleton<SettingsLocalDataSource>(
     () => SettingsLocalDataSourceImpl(settingsBox: settingsBox),
@@ -48,6 +48,7 @@ Future registerSettings() async {
 }
 
 Future registerWordBank() async {
+  // Provider
   sl.registerFactory(
     () => WordBankProvider(
       getWordBankUseCase: sl(),
@@ -58,21 +59,21 @@ Future registerWordBank() async {
     ),
   );
 
-  // use cases
+  // Use cases
   sl.registerLazySingleton(() => GetWordBank(sl()));
   sl.registerLazySingleton(() => AddLanguageToWordBank(sl()));
   sl.registerLazySingleton(() => ChangeCurrentLanguage(sl()));
   sl.registerLazySingleton(() => EditWordList(sl()));
   sl.registerLazySingleton(() => GetCurrentLanguage(sl()));
 
-  // repositories
+  // Repositories
   sl.registerLazySingleton<WordBankRepository>(
     () => WordBankRepositoryImpl(
       sl(),
     ),
   );
 
-  // data sources
+  // Data sources
   final wordBankBox = await Hive.openBox(cachedWordBankId);
   sl.registerLazySingleton<WordBankLocalDataSource>(
     () => WordBankLocalDataSourceImpl(wordBankBox: wordBankBox),
@@ -80,8 +81,10 @@ Future registerWordBank() async {
 }
 
 Future init() async {
+  // Initial
   final Directory dir = await getApplicationDocumentsDirectory();
   Hive.init(dir.path);
+
   // Features
   await registerSettings();
   await registerWordBank();
