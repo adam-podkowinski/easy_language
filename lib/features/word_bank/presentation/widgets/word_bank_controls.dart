@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
 import 'package:flutter/material.dart';
@@ -62,10 +61,14 @@ class WordBankControls extends StatelessWidget {
         ),
       );
     } else {
-      return AutoSizeText(
-        'Loading...',
-        style: Theme.of(context).textTheme.subtitle1,
-        maxLines: 1,
+      return DropdownButton(
+        items: const [],
+        underline: Divider(
+          height: 1.w,
+          color: Theme.of(context).accentColor,
+        ),
+        hint: const Text('Loading...'),
+        elevation: 0,
       );
     }
   }

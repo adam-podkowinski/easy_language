@@ -103,7 +103,8 @@ void main() {
         () async {
           when(() => mockBox.isEmpty).thenReturn(false);
           when(() => mockBox.isNotEmpty).thenReturn(true);
-          when(() => mockBox.get(cachedCurrentLanguageId)).thenReturn(tLanguage.isoCode);
+          when(() => mockBox.get(cachedCurrentLanguageId))
+              .thenReturn(tLanguage.isoCode);
 
           final result = await dataSource.getLocalCurrentLanguage();
           expect(result, tLanguage);
