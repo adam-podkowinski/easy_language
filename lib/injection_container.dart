@@ -6,7 +6,7 @@ import 'package:easy_language/features/settings/data/repositories/settings_repos
 import 'package:easy_language/features/settings/domain/repositories/settings_repository.dart';
 import 'package:easy_language/features/settings/domain/use_cases/change_settings.dart';
 import 'package:easy_language/features/settings/domain/use_cases/get_settings.dart';
-import 'package:easy_language/features/settings/presentation/manager/settings_bloc.dart';
+import 'package:easy_language/features/settings/presentation/manager/settings_provider.dart';
 import 'package:easy_language/features/word_bank/data/data_sources/word_bank_local_data_source.dart';
 import 'package:easy_language/features/word_bank/data/repositories/word_bank_repository_impl.dart';
 import 'package:easy_language/features/word_bank/domain/repositories/word_bank_repository.dart';
@@ -23,18 +23,11 @@ import 'package:path_provider/path_provider.dart';
 final sl = GetIt.instance;
 
 Future registerSettings() async {
-  // bloc
-  sl.registerFactory(
-    () => SettingsBloc(
-      getSettings: sl(),
-      changeSettings: sl(),
-    ),
-  );
-
+  //provider
   sl.registerLazySingleton(
-    () => SingletonSettingsBloc(
-      getSettings: sl(),
-      changeSettings: sl(),
+    () => SettingsProvider(
+      getSettingsUseCase: sl(),
+      changeSettingsUseCase: sl(),
     ),
   );
 
@@ -57,10 +50,10 @@ Future registerSettings() async {
 Future registerWordBank() async {
   sl.registerFactory(
     () => WordBankProvider(
-      getWordBank: sl(),
-      getCurrentLanguage: sl(),
-      editWordList: sl(),
-      addLanguage: sl(),
+      getWordBankUseCase: sl(),
+      getCurrentLanguageUseCase: sl(),
+      editWordListUseCase: sl(),
+      addLanguageUseCase: sl(),
     ),
   );
 

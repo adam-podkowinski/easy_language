@@ -1,14 +1,14 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
-import 'package:easy_language/features/settings/presentation/manager/settings_bloc.dart';
+import 'package:easy_language/features/settings/presentation/manager/settings_provider.dart';
 import 'package:easy_language/features/settings/presentation/widgets/theme_picker.dart';
-import 'package:easy_language/injection_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class IntroductionPage extends StatelessWidget {
   static const svgPrefix = 'assets/svgs';
@@ -17,6 +17,7 @@ class IntroductionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final state = context.watch<SettingsProvider>();
     return SafeArea(
       child: Scaffold(
         body: IntroductionScreen(
@@ -24,11 +25,9 @@ class IntroductionPage extends StatelessWidget {
           onDone: () {
             Navigator.of(context).pushReplacementNamed(wordBankPageId).then(
                   (_) => {
-                    sl<SingletonSettingsBloc>().add(
-                      const ChangeSettingsEvent(
-                        changedSettings: {Settings.isStartupId: false},
-                      ),
-                    ),
+                    state.changeSettings({
+                      Settings.isStartupId: false,
+                    }),
                   },
                 );
           },

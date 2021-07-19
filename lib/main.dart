@@ -1,12 +1,12 @@
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/main_page.dart';
 import 'package:easy_language/features/login/presentation/pages/loading_page.dart';
-import 'package:easy_language/features/settings/presentation/manager/settings_bloc.dart';
+import 'package:easy_language/features/settings/presentation/manager/settings_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_language/injection_container.dart' as di;
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,26 +17,26 @@ Future<void> main() async {
 class EasyLanguage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final settingsBloc = di.sl<SingletonSettingsBloc>();
     return ScreenUtilInit(
       designSize: screenSize,
-      builder: () => BlocProvider(
-        create: (context) => settingsBloc,
-        child: BlocBuilder<SingletonSettingsBloc, SettingsState>(
-          builder: (context, state) {
-            if (state is SettingsInitial) {
-              settingsBloc.add(
-                const GetSettingsEvent(),
-              );
+      builder: () => ChangeNotifierProvider(
+        create: (context) {
+          final settings = di.sl<SettingsProvider>();
+          settings.initSettings();
+          return settings;
+        },
+        child: Builder(
+          builder: (context) {
+            final state = context.watch<SettingsProvider>();
+            if (state.loading) {
               return const LoadingApp();
-            } else if (state is SettingsInitialized) {
+            } else {
               return MainApp(
                 state.settings.themeMode,
                 showIntroduction: state.settings.isStartup,
-                failure: state.failure,
+                failure: state.settingsFailure,
               );
             }
-            return const MainApp(null, showIntroduction: true);
           },
         ),
       ),

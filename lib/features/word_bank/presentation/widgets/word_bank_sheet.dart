@@ -1,7 +1,7 @@
 import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class WordBankSheet extends StatelessWidget {
   const WordBankSheet({

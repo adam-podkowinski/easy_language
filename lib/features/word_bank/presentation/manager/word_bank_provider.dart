@@ -11,10 +11,10 @@ import 'package:language_picker/languages.dart';
 class WordBankProvider extends ChangeNotifier {
   bool loading = true;
 
-  final GetWordBank getWordBank;
-  final GetCurrentLanguage getCurrentLanguage;
-  final EditWordList editWordList;
-  final AddLanguageToWordBank addLanguage;
+  final GetWordBank getWordBankUseCase;
+  final GetCurrentLanguage getCurrentLanguageUseCase;
+  final EditWordList editWordListUseCase;
+  final AddLanguageToWordBank addLanguageUseCase;
 
   Language? currentLanguage;
   WordBank wordBank = const WordBank(dictionaries: {});
@@ -23,10 +23,10 @@ class WordBankProvider extends ChangeNotifier {
   LanguageFailure? currentLanguageFailure;
 
   WordBankProvider({
-    required this.getWordBank,
-    required this.getCurrentLanguage,
-    required this.editWordList,
-    required this.addLanguage,
+    required this.getWordBankUseCase,
+    required this.getCurrentLanguageUseCase,
+    required this.editWordListUseCase,
+    required this.addLanguageUseCase,
   });
 
   void _prepareMethod() {
@@ -35,11 +35,11 @@ class WordBankProvider extends ChangeNotifier {
     currentLanguageFailure = null;
   }
 
-  Future<WordBank> initWordBank() async {
+  Future initWordBank() async {
     _prepareMethod();
 
-    final wordBankEither = await getWordBank(NoParams());
-    final currentLanguageEither = await getCurrentLanguage(NoParams());
+    final wordBankEither = await getWordBankUseCase(NoParams());
+    final currentLanguageEither = await getCurrentLanguageUseCase(NoParams());
 
     wordBankEither.fold(
       (l) {
@@ -60,13 +60,12 @@ class WordBankProvider extends ChangeNotifier {
 
     loading = false;
     notifyListeners();
-    return wordBank;
   }
 
-  Future<WordBank> addLanguageToWordBank(Language language) async {
+  Future addLanguageToWordBank(Language language) async {
     _prepareMethod();
 
-    final wordBankEither = await addLanguage(
+    final wordBankEither = await addLanguageUseCase(
       AddLanguageToWordBankParams(language),
     );
 
@@ -82,7 +81,7 @@ class WordBankProvider extends ChangeNotifier {
       },
     );
 
-    final currentLanguageEither = await getCurrentLanguage(NoParams());
+    final currentLanguageEither = await getCurrentLanguageUseCase(NoParams());
     currentLanguageEither.fold((l) {
       if (l is LanguageFailure) {
         currentLanguage = l.currentLanguage;
@@ -92,6 +91,5 @@ class WordBankProvider extends ChangeNotifier {
 
     loading = false;
     notifyListeners();
-    return wordBank;
   }
 }
