@@ -43,7 +43,7 @@ void main() {
       should return WordBankModel from Hive
       when there is one in the cache''',
       () async {
-        when(() => mockBox.toMap()).thenReturn(
+        when(() => mockBox.get(cachedWordBankId)).thenReturn(
           cast(jsonDecode(fixture('word_bank.json'))),
         );
         when(() => mockBox.isEmpty).thenReturn(false);
@@ -51,7 +51,7 @@ void main() {
 
         final result = await dataSource.getLocalWordBank();
 
-        verify(() => mockBox.toMap());
+        verify(() => mockBox.get(cachedWordBankId));
         expect(result, equals(tWordBankModel));
       },
     );
@@ -60,6 +60,7 @@ void main() {
       'should throw a CacheException when there is not a cached value',
       () async {
         when(() => mockBox.toMap()).thenReturn({});
+        when(() => mockBox.get(any())).thenReturn(null);
         when(() => mockBox.isEmpty).thenReturn(true);
         when(() => mockBox.isNotEmpty).thenReturn(false);
 
@@ -80,14 +81,14 @@ void main() {
     test(
       'should call Hive box to cache the data',
       () async {
-        when(() => mockBox.putAll(any())).thenAnswer((_) => Future.value());
+        when(() => mockBox.put(any(), any())).thenAnswer((_) => Future.value());
 
         await dataSource.cacheWordBank(tWordBankModel);
 
         final expectedMap = tWordBankModel.toMap();
 
         verify(
-          () => mockBox.putAll(expectedMap),
+          () => mockBox.put(cachedWordBankId, expectedMap),
         );
       },
     );
@@ -102,7 +103,7 @@ void main() {
         () async {
           when(() => mockBox.isEmpty).thenReturn(false);
           when(() => mockBox.isNotEmpty).thenReturn(true);
-          when(() => mockBox.get(any())).thenReturn(tLanguage.isoCode);
+          when(() => mockBox.get(cachedCurrentLanguageId)).thenReturn(tLanguage.isoCode);
 
           final result = await dataSource.getLocalCurrentLanguage();
           expect(result, tLanguage);

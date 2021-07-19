@@ -26,7 +26,7 @@ class WordBankLocalDataSourceImpl implements WordBankLocalDataSource {
     try {
       await wordBankBox.put(cachedWordBankId, wordBankModel.toMap());
     } catch (e) {
-      Logger().log(Level.error, e);
+      Logger().e(e);
       throw CacheException();
     }
   }
@@ -41,7 +41,7 @@ class WordBankLocalDataSourceImpl implements WordBankLocalDataSource {
         return WordBankModel.fromMap(cast(dbMap));
       }
     } catch (e) {
-      Logger().log(Level.error, e);
+      Logger().e(e);
       throw CacheException();
     }
   }
@@ -59,7 +59,7 @@ class WordBankLocalDataSourceImpl implements WordBankLocalDataSource {
         return Future.value(Language.fromIsoCode(dbLanguageIso));
       }
     } catch (e) {
-      Logger().log(Level.error, e);
+      Logger().e(e);
       throw CacheException();
     }
   }
@@ -69,7 +69,7 @@ class WordBankLocalDataSourceImpl implements WordBankLocalDataSource {
     try {
       await wordBankBox.put(cachedCurrentLanguageId, language.isoCode);
     } catch (e) {
-      Logger().log(Level.error, e);
+      Logger().e(e);
       throw CacheException();
     }
   }
