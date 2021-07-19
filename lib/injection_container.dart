@@ -54,6 +54,7 @@ Future registerWordBank() async {
       getCurrentLanguageUseCase: sl(),
       editWordListUseCase: sl(),
       addLanguageUseCase: sl(),
+      changeCurrentLanguageUseCase: sl(),
     ),
   );
 

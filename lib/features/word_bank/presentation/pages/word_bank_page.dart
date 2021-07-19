@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/presentation/drawer.dart';
 import 'package:easy_language/core/presentation/show_error.dart';
+import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_controls.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_sheet.dart';
@@ -67,7 +70,24 @@ class WordBankPage extends StatelessWidget {
     return IconButton(
       icon: const Icon(Icons.add),
       onPressed: () {
-        state.addLanguageToWordBank(Languages.azerbaijani);
+        if (state.wordBank.dictionaries.isEmpty) {
+          // TODO: show a language picker
+          final l = Languages.defaultLanguages[
+              Random().nextInt(Languages.defaultLanguages.length)];
+
+          state.addLanguageFromName(
+            l.name,
+          );
+        } else {
+          // TODO: show word creation picker
+          state.addWordToCurrentLanguage(
+            Word(
+                wordForeign:
+                    'dziena${state.wordBank.dictionaries[state.currentLanguage]?.length}',
+                wordTranslation:
+                    'thanks${state.wordBank.dictionaries[state.currentLanguage]?.length}1'),
+          );
+        }
       },
     );
   }

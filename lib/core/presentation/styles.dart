@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class CustomTheme {
   static const primary = Color(0xFF1889f8);
   static const primaryVariant = Color(0xff1863f8);
-  static const secondary = Color(0xFFf88718);
+  static const secondary = Color(0xffe58f3b);
   static const secondaryVariant = Color(0xfff85f18);
   static const surface = primary;
   static const error = Colors.deepOrange;
@@ -23,9 +23,14 @@ class CustomTheme {
   static const backgroundDark = Color(0xFF191919);
   static const onBackgroundDark = Colors.white;
 
-  static TextTheme buildTextTheme(BuildContext context) {
+  static TextTheme buildTextTheme(BuildContext context, Color onBackground) {
     return TextTheme(
-      headline6: const TextStyle(),
+      headline6: TextStyle(
+        fontSize: 24.sp,
+        fontWeight: FontWeight.w900,
+        color: onBackground,
+        fontFamily: 'Mulish',
+      ),
       headline5: TextStyle(
         fontSize: 26.sp,
         fontWeight: FontWeight.w900,
@@ -46,7 +51,7 @@ class CustomTheme {
   }
 
   static ThemeData buildLight(BuildContext context) {
-    final textTheme = buildTextTheme(context);
+    final textTheme = buildTextTheme(context, onBackgroundLight);
 
     return ThemeData.from(
       colorScheme: const ColorScheme(
@@ -71,7 +76,7 @@ class CustomTheme {
   }
 
   static ThemeData buildDark(BuildContext context) {
-    final textTheme = buildTextTheme(context);
+    final textTheme = buildTextTheme(context, onBackgroundDark);
 
     return ThemeData.from(
       colorScheme: const ColorScheme(

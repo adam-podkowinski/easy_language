@@ -1,7 +1,11 @@
+import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/use_cases/use_case.dart';
+import 'package:easy_language/core/util/language_from_name.dart';
+import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/word_bank/domain/entities/word_bank.dart';
 import 'package:easy_language/features/word_bank/domain/use_cases/add_language_to_word_bank.dart';
+import 'package:easy_language/features/word_bank/domain/use_cases/change_current_language.dart';
 import 'package:easy_language/features/word_bank/domain/use_cases/edit_word_list.dart';
 import 'package:easy_language/features/word_bank/domain/use_cases/get_current_language.dart';
 import 'package:easy_language/features/word_bank/domain/use_cases/get_word_bank.dart';
@@ -15,6 +19,7 @@ class WordBankProvider extends ChangeNotifier {
   final GetCurrentLanguage getCurrentLanguageUseCase;
   final EditWordList editWordListUseCase;
   final AddLanguageToWordBank addLanguageUseCase;
+  final ChangeCurrentLanguage changeCurrentLanguageUseCase;
 
   Language? currentLanguage;
   WordBank wordBank = const WordBank(dictionaries: {});
@@ -27,12 +32,18 @@ class WordBankProvider extends ChangeNotifier {
     required this.getCurrentLanguageUseCase,
     required this.editWordListUseCase,
     required this.addLanguageUseCase,
+    required this.changeCurrentLanguageUseCase,
   });
 
   void _prepareMethod() {
     loading = true;
     wordBankFailure = null;
     currentLanguageFailure = null;
+  }
+
+  void _finishMethod() {
+    loading = false;
+    notifyListeners();
   }
 
   Future initWordBank() async {
@@ -51,19 +62,33 @@ class WordBankProvider extends ChangeNotifier {
       (r) => wordBank = r,
     );
 
-    currentLanguageEither.fold((l) {
-      if (l is LanguageFailure) {
-        currentLanguage = l.currentLanguage;
-        currentLanguageFailure = l;
-      }
-    }, (r) => currentLanguage = r);
+    currentLanguageEither.fold(
+      (l) {
+        if (l is LanguageFailure) {
+          currentLanguage = l.currentLanguage;
+          currentLanguageFailure = l;
+        }
+      },
+      (r) => currentLanguage = r,
+    );
 
-    loading = false;
-    notifyListeners();
+    _finishMethod();
   }
 
-  Future addLanguageToWordBank(Language language) async {
+  Future addLanguageFromName(String? languageName) async {
     _prepareMethod();
+
+    if (languageName == null) {
+      _finishMethod();
+      throw UnexpectedException();
+    }
+
+    final language = languageFromName(languageName);
+
+    if (language == null) {
+      _finishMethod();
+      throw UnexpectedException();
+    }
 
     final wordBankEither = await addLanguageUseCase(
       AddLanguageToWordBankParams(language),
@@ -76,20 +101,81 @@ class WordBankProvider extends ChangeNotifier {
           wordBank = l.wordBank;
         }
       },
-      (r) {
-        wordBank = r;
-      },
+      (r) => wordBank = r,
     );
 
     final currentLanguageEither = await getCurrentLanguageUseCase(NoParams());
-    currentLanguageEither.fold((l) {
-      if (l is LanguageFailure) {
-        currentLanguage = l.currentLanguage;
-        currentLanguageFailure = l;
-      }
-    }, (r) => currentLanguage = r);
+    currentLanguageEither.fold(
+      (l) {
+        if (l is LanguageFailure) {
+          currentLanguage = l.currentLanguage;
+          currentLanguageFailure = l;
+        }
+      },
+      (r) => currentLanguage = r,
+    );
 
-    loading = false;
-    notifyListeners();
+    _finishMethod();
+  }
+
+  Future addWordToCurrentLanguage(Word wordToAdd) async {
+    _prepareMethod();
+
+    if (currentLanguage != null) {
+      if (wordBank.dictionaries[currentLanguage] != null) {
+        final wordBankEither = await editWordListUseCase(
+          EditWordListParams(
+            languageFrom: currentLanguage!,
+            newWordList: wordBank.dictionaries[currentLanguage]!
+              ..insert(0, wordToAdd),
+          ),
+        );
+
+        wordBankEither.fold(
+          (l) {
+            if (l is WordBankFailure) {
+              wordBankFailure = l;
+              wordBank = l.wordBank;
+            }
+          },
+          (r) => wordBank = r,
+        );
+      }
+    }
+
+    _finishMethod();
+  }
+
+  Future changeCurrentLanguageFromName(String? languageName) async {
+    _prepareMethod();
+
+    if (languageName == null) {
+      _finishMethod();
+      throw UnexpectedException();
+    }
+
+    final language = languageFromName(languageName);
+
+    if (language == null) {
+      _finishMethod();
+      throw UnexpectedException();
+    }
+
+    if (wordBank.dictionaries[language] != null) {
+      final currentLanguageEither = await changeCurrentLanguageUseCase(
+        ChangeCurrentLanguageParams(language: language),
+      );
+      currentLanguageEither.fold(
+        (l) {
+          if (l is LanguageFailure) {
+            currentLanguage = l.currentLanguage;
+            currentLanguageFailure = l;
+          }
+        },
+        (r) => currentLanguage = r,
+      );
+    }
+
+    _finishMethod();
   }
 }
