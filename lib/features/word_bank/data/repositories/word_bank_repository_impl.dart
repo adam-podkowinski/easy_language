@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables
 
 import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/error/failures.dart';
@@ -12,7 +13,7 @@ import 'package:language_picker/languages.dart';
 class WordBankRepositoryImpl implements WordBankRepository {
   bool _initialWordBank = true;
   bool _initialCurrentLanguage = true;
-  WordBankModel _wordBank = WordBankModel(dictionaries: const {});
+  WordBankModel _wordBank = WordBankModel(dictionaries: {});
   Language? _currentLanguage;
 
   final WordBankLocalDataSource localDataSource;
@@ -43,6 +44,8 @@ class WordBankRepositoryImpl implements WordBankRepository {
       }
 
       await localDataSource.cacheWordBank(_wordBank);
+
+      await changeCurrentLanguage(language);
 
       return Right(_wordBank);
     } catch (_) {
@@ -142,6 +145,7 @@ class WordBankRepositoryImpl implements WordBankRepository {
       _initialWordBank = false;
       return Left(WordBankGetFailure(_wordBank));
     }
+
     return Right(_wordBank);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/presentation/drawer.dart';
 import 'package:easy_language/core/presentation/show_error.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
@@ -8,7 +9,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:language_picker/languages.dart';
 import 'package:provider/provider.dart';
 
@@ -59,25 +59,16 @@ class WordBankPage extends StatelessWidget {
 
   Widget _addWordWidget(BuildContext context) {
     final state = context.watch<WordBankProvider>();
-    Fluttertoast.cancel();
-    Fluttertoast.showToast(
-      msg: 'Error while changing settings ${state.wordBankFailure.toString()}',
-      backgroundColor: Colors.deepOrange,
-      textColor: Colors.white,
-    );
+    if (state.currentLanguageFailure is LanguageCacheFailure) {
+      showError(context, state.currentLanguageFailure.toString());
+    }
+    if (state.wordBankFailure is WordBankCacheFailure) {
+      showError(context, state.wordBankFailure.toString());
+    }
     return IconButton(
       icon: const Icon(Icons.add),
       onPressed: () {
-        if (state.currentLanguageFailure != null) {
-          showError(context, state.currentLanguageFailure.toString());
-        }
-        if (state.wordBankFailure != null) {
-          showError(context, state.wordBankFailure.toString());
-        }
-
-        state.addLanguageToWordBank(
-          Languages.yoruba,
-        );
+        state.addLanguageToWordBank(Languages.azerbaijani);
       },
     );
   }

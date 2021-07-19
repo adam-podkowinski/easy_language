@@ -4,6 +4,7 @@ import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/features/word_bank/data/models/word_bank_model.dart';
 import 'package:hive/hive.dart';
 import 'package:language_picker/languages.dart';
+import 'package:logger/logger.dart';
 
 abstract class WordBankLocalDataSource {
   Future<WordBankModel> getLocalWordBank();
@@ -23,8 +24,9 @@ class WordBankLocalDataSourceImpl implements WordBankLocalDataSource {
   @override
   Future<void> cacheWordBank(WordBankModel wordBankModel) async {
     try {
-      await wordBankBox.putAll(wordBankModel.toMap());
-    } catch (_) {
+      await wordBankBox.put(cachedWordBankId, wordBankModel.toMap());
+    } catch (e) {
+      Logger().log(Level.error, e);
       throw CacheException();
     }
   }
@@ -35,10 +37,11 @@ class WordBankLocalDataSourceImpl implements WordBankLocalDataSource {
       if (wordBankBox.isEmpty) {
         throw CacheException();
       } else {
-        final dbMap = wordBankBox.toMap();
-        return Future.value(WordBankModel.fromMap(dbMap));
+        final dbMap = wordBankBox.get(cachedWordBankId);
+        return WordBankModel.fromMap(cast(dbMap));
       }
-    } catch (_) {
+    } catch (e) {
+      Logger().log(Level.error, e);
       throw CacheException();
     }
   }
@@ -55,7 +58,8 @@ class WordBankLocalDataSourceImpl implements WordBankLocalDataSource {
 
         return Future.value(Language.fromIsoCode(dbLanguageIso));
       }
-    } catch (_) {
+    } catch (e) {
+      Logger().log(Level.error, e);
       throw CacheException();
     }
   }
@@ -64,7 +68,8 @@ class WordBankLocalDataSourceImpl implements WordBankLocalDataSource {
   Future cacheCurrentLanguage(Language language) async {
     try {
       await wordBankBox.put(cachedCurrentLanguageId, language.isoCode);
-    } catch (_) {
+    } catch (e) {
+      Logger().log(Level.error, e);
       throw CacheException();
     }
   }

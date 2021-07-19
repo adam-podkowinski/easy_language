@@ -29,15 +29,14 @@ class WordBankProvider extends ChangeNotifier {
     required this.addLanguage,
   });
 
-  void _clearFailures() {
+  void _prepareMethod() {
+    loading = true;
     wordBankFailure = null;
     currentLanguageFailure = null;
   }
 
   Future<WordBank> initWordBank() async {
-    loading = true;
-
-    _clearFailures();
+    _prepareMethod();
 
     final wordBankEither = await getWordBank(NoParams());
     final currentLanguageEither = await getCurrentLanguage(NoParams());
@@ -65,8 +64,7 @@ class WordBankProvider extends ChangeNotifier {
   }
 
   Future<WordBank> addLanguageToWordBank(Language language) async {
-    loading = true;
-    _clearFailures();
+    _prepareMethod();
 
     final wordBankEither = await addLanguage(
       AddLanguageToWordBankParams(language),
@@ -83,6 +81,14 @@ class WordBankProvider extends ChangeNotifier {
         wordBank = r;
       },
     );
+
+    final currentLanguageEither = await getCurrentLanguage(NoParams());
+    currentLanguageEither.fold((l) {
+      if (l is LanguageFailure) {
+        currentLanguage = l.currentLanguage;
+        currentLanguageFailure = l;
+      }
+    }, (r) => currentLanguage = r);
 
     loading = false;
     notifyListeners();
