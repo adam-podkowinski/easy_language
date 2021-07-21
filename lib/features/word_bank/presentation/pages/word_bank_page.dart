@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/presentation/drawer.dart';
 import 'package:easy_language/core/presentation/show_error.dart';
@@ -84,7 +85,8 @@ class WordBankPage extends StatelessWidget {
                 .toList(),
           );
         } else {
-          showWordDialog(context, state.addWordToCurrentLanguage);
+          showWordDialog(
+              context, addNewWordTitle, state.addWordToCurrentLanguage);
         }
       },
     );

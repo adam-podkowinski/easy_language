@@ -8,3 +8,4 @@ const cachedSettingsId = 'settings';
 const cachedWordBankId = 'word_bank';
 const cachedCurrentLanguageId = 'current_language';
 const addNewLanguageString = 'New...';
+const addNewWordTitle = 'Add a new word';

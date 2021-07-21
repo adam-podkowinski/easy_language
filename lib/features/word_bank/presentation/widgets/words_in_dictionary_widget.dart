@@ -2,6 +2,7 @@ import 'package:easy_language/core/word.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// TODO: Show edit options and translation on right side
 class WordsInDictionaryWidget extends StatelessWidget {
   const WordsInDictionaryWidget({
     Key? key,
@@ -12,27 +13,35 @@ class WordsInDictionaryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return ReorderableListView.builder(
       itemCount: dictionariesList.length,
+      onReorder: (i1, i2) {},
       itemBuilder: (context, index) {
         return Padding(
           padding: EdgeInsets.all(8.w),
+          key: GlobalKey(),
           child: Column(
             children: [
               ListTile(
                 title: Text(
-                  dictionariesList[index].wordForeign,
-                  style: const TextStyle(color: Colors.white),
+                  'Word: ${dictionariesList[index].wordForeign}',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
                 ),
                 subtitle: Text(
-                  dictionariesList[index].wordTranslation,
-                  style: const TextStyle(
-                    color: Colors.white70,
+                  'Translation: ${dictionariesList[index].wordTranslation}',
+                  style: TextStyle(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onPrimary
+                        .withOpacity(0.8),
                   ),
                 ),
               ),
               Divider(
                 color: Theme.of(context).colorScheme.onPrimary,
+                height: 0,
               ),
             ],
           ),
