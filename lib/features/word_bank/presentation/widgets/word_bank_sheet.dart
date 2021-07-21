@@ -84,7 +84,7 @@ class _WordBankSheetState extends State<WordBankSheet> {
         child: Builder(
           builder: (context) {
             return AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 250),
               switchInCurve: Curves.decelerate,
               switchOutCurve: Curves.decelerate,
               child: currentWidget,

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/presentation/drawer.dart';
 import 'package:easy_language/core/presentation/show_error.dart';
+import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_controls.dart';
@@ -71,12 +72,15 @@ class WordBankPage extends StatelessWidget {
       icon: const Icon(Icons.add),
       onPressed: () {
         if (state.wordBank.dictionaries.isEmpty) {
-          // TODO: show a language picker
-          final l = Languages.defaultLanguages[
-              Random().nextInt(Languages.defaultLanguages.length)];
-
-          state.addLanguageFromName(
-            l.name,
+          showLanguagePickerDialog(
+            context,
+            (lang) async => state.addLanguageFromName(lang.name),
+            Languages.defaultLanguages
+                .where(
+                  (element) =>
+                      !state.wordBank.dictionaries.keys.contains(element),
+                )
+                .toList(),
           );
         } else {
           // TODO: show word creation picker
