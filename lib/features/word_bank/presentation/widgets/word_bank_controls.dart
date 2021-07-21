@@ -40,7 +40,7 @@ class WordBankControls extends StatelessWidget {
             if (value == addNewLanguageString) {
               showLanguagePickerDialog(
                 context,
-                (lang) async => state.addLanguageFromName(lang.name),
+                (lang) async => state.addLanguage(lang),
                 Languages.defaultLanguages
                     .where(
                       (element) =>

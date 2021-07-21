@@ -75,23 +75,16 @@ class WordBankProvider extends ChangeNotifier {
     _finishMethod();
   }
 
-  Future addLanguageFromName(String? languageName) async {
+  Future addLanguage(Language? lang) async {
     _prepareMethod();
 
-    if (languageName == null) {
-      _finishMethod();
-      throw UnexpectedException();
-    }
-
-    final language = languageFromName(languageName);
-
-    if (language == null) {
+    if (lang == null) {
       _finishMethod();
       throw UnexpectedException();
     }
 
     final wordBankEither = await addLanguageUseCase(
-      AddLanguageToWordBankParams(language),
+      AddLanguageToWordBankParams(lang),
     );
 
     wordBankEither.fold(

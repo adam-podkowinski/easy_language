@@ -39,9 +39,7 @@ class NoLanguagesWidget extends StatelessWidget {
                 final l = Languages.defaultLanguages[
                     Random().nextInt(Languages.defaultLanguages.length)];
 
-                state.addLanguageFromName(
-                  l.name,
-                );
+                state.addLanguage(l);
               },
               style: ButtonStyle(
                 shape: MaterialStateProperty.all(

@@ -1,6 +1,7 @@
 import 'package:easy_language/core/presentation/styles.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
+import 'package:easy_language/features/word_bank/presentation/widgets/show_word_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -34,13 +35,7 @@ class NoWordsInDictionaryWidget extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                // TODO: show word creation picker
-                final w = Word(
-                    wordForeign:
-                        'dziena${state.wordBank.dictionaries[state.currentLanguage]?.length}',
-                    wordTranslation:
-                        'thanks${state.wordBank.dictionaries[state.currentLanguage]?.length}1');
-                state.addWordToCurrentLanguage(w);
+                showWordDialog(context, state.addWordToCurrentLanguage);
               },
               style: ButtonStyle(
                 shape: MaterialStateProperty.all(

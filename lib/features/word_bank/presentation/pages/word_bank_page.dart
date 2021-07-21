@@ -6,6 +6,7 @@ import 'package:easy_language/core/presentation/show_error.dart';
 import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
+import 'package:easy_language/features/word_bank/presentation/widgets/show_word_dialog.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_controls.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_sheet.dart';
 import 'package:easy_language/injection_container.dart';
@@ -74,7 +75,7 @@ class WordBankPage extends StatelessWidget {
         if (state.wordBank.dictionaries.isEmpty) {
           showLanguagePickerDialog(
             context,
-            (lang) async => state.addLanguageFromName(lang.name),
+            (lang) async => state.addLanguage(lang),
             Languages.defaultLanguages
                 .where(
                   (element) =>
@@ -83,14 +84,7 @@ class WordBankPage extends StatelessWidget {
                 .toList(),
           );
         } else {
-          // TODO: show word creation picker
-          state.addWordToCurrentLanguage(
-            Word(
-                wordForeign:
-                    'dziena${state.wordBank.dictionaries[state.currentLanguage]?.length}',
-                wordTranslation:
-                    'thanks${state.wordBank.dictionaries[state.currentLanguage]?.length}1'),
-          );
+          showWordDialog(context, state.addWordToCurrentLanguage);
         }
       },
     );
