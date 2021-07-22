@@ -1,12 +1,8 @@
-import 'dart:math';
-
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:language_picker/language_picker.dart';
 import 'package:language_picker/languages.dart';
 import 'package:provider/provider.dart';
 
@@ -22,50 +18,56 @@ class WordBankControls extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.watch<WordBankProvider>();
     if (!state.loading) {
-      final languagesStringList = [
-        ...state.wordBank.dictionaries.keys.map((e) => e.name).toList(),
-        addNewLanguageString,
-      ];
+      final languagesList = state.wordBank.dictionaries.keys.toList();
+
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 25.w),
-        child: DropdownButton<String>(
-          underline: Divider(
-            height: 1.w,
-            color: Theme.of(context).accentColor,
-          ),
-          hint: const Text(addNewLanguageString),
-          elevation: 0,
-          value: state.currentLanguage?.name,
-          onChanged: (value) {
-            if (value == addNewLanguageString) {
-              showLanguagePickerDialog(
-                context,
-                (lang) async => state.addLanguage(lang),
-                Languages.defaultLanguages
-                    .where(
-                      (element) =>
-                          !state.wordBank.dictionaries.keys.contains(element),
-                    )
-                    .toList(),
-              );
-            } else {
-              state.changeCurrentLanguageFromName(value);
-            }
-          },
-          iconEnabledColor: Theme.of(context).accentColor,
-          items: languagesStringList
-              .map(
-                (e) => DropdownMenuItem<String>(
-                  value: e,
-                  child: Center(
-                    child: Text(
-                      e,
-                      textAlign: TextAlign.right,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              onPressed: () {
+                showLanguagePickerDialog(
+                  context,
+                  (lang) async => state.addLanguage(lang),
+                  Languages.defaultLanguages
+                      .where(
+                        (element) =>
+                            !state.wordBank.dictionaries.keys.contains(element),
+                      )
+                      .toList(),
+                );
+              },
+              icon: Icon(
+                Icons.add,
+                color: Theme.of(context).accentColor,
+              ),
+            ),
+            DropdownButton<Language>(
+              underline: Divider(
+                height: 1.w,
+                color: Theme.of(context).accentColor,
+              ),
+              hint: const Text(addNewLanguageString),
+              elevation: 0,
+              value: state.currentLanguage,
+              onChanged: (value) => state.changeCurrentLanguage(value),
+              iconEnabledColor: Theme.of(context).accentColor,
+              items: languagesList
+                  .map(
+                    (e) => DropdownMenuItem<Language>(
+                      value: e,
+                      child: Center(
+                        child: Text(
+                          e.name,
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              )
-              .toList(),
+                  )
+                  .toList(),
+            ),
+          ],
         ),
       );
     } else {

@@ -2,8 +2,6 @@ import 'package:easy_language/core/word.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-// TODO: more rounded corners in word dialog
-
 void showWordDialog(
   BuildContext context,
   String title,
@@ -65,6 +63,9 @@ class _WordDialogState extends State<WordDialog> {
       child: SimpleDialog(
         title: Text(widget.title),
         contentPadding: EdgeInsets.all(_padding),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(_space),
+        ),
         children: [
           SizedBox(
             width: 1.sw,
@@ -115,6 +116,9 @@ class _WordDialogState extends State<WordDialog> {
             },
             child: const Text('Accept'),
           ),
+          SizedBox(
+            height: 2.h,
+          ),
           ElevatedButton(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Colors.red),
@@ -141,7 +145,7 @@ class _WordDialogState extends State<WordDialog> {
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(_padding),
         borderSide: BorderSide(
-          color: Theme.of(context).colorScheme.onBackground,
+          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
         ),
       ),
     );

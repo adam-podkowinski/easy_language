@@ -139,15 +139,8 @@ class WordBankProvider extends ChangeNotifier {
     _finishMethod();
   }
 
-  Future changeCurrentLanguageFromName(String? languageName) async {
+  Future changeCurrentLanguage(Language? language) async {
     _prepareMethod();
-
-    if (languageName == null) {
-      _finishMethod();
-      throw UnexpectedException();
-    }
-
-    final language = languageFromName(languageName);
 
     if (language == null) {
       _finishMethod();

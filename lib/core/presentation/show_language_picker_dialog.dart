@@ -4,8 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:language_picker/language_picker_dialog.dart';
 import 'package:language_picker/languages.dart';
 
-// TODO: more rounded corners in language dialog
-
 void showLanguagePickerDialog(
   BuildContext context,
   Function(Language) onValuePicked,

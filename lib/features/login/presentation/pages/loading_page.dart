@@ -7,7 +7,7 @@ class LoadingApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Easy Language',
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -16,7 +16,7 @@ class LoadingApp extends StatelessWidget {
           child: Text(
             'Easy Language',
             style: TextStyle(
-              fontSize: 25.sp,
+              fontSize: 25,
               fontWeight: FontWeight.w900,
               color: Colors.white,
               fontFamily: 'Mulish',

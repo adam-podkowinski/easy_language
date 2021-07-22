@@ -90,9 +90,9 @@ class IntroductionPage extends StatelessWidget {
               SizedBox(
                 width: 5.w,
               ),
-              Text(
+              const Text(
                 'Log in',
-                style: TextStyle(fontSize: 18.sp),
+                style: TextStyle(fontSize: 18),
               ),
             ],
           ),

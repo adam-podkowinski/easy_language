@@ -26,13 +26,13 @@ class CustomTheme {
   static TextTheme buildTextTheme(BuildContext context, Color onBackground) {
     return TextTheme(
       headline6: TextStyle(
-        fontSize: 24.sp,
+        fontSize: 24,
         fontWeight: FontWeight.w900,
         color: onBackground,
         fontFamily: 'Mulish',
       ),
       headline5: TextStyle(
-        fontSize: 26.sp,
+        fontSize: 26,
         fontWeight: FontWeight.w900,
         color: primary,
       ),
@@ -111,7 +111,7 @@ class CustomTheme {
       backgroundColor: background,
       foregroundColor: secondary,
       titleTextStyle: TextStyle(
-        fontSize: 24.sp,
+        fontSize: 24,
         fontWeight: FontWeight.w900,
         color: onBackground,
         fontFamily: 'Mulish',
