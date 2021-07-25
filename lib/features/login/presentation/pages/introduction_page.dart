@@ -35,8 +35,9 @@ class IntroductionPage extends StatelessWidget {
           skip: const Text('Skip'),
           next: const Text('Next'),
           done: const Text('Done'),
+          color: Theme.of(context).accentColor,
           dotsDecorator: DotsDecorator(
-            activeColor: Theme.of(context).primaryColor,
+            activeColor: Theme.of(context).accentColor,
           ),
         ),
       ),
