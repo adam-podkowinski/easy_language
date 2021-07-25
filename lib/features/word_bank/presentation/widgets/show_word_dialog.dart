@@ -54,12 +54,15 @@ class _WordDialogState extends State<WordDialog> {
   late final TextEditingController foreignWordController;
   late final TextEditingController wordTranslationController;
 
-
   @override
   void initState() {
     super.initState();
-    foreignWordController = TextEditingController(text: widget.wordToEdit?.wordForeign);
-    wordTranslationController = TextEditingController(text: widget.wordToEdit?.wordTranslation);
+    foreignWordController = TextEditingController(
+      text: widget.wordToEdit?.wordForeign,
+    );
+    wordTranslationController = TextEditingController(
+      text: widget.wordToEdit?.wordTranslation,
+    );
   }
 
   @override
