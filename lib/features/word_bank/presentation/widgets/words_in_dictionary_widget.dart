@@ -6,7 +6,6 @@ import 'package:easy_language/features/word_bank/presentation/manager/word_bank_
 import 'package:easy_language/features/word_bank/presentation/widgets/show_word_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
@@ -91,7 +90,7 @@ class WordListItem extends StatelessWidget {
               actionPane: const SlidableDrawerActionPane(),
               secondaryActions: <Widget>[
                 IconSlideAction(
-                  caption: 'Delete word',
+                  caption: 'Delete',
                   color: Theme.of(context).errorColor,
                   icon: Icons.delete,
                   onTap: () => _state.removeWord(index),

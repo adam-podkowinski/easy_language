@@ -14,12 +14,12 @@ void main() {
       Word(
         wordForeign: 'gracias',
         wordTranslation: 'hello',
-        editDate: DateTime.now(),
+        editDate: DateTime.parse('2021-07-25 19:59:50.709734'),
       ),
       Word(
         wordForeign: 'dzień',
         wordTranslation: 'day',
-        editDate: DateTime.now(),
+        editDate: DateTime.parse('2021-07-25 19:59:50.709734'),
       )
     ],
   });
@@ -44,8 +44,16 @@ void main() {
       () async {
         final tMap = {
           "pl": [
-            {Word.wordForeignId: 'gracias', Word.wordTranslationId: 'hello'},
-            {Word.wordForeignId: 'dzień', Word.wordTranslationId: 'day'},
+            {
+              Word.wordForeignId: 'gracias',
+              Word.wordTranslationId: 'hello',
+              Word.wordEditDateId: '2021-07-25T19:59:50.709734',
+            },
+            {
+              Word.wordForeignId: 'dzień',
+              Word.wordTranslationId: 'day',
+              Word.wordEditDateId: '2021-07-25T19:59:50.709734',
+            },
           ]
         };
 

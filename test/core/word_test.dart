@@ -7,10 +7,13 @@ import 'package:flutter_test/flutter_test.dart';
 import '../fixtures/fixture_reader.dart';
 
 void main() {
+  const tDateTimeString = '2021-07-25T19:59:50.709734';
+  final tDateTime = DateTime.parse(tDateTimeString);
+
   final tWord = Word(
     wordForeign: 'gracias',
     wordTranslation: 'hello',
-    editDate: DateTime.now(),
+    editDate: tDateTime,
   );
 
   test(
@@ -51,7 +54,7 @@ void main() {
           Word(
             wordForeign: 'szkola',
             wordTranslation: 'hello',
-            editDate: DateTime.now(),
+            editDate: tDateTime,
           ),
         );
 
@@ -66,7 +69,7 @@ void main() {
           Word(
             wordForeign: 'szkola',
             wordTranslation: 'school',
-            editDate: DateTime.now(),
+            editDate: tDateTime,
           ),
         );
       },
@@ -80,6 +83,7 @@ void main() {
         const Map<String, String> tValidMap = {
           Word.wordForeignId: 'gracias',
           Word.wordTranslationId: 'hello',
+          Word.wordEditDateId: tDateTimeString,
         };
 
         final newMap = tWord.toMap();

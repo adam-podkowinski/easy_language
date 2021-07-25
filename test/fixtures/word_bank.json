@@ -1,12 +1,14 @@
 {
-    "pl": [
-        {
-            "wordForeign": "gracias",
-            "wordTranslation": "hello"
-        },
-        {
-            "wordForeign": "dzień",
-            "wordTranslation": "day"
-        }
-    ]
+  "pl": [
+    {
+      "wordForeign": "gracias",
+      "wordTranslation": "hello",
+      "wordEditDate": "2021-07-25 19:59:50.709734"
+    },
+    {
+      "wordForeign": "dzień",
+      "wordTranslation": "day",
+      "wordEditDate": "2021-07-25 19:59:50.709734"
+    }
+  ]
 }
