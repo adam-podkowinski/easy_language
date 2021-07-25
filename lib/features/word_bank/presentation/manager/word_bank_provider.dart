@@ -8,7 +8,6 @@ import 'package:easy_language/features/word_bank/domain/use_cases/change_current
 import 'package:easy_language/features/word_bank/domain/use_cases/edit_word_list.dart';
 import 'package:easy_language/features/word_bank/domain/use_cases/get_current_language.dart';
 import 'package:easy_language/features/word_bank/domain/use_cases/get_word_bank.dart';
-import 'package:easy_language/features/word_bank/presentation/widgets/words_in_dictionary_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:language_picker/languages.dart';
 
@@ -20,8 +19,6 @@ class WordBankProvider extends ChangeNotifier {
   final EditWordList editWordListUseCase;
   final AddLanguageToWordBank addLanguageUseCase;
   final ChangeCurrentLanguage changeCurrentLanguageUseCase;
-
-  GlobalKey<AnimatedListState> wordListKey = GlobalKey();
 
   Language? currentLanguage;
   WordBank wordBank = const WordBank(dictionaries: {});
@@ -110,8 +107,6 @@ class WordBankProvider extends ChangeNotifier {
       (r) => currentLanguage = r,
     );
 
-    wordListKey = GlobalKey();
-
     _finishMethod();
   }
 
@@ -140,8 +135,6 @@ class WordBankProvider extends ChangeNotifier {
       }
     }
 
-    wordListKey.currentState?.insertItem(0);
-
     _finishMethod();
   }
 
@@ -167,8 +160,6 @@ class WordBankProvider extends ChangeNotifier {
         (r) => currentLanguage = r,
       );
     }
-
-    wordListKey = GlobalKey();
 
     _finishMethod();
   }
@@ -226,7 +217,7 @@ class WordBankProvider extends ChangeNotifier {
       throw UnexpectedException();
     }
 
-    final removedWord = newWordList.removeAt(index);
+    newWordList.removeAt(index);
     final wordBankEither = await editWordListUseCase(
       EditWordListParams(languageFrom: changeOnLang, newWordList: newWordList),
     );
@@ -241,14 +232,42 @@ class WordBankProvider extends ChangeNotifier {
       (r) => wordBank = r,
     );
 
-    wordListKey.currentState?.removeItem(
-      index,
-      (context, animation) => WordListItem(
-        word: removedWord,
-        state: this,
-        index: -1,
-        anim: animation,
-      ),
+    _finishMethod();
+  }
+
+  Future reorderWordList(
+    List<Word> newWordList, {
+    Language? language,
+  }) async {
+    _prepareMethod();
+
+    final changeOnLang = language ?? currentLanguage;
+
+    if (changeOnLang == null) {
+      _finishMethod();
+      throw UnexpectedException();
+    }
+
+    wordBank.dictionaries[changeOnLang] = newWordList;
+    final wordList = wordBank.dictionaries[changeOnLang];
+
+    if (wordList == null) {
+      _finishMethod();
+      throw UnexpectedException();
+    }
+
+    final wordBankEither = await editWordListUseCase(
+      EditWordListParams(languageFrom: changeOnLang, newWordList: wordList),
+    );
+
+    wordBankEither.fold(
+      (l) {
+        if (l is WordBankFailure) {
+          wordBankFailure = l;
+          wordBank = l.wordBank;
+        }
+      },
+      (r) => wordBank = r,
     );
 
     _finishMethod();
