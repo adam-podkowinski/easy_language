@@ -4,6 +4,7 @@ import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/show_word_dialog.dart';
+import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -67,19 +68,14 @@ class WordListItem extends StatelessWidget {
     final t = dragAnimation.value;
     final elevation = lerpDouble(0, 0.5, t)!;
     final color = Color.lerp(
-      Theme.of(context).colorScheme.primaryVariant,
-      Theme.of(context).colorScheme.primaryVariant.withOpacity(0.94),
+      getSheetColor(context),
+      getSheetColor(context).withOpacity(0.94),
       t,
     );
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Divider(
-          color: Theme.of(context).primaryColor,
-          height: 1.h,
-          thickness: 1.w,
-        ),
         Handle(
           delay: const Duration(milliseconds: 150),
           child: SizeFadeTransition(
@@ -97,6 +93,7 @@ class WordListItem extends StatelessWidget {
                 ),
               ],
               child: Material(
+                type: MaterialType.card,
                 color: color,
                 elevation: elevation,
                 child: Padding(
@@ -141,7 +138,7 @@ class WordListItem extends StatelessWidget {
           ),
         ),
         Divider(
-          color: Theme.of(context).primaryColor,
+          color: getSecondSheetColor(context),
           height: 1.h,
           thickness: 1.w,
         ),

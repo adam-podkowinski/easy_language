@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class CustomTheme {
-  static const primary = Color(0xFF1889f8);
-  static const primaryVariant = Color(0xff1863f8);
-  static const secondary = Color(0xffe58f3b);
-  static const secondaryVariant = Color(0xfff85f18);
+  static const primary = Color(0xff148af9);
+  static const primaryVariant = Color(0xff3058b6);
+
+  static const secondary = Color(0xFFf98314);
+  static const secondaryVariant = Color(0xffd97212);
   static const surface = primary;
-  static const error = Colors.deepOrange;
+  static const error = Colors.redAccent;
   static const onPrimary = Colors.white;
   static const onSecondary = Colors.white;
   static const onSurface = Colors.white;
@@ -16,10 +17,10 @@ class CustomTheme {
   static const brightnessLight = Brightness.light;
   static const brightnessDark = Brightness.dark;
 
-  static const backgroundLight = Colors.white;
+  static const backgroundLight = Color(0xFFF6EFEC);
   static const onBackgroundLight = backgroundDark;
 
-  static const backgroundDark = Color(0xFF191919);
+  static const backgroundDark = Color(0xFF1A1313);
   static const onBackgroundDark = Colors.white;
 
   static TextTheme buildTextTheme(BuildContext context, Color onBackground) {

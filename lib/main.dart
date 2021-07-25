@@ -17,7 +17,6 @@ Future<void> main() async {
 class EasyLanguage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print(DateTime.now());
     return ScreenUtilInit(
       designSize: screenSize,
       builder: () => ChangeNotifierProvider(

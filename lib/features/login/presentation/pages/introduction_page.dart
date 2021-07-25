@@ -32,12 +32,11 @@ class IntroductionPage extends StatelessWidget {
                 );
           },
           showSkipButton: true,
-          color: Theme.of(context).accentColor,
           skip: const Text('Skip'),
           next: const Text('Next'),
           done: const Text('Done'),
           dotsDecorator: DotsDecorator(
-            activeColor: Theme.of(context).accentColor,
+            activeColor: Theme.of(context).primaryColor,
           ),
         ),
       ),

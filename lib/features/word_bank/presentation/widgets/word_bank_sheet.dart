@@ -6,6 +6,26 @@ import 'package:easy_language/features/word_bank/presentation/widgets/words_in_d
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+Color getSheetColor(BuildContext context) {
+  final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
+  if (isDark) {
+    return Theme.of(context).colorScheme.primaryVariant;
+  } else {
+    return Theme.of(context).colorScheme.primary;
+  }
+}
+
+Color getSecondSheetColor(BuildContext context) {
+  final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
+  if (!isDark) {
+    return Theme.of(context).colorScheme.primaryVariant;
+  } else {
+    return Theme.of(context).colorScheme.primary;
+  }
+}
+
 class WordBankSheet extends StatefulWidget {
   const WordBankSheet({
     Key? key,
@@ -75,7 +95,7 @@ class _WordBankSheetState extends State<WordBankSheet> {
       child: Container(
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryVariant,
+          color: getSheetColor(context),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(widget.radius),
             topRight: Radius.circular(widget.radius),
