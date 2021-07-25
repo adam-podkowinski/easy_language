@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomTheme {
   static const primary = Color(0xFF1889f8);
@@ -31,7 +30,7 @@ class CustomTheme {
         color: onBackground,
         fontFamily: 'Mulish',
       ),
-      headline5: TextStyle(
+      headline5: const TextStyle(
         fontSize: 26,
         fontWeight: FontWeight.w900,
         color: primary,

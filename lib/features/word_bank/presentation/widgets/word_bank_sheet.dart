@@ -53,7 +53,7 @@ class _WordBankSheetState extends State<WordBankSheet> {
             state.wordBank.dictionaries[state.currentLanguage] ?? [];
         if (dictionary.isNotEmpty) {
           currentWidget = WordsInDictionaryWidget(
-            dictionariesList: dictionary,
+            wordList: dictionary,
           );
         } else {
           currentWidget = NoWordsInDictionaryWidget(

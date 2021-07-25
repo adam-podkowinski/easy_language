@@ -5,8 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 void showWordDialog(
   BuildContext context,
   String title,
-  Function(Word) onAccepted,
-) {
+  Function(Word) onAccepted, {
+  Word? wordToEdit,
+}) {
   showDialog(
     context: context,
     builder: (context) {
@@ -30,10 +31,13 @@ class WordDialog extends StatefulWidget {
     Key? key,
     required this.title,
     required this.onAccepted,
+    this.wordToEdit,
   }) : super(key: key);
 
   final String title;
   final Function(Word) onAccepted;
+
+  final Word? wordToEdit;
 
   @override
   _WordDialogState createState() => _WordDialogState();
@@ -79,6 +83,7 @@ class _WordDialogState extends State<WordDialog> {
           TextFormField(
             validator: basicValidator,
             controller: foreignWordController,
+            initialValue: widget.wordToEdit?.wordForeign,
             decoration: buildInputDecoration(context, 'Foreign word'),
           ),
           SizedBox(
@@ -87,6 +92,7 @@ class _WordDialogState extends State<WordDialog> {
           TextFormField(
             validator: basicValidator,
             controller: wordTranslationController,
+            initialValue: widget.wordToEdit?.wordTranslation,
             decoration: buildInputDecoration(context, 'Word translation'),
           ),
           SizedBox(

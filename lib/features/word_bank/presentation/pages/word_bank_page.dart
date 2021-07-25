@@ -1,11 +1,8 @@
-import 'dart:math';
-
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/presentation/drawer.dart';
 import 'package:easy_language/core/presentation/show_error.dart';
 import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
-import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/show_word_dialog.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_controls.dart';
@@ -76,7 +73,7 @@ class WordBankPage extends StatelessWidget {
         if (state.wordBank.dictionaries.isEmpty) {
           showLanguagePickerDialog(
             context,
-            (lang) async => state.addLanguage(lang),
+            (lang) async => state.addLanguage(context, lang),
             Languages.defaultLanguages
                 .where(
                   (element) =>
@@ -86,7 +83,10 @@ class WordBankPage extends StatelessWidget {
           );
         } else {
           showWordDialog(
-              context, addNewWordTitle, state.addWordToCurrentLanguage);
+            context,
+            addNewWordTitle,
+            (word) async => state.addWordToCurrentLanguage(context, word),
+          );
         }
       },
     );

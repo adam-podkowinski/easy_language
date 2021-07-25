@@ -1,6 +1,5 @@
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/styles.dart';
-import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/show_word_dialog.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +36,10 @@ class NoWordsInDictionaryWidget extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 showWordDialog(
-                    context, addNewWordTitle, state.addWordToCurrentLanguage);
+                  context,
+                  addNewWordTitle,
+                  (word) => state.addWordToCurrentLanguage(context, word),
+                );
               },
               style: ButtonStyle(
                 shape: MaterialStateProperty.all(

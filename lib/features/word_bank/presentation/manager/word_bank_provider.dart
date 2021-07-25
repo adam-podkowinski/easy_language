@@ -1,7 +1,6 @@
 import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/use_cases/use_case.dart';
-import 'package:easy_language/core/util/language_from_name.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/word_bank/domain/entities/word_bank.dart';
 import 'package:easy_language/features/word_bank/domain/use_cases/add_language_to_word_bank.dart';
@@ -9,6 +8,7 @@ import 'package:easy_language/features/word_bank/domain/use_cases/change_current
 import 'package:easy_language/features/word_bank/domain/use_cases/edit_word_list.dart';
 import 'package:easy_language/features/word_bank/domain/use_cases/get_current_language.dart';
 import 'package:easy_language/features/word_bank/domain/use_cases/get_word_bank.dart';
+import 'package:easy_language/features/word_bank/presentation/widgets/words_in_dictionary_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:language_picker/languages.dart';
 
@@ -20,6 +20,8 @@ class WordBankProvider extends ChangeNotifier {
   final EditWordList editWordListUseCase;
   final AddLanguageToWordBank addLanguageUseCase;
   final ChangeCurrentLanguage changeCurrentLanguageUseCase;
+
+  GlobalKey<AnimatedListState> wordListKey = GlobalKey();
 
   Language? currentLanguage;
   WordBank wordBank = const WordBank(dictionaries: {});
@@ -75,7 +77,7 @@ class WordBankProvider extends ChangeNotifier {
     _finishMethod();
   }
 
-  Future addLanguage(Language? lang) async {
+  Future addLanguage(BuildContext context, Language? lang) async {
     _prepareMethod();
 
     if (lang == null) {
@@ -108,10 +110,12 @@ class WordBankProvider extends ChangeNotifier {
       (r) => currentLanguage = r,
     );
 
+    wordListKey = GlobalKey();
+
     _finishMethod();
   }
 
-  Future addWordToCurrentLanguage(Word wordToAdd) async {
+  Future addWordToCurrentLanguage(BuildContext context, Word wordToAdd) async {
     _prepareMethod();
 
     if (currentLanguage != null) {
@@ -136,10 +140,12 @@ class WordBankProvider extends ChangeNotifier {
       }
     }
 
+    wordListKey.currentState?.insertItem(0);
+
     _finishMethod();
   }
 
-  Future changeCurrentLanguage(Language? language) async {
+  Future changeCurrentLanguage(BuildContext context, Language? language) async {
     _prepareMethod();
 
     if (language == null) {
@@ -161,6 +167,89 @@ class WordBankProvider extends ChangeNotifier {
         (r) => currentLanguage = r,
       );
     }
+
+    wordListKey = GlobalKey();
+
+    _finishMethod();
+  }
+
+  Future changeWord(
+    int index,
+    Word newWord, {
+    Language? language,
+  }) async {
+    _prepareMethod();
+
+    final changeOnLang = language ?? currentLanguage;
+
+    if (changeOnLang == null) {
+      _finishMethod();
+      throw UnexpectedException();
+    }
+
+    final newWordList = wordBank.dictionaries[changeOnLang];
+    newWordList?[index] = newWord;
+    final wordBankEither = await editWordListUseCase(
+      EditWordListParams(languageFrom: changeOnLang, newWordList: newWordList),
+    );
+
+    wordBankEither.fold(
+      (l) {
+        if (l is WordBankFailure) {
+          wordBankFailure = l;
+          wordBank = l.wordBank;
+        }
+      },
+      (r) => wordBank = r,
+    );
+
+    _finishMethod();
+  }
+
+  Future removeWord(
+    int index, {
+    Language? language,
+  }) async {
+    _prepareMethod();
+
+    final changeOnLang = language ?? currentLanguage;
+
+    if (changeOnLang == null) {
+      _finishMethod();
+      throw UnexpectedException();
+    }
+
+    final newWordList = wordBank.dictionaries[changeOnLang];
+
+    if (newWordList == null) {
+      _finishMethod();
+      throw UnexpectedException();
+    }
+
+    final removedWord = newWordList.removeAt(index);
+    final wordBankEither = await editWordListUseCase(
+      EditWordListParams(languageFrom: changeOnLang, newWordList: newWordList),
+    );
+
+    wordBankEither.fold(
+      (l) {
+        if (l is WordBankFailure) {
+          wordBankFailure = l;
+          wordBank = l.wordBank;
+        }
+      },
+      (r) => wordBank = r,
+    );
+
+    wordListKey.currentState?.removeItem(
+      index,
+      (context, animation) => WordListItem(
+        word: removedWord,
+        state: this,
+        index: -1,
+        anim: animation,
+      ),
+    );
 
     _finishMethod();
   }

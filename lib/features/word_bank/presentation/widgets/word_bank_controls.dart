@@ -29,7 +29,9 @@ class WordBankControls extends StatelessWidget {
               onPressed: () {
                 showLanguagePickerDialog(
                   context,
-                  (lang) async => state.addLanguage(lang),
+                  (lang) async {
+                    return state.addLanguage(context, lang);
+                  },
                   Languages.defaultLanguages
                       .where(
                         (element) =>
@@ -51,7 +53,7 @@ class WordBankControls extends StatelessWidget {
               hint: const Text(addNewLanguageString),
               elevation: 0,
               value: state.currentLanguage,
-              onChanged: (value) => state.changeCurrentLanguage(value),
+              onChanged: (value) => state.changeCurrentLanguage(context, value),
               iconEnabledColor: Theme.of(context).accentColor,
               items: languagesList
                   .map(
