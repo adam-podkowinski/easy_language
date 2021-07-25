@@ -10,9 +10,17 @@ import '../../../../fixtures/fixture_reader.dart';
 
 void main() {
   final tWordBank = WordBankModel(dictionaries: {
-    Languages.polish: const [
-      Word(wordForeign: 'gracias', wordTranslation: 'hello'),
-      Word(wordForeign: 'dzień', wordTranslation: 'day')
+    Languages.polish: [
+      Word(
+        wordForeign: 'gracias',
+        wordTranslation: 'hello',
+        editDate: DateTime.now(),
+      ),
+      Word(
+        wordForeign: 'dzień',
+        wordTranslation: 'day',
+        editDate: DateTime.now(),
+      )
     ],
   });
 

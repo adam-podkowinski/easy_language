@@ -7,9 +7,10 @@ import 'package:flutter_test/flutter_test.dart';
 import '../fixtures/fixture_reader.dart';
 
 void main() {
-  const tWord = Word(
+  final tWord = Word(
     wordForeign: 'gracias',
     wordTranslation: 'hello',
+    editDate: DateTime.now(),
   );
 
   test(
@@ -47,7 +48,11 @@ void main() {
 
         expect(
           tNewWord,
-          const Word(wordForeign: 'szkola', wordTranslation: 'hello'),
+          Word(
+            wordForeign: 'szkola',
+            wordTranslation: 'hello',
+            editDate: DateTime.now(),
+          ),
         );
 
         const Map<String, String> tMapSecond = {
@@ -58,7 +63,11 @@ void main() {
         final tNewWordSecond = tWord.copyWithMap(tMapSecond);
         expect(
           tNewWordSecond,
-          const Word(wordForeign: 'szkola', wordTranslation: 'school'),
+          Word(
+            wordForeign: 'szkola',
+            wordTranslation: 'school',
+            editDate: DateTime.now(),
+          ),
         );
       },
     );
@@ -76,25 +85,6 @@ void main() {
         final newMap = tWord.toMap();
 
         expect(newMap, tValidMap);
-      },
-    );
-  });
-
-  group('wordToMap', () {
-    test(
-      'should return a valid Map from passed Word entity',
-      () async {
-        const tWordEntity =
-            Word(wordForeign: 'gracias', wordTranslation: 'hello');
-
-        const tWordMap = {
-          Word.wordForeignId: 'gracias',
-          Word.wordTranslationId: 'hello',
-        };
-
-        final tNewMap = Word.wordToMap(tWordEntity);
-
-        expect(tNewMap, tWordMap);
       },
     );
   });

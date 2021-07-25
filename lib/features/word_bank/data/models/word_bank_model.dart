@@ -33,7 +33,7 @@ class WordBankModel extends WordBank {
     final Map<dynamic, dynamic> map = dictionaries.map(
       (key, value) => MapEntry(
         key.isoCode,
-        [...value.map((e) => Word.wordToMap(e))],
+        [...value.map((e) => e.toMap())],
       ),
     );
 

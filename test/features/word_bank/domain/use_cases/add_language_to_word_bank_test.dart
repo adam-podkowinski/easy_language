@@ -22,9 +22,12 @@ void main() {
     'should forward a call to add a language to a word bank to a repository',
     () async {
       final tNewLanguage = Languages.polish;
-      const tNewWord =
-          Word(wordForeign: 'polska', wordTranslation: 'polskagurom');
-      const tWordList = [tNewWord];
+      final tNewWord = Word(
+        wordForeign: 'polska',
+        wordTranslation: 'polskagurom',
+        editDate: DateTime.now(),
+      );
+      final tWordList = [tNewWord];
       final tWordBank = WordBank(dictionaries: {
         tNewLanguage: tWordList,
       });

@@ -20,7 +20,13 @@ void main() {
 
   final tLanguage = Languages.english;
   final tWordBank = WordBank(dictionaries: {
-    tLanguage: const [Word(wordForeign: 'lolo', wordTranslation: 'lol')],
+    tLanguage: [
+      Word(
+        wordForeign: 'lolo',
+        wordTranslation: 'lol',
+        editDate: DateTime.now(),
+      )
+    ],
   });
 
   test(

@@ -73,8 +73,12 @@ void main() {
 
   group('cacheWordBank', () {
     final tWordBankModel = WordBankModel(dictionaries: {
-      Languages.polish: const [
-        Word(wordForeign: 'gracias', wordTranslation: 'hello')
+      Languages.polish: [
+        Word(
+          wordForeign: 'gracias',
+          wordTranslation: 'hello',
+          editDate: DateTime.now(),
+        )
       ],
     });
 

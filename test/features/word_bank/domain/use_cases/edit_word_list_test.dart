@@ -23,9 +23,12 @@ void main() {
     () async {
       final tLanguageFrom = Languages.polish;
       final tLanguageTo = Languages.spanish;
-      const tNewWord =
-          Word(wordForeign: 'gracias', wordTranslation: 'polskagurom');
-      const tNewWordList = [tNewWord];
+      final tNewWord = Word(
+        wordForeign: 'gracias',
+        wordTranslation: 'polskagurom',
+        editDate: DateTime.now(),
+      );
+      final tNewWordList = [tNewWord];
       final tWordBank = WordBank(dictionaries: {
         tLanguageTo: tNewWordList,
       });

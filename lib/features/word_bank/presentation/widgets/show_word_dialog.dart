@@ -125,6 +125,7 @@ class _WordDialogState extends State<WordDialog> {
                   Word(
                     wordForeign: foreignWordController.text.trim(),
                     wordTranslation: wordTranslationController.text.trim(),
+                    editDate: DateTime.now(),
                   ),
                 );
                 Navigator.of(context).pop();

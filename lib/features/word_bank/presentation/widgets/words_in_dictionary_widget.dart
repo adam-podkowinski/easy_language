@@ -74,6 +74,7 @@ class WordListItem extends StatelessWidget {
     );
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Divider(
           color: Theme.of(context).primaryColor,
@@ -103,13 +104,13 @@ class WordListItem extends StatelessWidget {
                   padding: EdgeInsets.all(8.w),
                   child: ListTile(
                     title: Text(
-                      'Word: ${word.wordForeign}',
+                      word.wordForeign,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onPrimary,
                       ),
                     ),
                     subtitle: Text(
-                      'Translation: ${word.wordTranslation}',
+                      word.wordTranslation,
                       style: TextStyle(
                         color:
                             Theme.of(context).colorScheme.onPrimary.withOpacity(
