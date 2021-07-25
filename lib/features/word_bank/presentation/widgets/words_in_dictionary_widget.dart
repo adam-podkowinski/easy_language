@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:provider/provider.dart';
@@ -72,70 +73,79 @@ class WordListItem extends StatelessWidget {
       t,
     );
 
-    return Handle(
-      delay: const Duration(milliseconds: 100),
-      child: SizeFadeTransition(
-        curve: Curves.easeInOut,
-        sizeFraction: 0.7,
-        animation: itemAnimation,
-        child: Material(
-          color: color,
-          elevation: elevation,
-          child: Padding(
-            padding: EdgeInsets.all(8.w),
-            child: ListTile(
-              title: Text(
-                'Word: ${word.wordForeign}',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
+    return Column(
+      children: [
+        Divider(
+          color: Theme.of(context).primaryColor,
+          height: 1.h,
+          thickness: 1.w,
+        ),
+        Handle(
+          delay: const Duration(milliseconds: 150),
+          child: SizeFadeTransition(
+            curve: Curves.easeInOut,
+            sizeFraction: 0.7,
+            animation: itemAnimation,
+            child: Slidable(
+              actionPane: const SlidableDrawerActionPane(),
+              secondaryActions: <Widget>[
+                IconSlideAction(
+                  caption: 'Delete word',
+                  color: Theme.of(context).errorColor,
+                  icon: Icons.delete,
+                  onTap: () => _state.removeWord(index),
                 ),
-              ),
-              subtitle: Text(
-                'Translation: ${word.wordTranslation}',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary.withOpacity(
-                        0.8,
+              ],
+              child: Material(
+                color: color,
+                elevation: elevation,
+                child: Padding(
+                  padding: EdgeInsets.all(8.w),
+                  child: ListTile(
+                    title: Text(
+                      'Word: ${word.wordForeign}',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
                       ),
+                    ),
+                    subtitle: Text(
+                      'Translation: ${word.wordTranslation}',
+                      style: TextStyle(
+                        color:
+                            Theme.of(context).colorScheme.onPrimary.withOpacity(
+                                  0.8,
+                                ),
+                      ),
+                    ),
+                    trailing: InkWell(
+                      onTap: () {
+                        showWordDialog(
+                          context,
+                          editWordTitle,
+                          (newWord) => _state.changeWord(
+                            index,
+                            newWord,
+                          ),
+                          wordToEdit: word,
+                        );
+                      },
+                      child: Icon(
+                        Icons.edit,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      showWordDialog(
-                        context,
-                        editWordTitle,
-                        (newWord) => _state.changeWord(
-                          index,
-                          newWord,
-                        ),
-                        wordToEdit: word,
-                      );
-                    },
-                    child: Icon(
-                      Icons.edit,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10.w,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      _state.removeWord(index);
-                    },
-                    child: Icon(
-                      Icons.delete,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                  ),
-                ],
               ),
             ),
           ),
         ),
-      ),
+        Divider(
+          color: Theme.of(context).primaryColor,
+          height: 1.h,
+          thickness: 1.w,
+        ),
+      ],
     );
   }
 }
