@@ -14,6 +14,7 @@ void showWordDialog(
       return WordDialog(
         title: title,
         onAccepted: onAccepted,
+        wordToEdit: wordToEdit,
       );
     },
   );
@@ -50,8 +51,16 @@ class _WordDialogState extends State<WordDialog> {
 
   final _formKey = GlobalKey<FormState>();
 
-  final foreignWordController = TextEditingController();
-  final wordTranslationController = TextEditingController();
+  late final TextEditingController foreignWordController;
+  late final TextEditingController wordTranslationController;
+
+
+  @override
+  void initState() {
+    super.initState();
+    foreignWordController = TextEditingController(text: widget.wordToEdit?.wordForeign);
+    wordTranslationController = TextEditingController(text: widget.wordToEdit?.wordTranslation);
+  }
 
   @override
   void dispose() {
@@ -83,7 +92,6 @@ class _WordDialogState extends State<WordDialog> {
           TextFormField(
             validator: basicValidator,
             controller: foreignWordController,
-            initialValue: widget.wordToEdit?.wordForeign,
             decoration: buildInputDecoration(context, 'Foreign word'),
           ),
           SizedBox(
@@ -92,7 +100,6 @@ class _WordDialogState extends State<WordDialog> {
           TextFormField(
             validator: basicValidator,
             controller: wordTranslationController,
-            initialValue: widget.wordToEdit?.wordTranslation,
             decoration: buildInputDecoration(context, 'Word translation'),
           ),
           SizedBox(
@@ -113,8 +120,8 @@ class _WordDialogState extends State<WordDialog> {
               if (_formKey.currentState!.validate()) {
                 widget.onAccepted(
                   Word(
-                    wordForeign: foreignWordController.text,
-                    wordTranslation: wordTranslationController.text,
+                    wordForeign: foreignWordController.text.trim(),
+                    wordTranslation: wordTranslationController.text.trim(),
                   ),
                 );
                 Navigator.of(context).pop();

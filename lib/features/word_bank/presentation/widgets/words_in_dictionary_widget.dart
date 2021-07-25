@@ -17,6 +17,7 @@ class WordsInDictionaryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<WordBankProvider>();
+    // TODO: use implicitly_animated_reorderable_list package instead
     return AnimatedList(
       key: state.wordListKey,
       initialItemCount: wordList.length,
@@ -70,7 +71,6 @@ class _WordListItemState extends State<WordListItem> {
         child: Column(
           children: [
             ListTile(
-              onTap: () {},
               title: Text(
                 'Word: ${widget.word.wordForeign}',
                 style: TextStyle(

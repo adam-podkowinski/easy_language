@@ -40,7 +40,10 @@ class CustomTheme {
       headline2: const TextStyle(),
       headline1: const TextStyle(),
       caption: const TextStyle(),
-      button: const TextStyle(),
+      button: const TextStyle(
+        color: onPrimary,
+        fontWeight: FontWeight.bold,
+      ),
       bodyText1: const TextStyle(),
       bodyText2: const TextStyle(),
       overline: const TextStyle(),
