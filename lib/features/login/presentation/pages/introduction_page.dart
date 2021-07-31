@@ -11,8 +11,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class IntroductionPage extends StatelessWidget {
-  static const svgPrefix = 'assets/svgs';
-
   const IntroductionPage({Key? key}) : super(key: key);
 
   @override
@@ -49,26 +47,26 @@ class IntroductionPage extends StatelessWidget {
       _buildPage(
         context,
         'Learn new languages',
-        '${IntroductionPage.svgPrefix}/learning_primary_first.svg',
+        '$svgPrefix/learning_primary_first.svg',
         'Memorize new vocabulary easily with our help',
       ),
       _buildPage(
         context,
         'Minimal and simple',
-        '${IntroductionPage.svgPrefix}/learning_primary_clean.svg',
+        '$svgPrefix/learning_primary_clean.svg',
         'Translate new words and store them fast',
       ),
       _buildPage(
         context,
         'Light or dark?',
-        '${IntroductionPage.svgPrefix}/dark_mode.svg',
+        '$svgPrefix/dark_mode.svg',
         'Choose your preferable theme for this application',
         footer: const ThemePicker(),
       ),
       _buildPage(
         context,
         'Save your progress',
-        '${IntroductionPage.svgPrefix}/learning_primary_save.svg',
+        '$svgPrefix/learning_primary_save.svg',
         'Log in using Google Play to remember your progress',
         footer: ElevatedButton(
           onPressed: () {},
@@ -84,7 +82,7 @@ class IntroductionPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               SvgPicture.asset(
-                '${IntroductionPage.svgPrefix}/google_play.svg',
+                '$svgPrefix/google_play.svg',
                 height: 40.h,
               ),
               SizedBox(
