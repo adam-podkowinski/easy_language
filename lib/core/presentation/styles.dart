@@ -45,7 +45,10 @@ class CustomTheme {
         color: onPrimary,
         fontWeight: FontWeight.bold,
       ),
-      bodyText1: const TextStyle(),
+      bodyText1: const TextStyle(
+        fontSize: 15,
+        fontWeight: FontWeight.bold,
+      ),
       bodyText2: const TextStyle(),
       overline: const TextStyle(),
       subtitle1: const TextStyle(),

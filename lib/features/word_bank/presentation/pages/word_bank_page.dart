@@ -43,7 +43,7 @@ class WordBankPage extends StatelessWidget {
               ),
             ],
           ),
-          drawer: const EasyLanguageDrawer(),
+          drawer: const EasyLanguageDrawer(pageId: wordBankPageId),
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 11.w),
             child: Column(

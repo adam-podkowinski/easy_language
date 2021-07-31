@@ -38,6 +38,8 @@ class MainApp extends StatelessWidget {
       routes: {
         wordBankPageId: (context) => const WordBankPage(),
         introductionPageId: (context) => const IntroductionPage(),
+        // TODO: create flashcards page and it's feature
+        flashcardsPageId: (context) => const WordBankPage(),
       },
     );
   }
