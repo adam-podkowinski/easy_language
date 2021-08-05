@@ -19,7 +19,7 @@ class WordBankPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final radius = 35.r;
+    final radius = 30.r;
     return SafeArea(
       child: ChangeNotifierProvider<WordBankProvider>(
         create: (context) {
@@ -30,7 +30,7 @@ class WordBankPage extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             toolbarHeight: 75.h,
-            title: const Text('Word bank'),
+            title: Text(pageTitlesFromIds[wordBankPageId] ?? 'Word Bank'),
             actions: [
               Builder(
                 builder: (context) {

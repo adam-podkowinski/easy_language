@@ -12,3 +12,9 @@ const addNewLanguageString = 'New...';
 const addNewWordTitle = 'Add a new word';
 const editWordTitle = 'Edit a word';
 const svgPrefix = 'assets/svgs';
+
+const Map<String, String> pageTitlesFromIds = {
+  wordBankPageId: 'Word Bank',
+  introductionPageId: 'Introduction',
+  flashcardsPageId: 'Flashcards',
+};

@@ -1,5 +1,5 @@
 import 'package:easy_language/core/constants.dart';
-import 'package:easy_language/core/presentation/main_page.dart';
+import 'package:easy_language/core/presentation/main_app.dart';
 import 'package:easy_language/features/login/presentation/pages/loading_page.dart';
 import 'package:easy_language/features/settings/presentation/manager/settings_provider.dart';
 import 'package:flutter/cupertino.dart';

@@ -1,6 +1,7 @@
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/presentation/styles.dart';
+import 'package:easy_language/features/flashcards/presentation/pages/flashcards_page.dart';
 import 'package:easy_language/features/login/presentation/pages/introduction_page.dart';
 import 'package:easy_language/features/word_bank/presentation/pages/word_bank_page.dart';
 import 'package:flutter/material.dart';
@@ -38,8 +39,7 @@ class MainApp extends StatelessWidget {
       routes: {
         wordBankPageId: (context) => const WordBankPage(),
         introductionPageId: (context) => const IntroductionPage(),
-        // TODO: create flashcards page and it's feature
-        flashcardsPageId: (context) => const WordBankPage(),
+        flashcardsPageId: (context) => const FlashcardsPage(),
       },
     );
   }

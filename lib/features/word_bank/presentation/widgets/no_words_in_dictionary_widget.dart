@@ -31,7 +31,7 @@ class NoWordsInDictionaryWidget extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             SizedBox(
-              height: 10.h,
+              height: 18.h,
             ),
             ElevatedButton(
               onPressed: () {
@@ -42,13 +42,24 @@ class NoWordsInDictionaryWidget extends StatelessWidget {
                 );
               },
               style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  Theme.of(context).accentColor,
+                ),
                 shape: MaterialStateProperty.all(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(radius),
                   ),
                 ),
               ),
-              child: const Text('Add new word'),
+              child: Padding(
+                padding: EdgeInsets.all(10.w),
+                child: const Text(
+                  'Add new word',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              ),
             ),
           ],
         ),

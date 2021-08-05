@@ -43,6 +43,7 @@ class CustomTheme {
       caption: const TextStyle(),
       button: const TextStyle(
         color: onPrimary,
+        fontFamily: 'Mulish',
         fontWeight: FontWeight.bold,
       ),
       bodyText1: const TextStyle(
