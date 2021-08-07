@@ -4,17 +4,10 @@ import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/features/settings/data/data_sources/settings_local_data_source.dart';
 import 'package:easy_language/features/settings/data/repositories/settings_repository_impl.dart';
 import 'package:easy_language/features/settings/domain/repositories/settings_repository.dart';
-import 'package:easy_language/features/settings/domain/use_cases/change_settings.dart';
-import 'package:easy_language/features/settings/domain/use_cases/get_settings.dart';
 import 'package:easy_language/features/settings/presentation/manager/settings_provider.dart';
 import 'package:easy_language/features/word_bank/data/data_sources/word_bank_local_data_source.dart';
 import 'package:easy_language/features/word_bank/data/repositories/word_bank_repository_impl.dart';
 import 'package:easy_language/features/word_bank/domain/repositories/word_bank_repository.dart';
-import 'package:easy_language/features/word_bank/domain/use_cases/add_language_to_word_bank.dart';
-import 'package:easy_language/features/word_bank/domain/use_cases/change_current_language.dart';
-import 'package:easy_language/features/word_bank/domain/use_cases/edit_word_list.dart';
-import 'package:easy_language/features/word_bank/domain/use_cases/get_current_language.dart';
-import 'package:easy_language/features/word_bank/domain/use_cases/get_word_bank.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
@@ -26,14 +19,9 @@ Future registerSettings() async {
   // Provider
   sl.registerLazySingleton(
     () => SettingsProvider(
-      getSettingsUseCase: sl(),
-      changeSettingsUseCase: sl(),
+      settingsRepository: sl<SettingsRepository>(),
     ),
   );
-
-  // Use cases
-  sl.registerLazySingleton(() => GetSettings(sl()));
-  sl.registerLazySingleton(() => ChangeSettings(sl()));
 
   // Repositories
   sl.registerLazySingleton<SettingsRepository>(
@@ -51,20 +39,9 @@ Future registerWordBank() async {
   // Provider
   sl.registerFactory(
     () => WordBankProvider(
-      getWordBankUseCase: sl(),
-      getCurrentLanguageUseCase: sl(),
-      editWordListUseCase: sl(),
-      addLanguageUseCase: sl(),
-      changeCurrentLanguageUseCase: sl(),
+      wordBankRepository: sl<WordBankRepository>(),
     ),
   );
-
-  // Use cases
-  sl.registerLazySingleton(() => GetWordBank(sl()));
-  sl.registerLazySingleton(() => AddLanguageToWordBank(sl()));
-  sl.registerLazySingleton(() => ChangeCurrentLanguage(sl()));
-  sl.registerLazySingleton(() => EditWordList(sl()));
-  sl.registerLazySingleton(() => GetCurrentLanguage(sl()));
 
   // Repositories
   sl.registerLazySingleton<WordBankRepository>(

@@ -1,16 +1,13 @@
 import 'package:easy_language/core/error/failures.dart';
-import 'package:easy_language/core/use_cases/use_case.dart';
 import 'package:easy_language/features/settings/data/models/settings_model.dart';
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
-import 'package:easy_language/features/settings/domain/use_cases/change_settings.dart';
-import 'package:easy_language/features/settings/domain/use_cases/get_settings.dart';
+import 'package:easy_language/features/settings/domain/repositories/settings_repository.dart';
 import 'package:flutter/material.dart';
 
 class SettingsProvider extends ChangeNotifier {
   bool loading = true;
 
-  final GetSettings getSettingsUseCase;
-  final ChangeSettings changeSettingsUseCase;
+  final SettingsRepository settingsRepository;
 
   Settings settings = const Settings(
     isStartup: false,
@@ -20,8 +17,7 @@ class SettingsProvider extends ChangeNotifier {
   SettingsFailure? settingsFailure;
 
   SettingsProvider({
-    required this.getSettingsUseCase,
-    required this.changeSettingsUseCase,
+    required this.settingsRepository,
   });
 
   String get themeModeString =>
@@ -35,7 +31,7 @@ class SettingsProvider extends ChangeNotifier {
   Future initSettings() async {
     _prepareMethod();
 
-    final settingsEither = await getSettingsUseCase(NoParams());
+    final settingsEither = await settingsRepository.getSettings();
     settingsEither.fold(
       (l) {
         if (l is SettingsFailure) {
@@ -54,8 +50,8 @@ class SettingsProvider extends ChangeNotifier {
   Future changeSettings(Map<String, dynamic> changedSettings) async {
     _prepareMethod();
 
-    final settingsEither = await changeSettingsUseCase(
-      SettingsParams(settingsMap: changedSettings),
+    final settingsEither = await settingsRepository.changeSettings(
+      settingsMap: changedSettings,
     );
     settingsEither.fold(
       (l) {

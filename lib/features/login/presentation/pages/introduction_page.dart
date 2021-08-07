@@ -21,7 +21,9 @@ class IntroductionPage extends StatelessWidget {
         body: IntroductionScreen(
           pages: _buildPages(context),
           onDone: () {
-            Navigator.of(context).pushReplacementNamed(wordBankPageId).then(
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil(wordBankPageId, (_) => false)
+                .then(
                   (_) => {
                     state.changeSettings({
                       Settings.isStartupId: false,

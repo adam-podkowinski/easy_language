@@ -3,7 +3,6 @@ import 'package:easy_language/core/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-// TODO: Use pushNamed instead of pushReplacementNamed after performance fix
 class EasyLanguageDrawer extends StatelessWidget {
   const EasyLanguageDrawer({
     Key? key,
@@ -35,7 +34,7 @@ class EasyLanguageDrawer extends StatelessWidget {
             leadingIconData: Icons.list,
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.of(context).pushReplacementNamed(wordBankPageId);
+              Navigator.of(context).pushNamed(wordBankPageId);
             },
           ),
           SizedBox(
@@ -47,7 +46,7 @@ class EasyLanguageDrawer extends StatelessWidget {
             leadingIconData: Icons.dynamic_feed,
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.of(context).pushReplacementNamed(flashcardsPageId);
+              Navigator.of(context).pushNamed(flashcardsPageId);
             },
           ),
           SizedBox(
@@ -59,7 +58,7 @@ class EasyLanguageDrawer extends StatelessWidget {
             leadingIconData: Icons.settings,
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.of(context).pushReplacementNamed(introductionPageId);
+              Navigator.of(context).pushNamed(introductionPageId);
             },
           ),
         ],
@@ -111,7 +110,7 @@ class DrawerListTile extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.w),
       ),
-      onTap: onTap,
+      onTap: isFocused ? null : onTap,
     );
   }
 }

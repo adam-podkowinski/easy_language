@@ -1,24 +1,15 @@
 import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/core/error/failures.dart';
-import 'package:easy_language/core/use_cases/use_case.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/word_bank/domain/entities/word_bank.dart';
-import 'package:easy_language/features/word_bank/domain/use_cases/add_language_to_word_bank.dart';
-import 'package:easy_language/features/word_bank/domain/use_cases/change_current_language.dart';
-import 'package:easy_language/features/word_bank/domain/use_cases/edit_word_list.dart';
-import 'package:easy_language/features/word_bank/domain/use_cases/get_current_language.dart';
-import 'package:easy_language/features/word_bank/domain/use_cases/get_word_bank.dart';
+import 'package:easy_language/features/word_bank/domain/repositories/word_bank_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:language_picker/languages.dart';
 
 class WordBankProvider extends ChangeNotifier {
   bool loading = true;
 
-  final GetWordBank getWordBankUseCase;
-  final GetCurrentLanguage getCurrentLanguageUseCase;
-  final EditWordList editWordListUseCase;
-  final AddLanguageToWordBank addLanguageUseCase;
-  final ChangeCurrentLanguage changeCurrentLanguageUseCase;
+  final WordBankRepository wordBankRepository;
 
   Language? currentLanguage;
   WordBank wordBank = const WordBank(dictionaries: {});
@@ -27,11 +18,7 @@ class WordBankProvider extends ChangeNotifier {
   LanguageFailure? currentLanguageFailure;
 
   WordBankProvider({
-    required this.getWordBankUseCase,
-    required this.getCurrentLanguageUseCase,
-    required this.editWordListUseCase,
-    required this.addLanguageUseCase,
-    required this.changeCurrentLanguageUseCase,
+    required this.wordBankRepository,
   });
 
   void _prepareMethod() {
@@ -48,8 +35,8 @@ class WordBankProvider extends ChangeNotifier {
   Future initWordBank() async {
     _prepareMethod();
 
-    final wordBankEither = await getWordBankUseCase(NoParams());
-    final currentLanguageEither = await getCurrentLanguageUseCase(NoParams());
+    final wordBankEither = await wordBankRepository.getWordBank();
+    final currentLanguageEither = await wordBankRepository.getCurrentLanguage();
 
     wordBankEither.fold(
       (l) {
@@ -82,9 +69,7 @@ class WordBankProvider extends ChangeNotifier {
       throw UnexpectedException();
     }
 
-    final wordBankEither = await addLanguageUseCase(
-      AddLanguageToWordBankParams(lang),
-    );
+    final wordBankEither = await wordBankRepository.addLanguageToWordBank(lang);
 
     wordBankEither.fold(
       (l) {
@@ -96,7 +81,7 @@ class WordBankProvider extends ChangeNotifier {
       (r) => wordBank = r,
     );
 
-    final currentLanguageEither = await getCurrentLanguageUseCase(NoParams());
+    final currentLanguageEither = await wordBankRepository.getCurrentLanguage();
     currentLanguageEither.fold(
       (l) {
         if (l is LanguageFailure) {
@@ -115,12 +100,10 @@ class WordBankProvider extends ChangeNotifier {
 
     if (currentLanguage != null) {
       if (wordBank.dictionaries[currentLanguage] != null) {
-        final wordBankEither = await editWordListUseCase(
-          EditWordListParams(
-            languageFrom: currentLanguage!,
-            newWordList: wordBank.dictionaries[currentLanguage]!
-              ..insert(0, wordToAdd),
-          ),
+        final wordBankEither = await wordBankRepository.editWordsList(
+          languageFrom: currentLanguage!,
+          newWordList: wordBank.dictionaries[currentLanguage]!
+            ..insert(0, wordToAdd),
         );
 
         wordBankEither.fold(
@@ -147,8 +130,9 @@ class WordBankProvider extends ChangeNotifier {
     }
 
     if (wordBank.dictionaries[language] != null) {
-      final currentLanguageEither = await changeCurrentLanguageUseCase(
-        ChangeCurrentLanguageParams(language: language),
+      final currentLanguageEither =
+          await wordBankRepository.changeCurrentLanguage(
+        language,
       );
       currentLanguageEither.fold(
         (l) {
@@ -180,8 +164,9 @@ class WordBankProvider extends ChangeNotifier {
 
     final newWordList = wordBank.dictionaries[changeOnLang];
     newWordList?[index] = newWord;
-    final wordBankEither = await editWordListUseCase(
-      EditWordListParams(languageFrom: changeOnLang, newWordList: newWordList),
+    final wordBankEither = await wordBankRepository.editWordsList(
+      languageFrom: changeOnLang,
+      newWordList: newWordList,
     );
 
     wordBankEither.fold(
@@ -218,8 +203,9 @@ class WordBankProvider extends ChangeNotifier {
     }
 
     newWordList.removeAt(index);
-    final wordBankEither = await editWordListUseCase(
-      EditWordListParams(languageFrom: changeOnLang, newWordList: newWordList),
+    final wordBankEither = await wordBankRepository.editWordsList(
+      languageFrom: changeOnLang,
+      newWordList: newWordList,
     );
 
     wordBankEither.fold(
@@ -256,8 +242,9 @@ class WordBankProvider extends ChangeNotifier {
       throw UnexpectedException();
     }
 
-    final wordBankEither = await editWordListUseCase(
-      EditWordListParams(languageFrom: changeOnLang, newWordList: wordList),
+    final wordBankEither = await wordBankRepository.editWordsList(
+      languageFrom: changeOnLang,
+      newWordList: wordList,
     );
 
     wordBankEither.fold(
