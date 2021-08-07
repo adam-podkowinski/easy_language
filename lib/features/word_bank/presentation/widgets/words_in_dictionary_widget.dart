@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
@@ -37,8 +35,6 @@ class WordsInDictionaryWidget extends StatelessWidget {
             word: item,
             index: index,
             itemAnimation: itemAnimation,
-            dragAnimation: dragAnimation,
-            inDrag: inDrag,
           ),
         );
       },
@@ -52,26 +48,15 @@ class WordListItem extends StatelessWidget {
     required this.word,
     required this.index,
     required this.itemAnimation,
-    required this.dragAnimation,
-    required this.inDrag,
   }) : super(key: key);
 
   final Word word;
   final int index;
   final Animation<double> itemAnimation;
-  final Animation<double> dragAnimation;
-  final bool inDrag;
 
   @override
   Widget build(BuildContext context) {
     final WordBankProvider _state = context.watch<WordBankProvider>();
-    final t = dragAnimation.value;
-    final elevation = lerpDouble(0, 0.5, t)!;
-    final color = Color.lerp(
-      getSheetColor(context),
-      getSheetColor(context).withOpacity(0.94),
-      t,
-    );
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -92,44 +77,39 @@ class WordListItem extends StatelessWidget {
                   onTap: () => _state.removeWord(index),
                 ),
               ],
-              child: Material(
-                type: MaterialType.card,
-                color: color,
-                elevation: elevation,
-                child: Padding(
-                  padding: EdgeInsets.all(8.w),
-                  child: ListTile(
-                    title: Text(
-                      word.wordForeign,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
+              child: Padding(
+                padding: EdgeInsets.all(8.w),
+                child: ListTile(
+                  title: Text(
+                    word.wordForeign,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
-                    subtitle: Text(
-                      word.wordTranslation,
-                      style: TextStyle(
-                        color:
-                            Theme.of(context).colorScheme.onPrimary.withOpacity(
-                                  0.8,
-                                ),
-                      ),
+                  ),
+                  subtitle: Text(
+                    word.wordTranslation,
+                    style: TextStyle(
+                      color:
+                          Theme.of(context).colorScheme.onPrimary.withOpacity(
+                                0.8,
+                              ),
                     ),
-                    trailing: InkWell(
-                      onTap: () {
-                        showWordDialog(
-                          context,
-                          editWordTitle,
-                          (newWord) => _state.changeWord(
-                            index,
-                            newWord,
-                          ),
-                          wordToEdit: word,
-                        );
-                      },
-                      child: Icon(
-                        Icons.edit,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
+                  ),
+                  trailing: InkWell(
+                    onTap: () {
+                      showWordDialog(
+                        context,
+                        editWordTitle,
+                        (newWord) => _state.changeWord(
+                          index,
+                          newWord,
+                        ),
+                        wordToEdit: word,
+                      );
+                    },
+                    child: Icon(
+                      Icons.edit,
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
                   ),
                 ),

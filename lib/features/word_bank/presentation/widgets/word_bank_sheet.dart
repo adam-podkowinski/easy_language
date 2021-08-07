@@ -95,7 +95,15 @@ class _WordBankSheetState extends State<WordBankSheet> {
       child: Container(
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
-          color: getSheetColor(context),
+          gradient: LinearGradient(
+            colors: [
+              getSheetColor(context),
+              getSheetColor(context),
+              getSecondSheetColor(context),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(widget.radius),
             topRight: Radius.circular(widget.radius),

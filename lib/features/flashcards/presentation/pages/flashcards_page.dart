@@ -46,7 +46,6 @@ class FlashcardsPage extends StatelessWidget {
                   colors: [
                     Theme.of(context).colorScheme.primaryVariant,
                     Theme.of(context).colorScheme.primaryVariant,
-                    Theme.of(context).colorScheme.primaryVariant,
                     Theme.of(context).primaryColor,
                   ],
                   begin: Alignment.topLeft,
