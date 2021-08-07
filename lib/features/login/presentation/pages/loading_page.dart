@@ -10,7 +10,7 @@ class LoadingApp extends StatelessWidget {
       title: 'Easy Language',
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: CustomTheme.primary,
+        backgroundColor: CustomTheme.primaryVariant,
         body: Center(
           child: Text(
             'Easy Language',

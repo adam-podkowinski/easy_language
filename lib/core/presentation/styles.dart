@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class CustomTheme {
   static const primary = Color(0xff148af9);
-  static const primaryVariant = Color(0xff3058b6);
+
+  static const primaryVariant = Color(0xff4f42ee);
 
   static const secondary = Color(0xFFf98314);
   static const secondaryVariant = Color(0xffd97212);
@@ -29,14 +30,17 @@ class CustomTheme {
         fontSize: 24,
         fontWeight: FontWeight.w900,
         color: onBackground,
-        fontFamily: 'Mulish',
       ),
       headline5: const TextStyle(
         fontSize: 26,
         fontWeight: FontWeight.w900,
         color: primary,
       ),
-      headline4: const TextStyle(),
+      headline4: TextStyle(
+        fontSize: 28,
+        fontWeight: FontWeight.w900,
+        color: onBackground,
+      ),
       headline3: const TextStyle(),
       headline2: const TextStyle(),
       headline1: const TextStyle(),

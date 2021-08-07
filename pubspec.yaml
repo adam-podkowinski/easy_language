@@ -51,4 +51,4 @@ flutter:
     - assets/svgs/
 
 flutter_native_splash:
-  color: "#148af9"
+  color: "#4f42d9"

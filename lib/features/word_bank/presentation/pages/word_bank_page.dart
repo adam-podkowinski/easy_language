@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 class WordBankPage extends StatelessWidget {
   const WordBankPage({Key? key}) : super(key: key);
 
+  // TODO: move change notifier provider up in a widget tree
   @override
   Widget build(BuildContext context) {
     final radius = 30.r;
@@ -29,7 +30,7 @@ class WordBankPage extends StatelessWidget {
         },
         child: Scaffold(
           appBar: AppBar(
-            toolbarHeight: 75.h,
+            toolbarHeight: 75.r,
             title: Text(pageTitlesFromIds[wordBankPageId] ?? 'Word Bank'),
             actions: [
               Builder(
