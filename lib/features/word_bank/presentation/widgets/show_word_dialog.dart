@@ -1,6 +1,7 @@
 import 'package:easy_language/core/word.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:uuid/uuid.dart';
 
 void showWordDialog(
   BuildContext context,
@@ -126,6 +127,7 @@ class _WordDialogState extends State<WordDialog> {
                     wordForeign: foreignWordController.text.trim(),
                     wordTranslation: wordTranslationController.text.trim(),
                     editDate: DateTime.now(),
+                    id: const Uuid().v1(),
                   ),
                 );
                 Navigator.of(context).pop();

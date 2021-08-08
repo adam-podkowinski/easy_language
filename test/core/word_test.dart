@@ -14,6 +14,7 @@ void main() {
     wordForeign: 'gracias',
     wordTranslation: 'hello',
     editDate: tDateTime,
+    id: 'id',
   );
 
   test(
@@ -55,6 +56,7 @@ void main() {
             wordForeign: 'szkola',
             wordTranslation: 'hello',
             editDate: tDateTime,
+            id: 'id',
           ),
         );
 
@@ -70,6 +72,7 @@ void main() {
             wordForeign: 'szkola',
             wordTranslation: 'school',
             editDate: tDateTime,
+            id: 'id',
           ),
         );
       },

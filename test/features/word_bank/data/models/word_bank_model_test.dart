@@ -15,11 +15,13 @@ void main() {
         wordForeign: 'gracias',
         wordTranslation: 'hello',
         editDate: DateTime.parse('2021-07-25 19:59:50.709734'),
+        id: 'id',
       ),
       Word(
         wordForeign: 'dzień',
         wordTranslation: 'day',
         editDate: DateTime.parse('2021-07-25 19:59:50.709734'),
+        id: 'id',
       )
     ],
   });

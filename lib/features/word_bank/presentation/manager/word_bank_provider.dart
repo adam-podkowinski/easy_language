@@ -148,7 +148,7 @@ class WordBankProvider extends ChangeNotifier {
     _finishMethod();
   }
 
-  Future changeWord(
+  Future editWord(
     int index,
     Word newWord, {
     Language? language,

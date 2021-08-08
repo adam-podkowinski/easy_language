@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+import 'package:uuid/uuid.dart';
 
 enum LearningStatus { learning, reviewing, mastered }
 
@@ -37,11 +38,13 @@ class Word extends Equatable {
   final DateTime editDate;
   final LearningStatus learningStatus;
   final int timesReviewed;
+  final String id;
 
   const Word({
     required this.wordForeign,
     required this.wordTranslation,
     required this.editDate,
+    required this.id,
     this.learningStatus = LearningStatus.reviewing,
     this.timesReviewed = 0,
   });
@@ -51,9 +54,11 @@ class Word extends Equatable {
   static const wordEditDateId = 'wordEditDate';
   static const learningStatusId = 'learningStatus';
   static const timesReviewedId = 'timesReviewed';
+  static const idId = 'id';
 
   factory Word.fromMap(Map<dynamic, dynamic> map) {
     return Word(
+      id: cast(map[Word.idId]) ?? const Uuid().v1(),
       wordForeign: cast(map[Word.wordForeignId]) ?? '',
       wordTranslation: cast(map[Word.wordTranslationId]) ?? '',
       learningStatus: LearningStatusExtension.fromString(
@@ -77,6 +82,7 @@ class Word extends Equatable {
         Word.wordEditDateId: editDate.toIso8601String(),
         Word.learningStatusId: learningStatus.statusToString,
         Word.timesReviewedId: timesReviewed,
+        Word.idId: id,
       };
 
   @override
@@ -86,5 +92,6 @@ class Word extends Equatable {
         editDate,
         learningStatus,
         timesReviewed,
+        id,
       ];
 }

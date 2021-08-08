@@ -100,7 +100,7 @@ class WordListItem extends StatelessWidget {
                       showWordDialog(
                         context,
                         editWordTitle,
-                        (newWord) => _state.changeWord(
+                        (newWord) => _state.editWord(
                           index,
                           newWord,
                         ),

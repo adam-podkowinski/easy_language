@@ -49,6 +49,7 @@ class _FlashcardsPageState extends State<FlashcardsPage> {
               height: 0.35.sh,
               margin: EdgeInsets.symmetric(horizontal: 50.w),
               clipBehavior: Clip.hardEdge,
+              curve: Curves.easeInOut,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30.r),
                 gradient: LinearGradient(
