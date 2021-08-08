@@ -80,11 +80,11 @@ void main() {
     test(
       'should return a valid Map',
       () async {
-        const Map<String, String> tValidMap = {
-          Word.wordForeignId: 'gracias',
-          Word.wordTranslationId: 'hello',
-          Word.wordEditDateId: tDateTimeString,
-        };
+        final Map<dynamic, dynamic> tValidMap = cast(
+          jsonDecode(
+            fixture('word.json'),
+          ),
+        );
 
         final newMap = tWord.toMap();
 

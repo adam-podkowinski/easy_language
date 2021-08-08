@@ -67,6 +67,9 @@ class _FlashcardsPageState extends State<FlashcardsPage> {
               ),
               duration: const Duration(milliseconds: 400),
               child: InkWell(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                focusColor: Colors.transparent,
                 onTap: () {
                   setState(() {
                     isTurned = !isTurned;
@@ -76,6 +79,8 @@ class _FlashcardsPageState extends State<FlashcardsPage> {
                 child: Center(
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 250),
+                    switchInCurve: Curves.easeInOut,
+                    switchOutCurve: Curves.easeInOut,
                     transitionBuilder:
                         (Widget child, Animation<double> animation) {
                       return FadeTransition(

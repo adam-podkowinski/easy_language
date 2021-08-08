@@ -3,12 +3,16 @@
     {
       "wordForeign": "gracias",
       "wordTranslation": "hello",
-      "wordEditDate": "2021-07-25 19:59:50.709734"
+      "wordEditDate": "2021-07-25T19:59:50.709734",
+      "learningStatus": "reviewing",
+      "timesReviewed": 0
     },
     {
       "wordForeign": "dzień",
       "wordTranslation": "day",
-      "wordEditDate": "2021-07-25 19:59:50.709734"
+      "wordEditDate": "2021-07-25T19:59:50.709734",
+      "learningStatus": "reviewing",
+      "timesReviewed": 0
     }
   ]
 }

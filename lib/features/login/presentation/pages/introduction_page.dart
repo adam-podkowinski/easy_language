@@ -5,9 +5,9 @@ import 'package:easy_language/features/settings/presentation/manager/settings_pr
 import 'package:easy_language/features/settings/presentation/widgets/theme_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class IntroductionPage extends StatelessWidget {

@@ -42,20 +42,8 @@ void main() {
     test(
       'should return a valid map from a WordBankModel',
       () async {
-        final tMap = {
-          "pl": [
-            {
-              Word.wordForeignId: 'gracias',
-              Word.wordTranslationId: 'hello',
-              Word.wordEditDateId: '2021-07-25T19:59:50.709734',
-            },
-            {
-              Word.wordForeignId: 'dzień',
-              Word.wordTranslationId: 'day',
-              Word.wordEditDateId: '2021-07-25T19:59:50.709734',
-            },
-          ]
-        };
+        final Map<dynamic, dynamic> tMap =
+            cast(jsonDecode(fixture('word_bank.json')));
 
         final tToMap = tWordBank.toMap();
 
