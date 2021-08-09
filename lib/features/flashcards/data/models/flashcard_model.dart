@@ -5,16 +5,16 @@ import 'package:language_picker/languages.dart';
 class FlashcardModel extends Flashcard {
   const FlashcardModel({
     required bool isTurned,
-    required String wordId,
+    required int wordIndex,
     required Language wordLanguage,
   }) : super(
           isTurned: isTurned,
-          wordId: wordId,
+          wordIndex: wordIndex,
           wordLanguage: wordLanguage,
         );
 
   static const isTurnedId = 'isTurned';
-  static const wordIdId = 'wordId';
+  static const wordIndexId = 'wordIndex';
   static const wordLanguageId = 'wordLanguage';
 
   factory FlashcardModel.fromMap(
@@ -22,17 +22,21 @@ class FlashcardModel extends Flashcard {
   ) {
     return FlashcardModel(
       isTurned: cast(flashcardMap[isTurnedId]) ?? false,
-      wordId: cast(flashcardMap[wordIdId]) ?? '',
+      wordIndex: cast(flashcardMap[wordIndexId]) ?? 0,
       wordLanguage: Language.fromIsoCode(
         cast(flashcardMap[wordLanguageId]) ?? 'en-US',
       ),
     );
   }
 
+  FlashcardModel copyWithMap(Map<dynamic, dynamic> map) {
+    return FlashcardModel.fromMap({...toMap(), ...map});
+  }
+
   Map<dynamic, dynamic> toMap() {
     return {
       isTurnedId: isTurned,
-      wordIdId: wordId,
+      wordIndexId: wordIndex,
       wordLanguageId: wordLanguage.isoCode,
     };
   }

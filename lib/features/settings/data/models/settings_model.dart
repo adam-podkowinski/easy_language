@@ -18,8 +18,7 @@ class SettingsModel extends Settings {
   }
 
   SettingsModel copyWithMap(Map<dynamic, dynamic> map) {
-    final Map<dynamic, dynamic> newMap = {...toMap(), ...map};
-    return SettingsModel.fromMap(newMap);
+    return SettingsModel.fromMap({...toMap(), ...map});
   }
 
   Map<dynamic, dynamic> toMap() => {

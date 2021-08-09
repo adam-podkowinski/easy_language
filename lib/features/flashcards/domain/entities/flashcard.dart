@@ -3,19 +3,19 @@ import 'package:language_picker/languages.dart';
 
 class Flashcard extends Equatable {
   final bool isTurned;
-  final String wordId;
+  final int wordIndex;
   final Language wordLanguage;
 
   const Flashcard({
     required this.isTurned,
-    required this.wordId,
+    required this.wordIndex,
     required this.wordLanguage,
   });
 
   @override
   List<Object?> get props => [
         isTurned,
-        wordId,
+        wordIndex,
         wordLanguage,
       ];
 }

@@ -60,3 +60,9 @@ class LanguageCacheFailure extends LanguageFailure {
 class LanguageGetFailure extends LanguageFailure {
   LanguageGetFailure(Language? currentLanguage) : super(currentLanguage);
 }
+
+abstract class FlashcardFailure extends Failure {}
+
+class FlashcardTurnFailure extends FlashcardFailure {}
+
+class FlashcardGetFailure extends FlashcardFailure {}

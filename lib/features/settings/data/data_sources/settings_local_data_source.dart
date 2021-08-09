@@ -1,6 +1,7 @@
 import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/features/settings/data/models/settings_model.dart';
 import 'package:hive/hive.dart';
+import 'package:logger/logger.dart';
 
 abstract class SettingsLocalDataSource {
   Future<SettingsModel> getLocalSettings();
@@ -22,7 +23,8 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
         final dbMap = settingsBox.toMap();
         return Future.value(SettingsModel.fromMap(dbMap));
       }
-    } catch (_) {
+    } catch (e) {
+      Logger().e(e);
       throw CacheException();
     }
   }
@@ -31,7 +33,8 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
   Future<void> cacheSettings(SettingsModel settingsToCache) async {
     try {
       await settingsBox.putAll(settingsToCache.toMap());
-    } catch (_) {
+    } catch (e) {
+      Logger().e(e);
       throw CacheException();
     }
   }
