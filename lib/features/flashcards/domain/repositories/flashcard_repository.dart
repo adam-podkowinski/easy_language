@@ -6,9 +6,9 @@ import 'package:language_picker/languages.dart';
 
 abstract class FlashcardRepository {
   Future<Either<Failure, Flashcard>> getNextFlashcard(
-    WordBank wordBank,
-    Language language,
-  );
+    WordBank wordBank, {
+    Language? language,
+  });
 
   Future<Either<Failure, Flashcard>> turnCurrentFlashcard();
 }
