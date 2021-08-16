@@ -1,13 +1,12 @@
 import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
-import 'package:easy_language/features/flashcards/data/models/flashcard_model.dart';
+import 'package:easy_language/features/flashcard/data/models/flashcard_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:language_picker/languages.dart';
 
 import '../../../../fixtures/fixture_reader.dart';
 
-// TODO: write tests for flashcard model
 void main() {
   final tFlashcard = FlashcardModel(
     isTurned: false,

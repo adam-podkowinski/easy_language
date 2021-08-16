@@ -1,10 +1,9 @@
-import 'dart:math';
-
 import 'package:easy_language/core/presentation/styles.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:language_picker/languages.dart';
+import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
 
 class NoLanguagesWidget extends StatelessWidget {
   const NoLanguagesWidget({
@@ -36,12 +35,23 @@ class NoLanguagesWidget extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                final l = Languages.defaultLanguages[
-                    Random().nextInt(Languages.defaultLanguages.length)];
-
-                state.addLanguage(context, l);
+                showLanguagePickerDialog(
+                  context,
+                      (lang) async {
+                    return state.addLanguage(context, lang);
+                  },
+                  Languages.defaultLanguages
+                      .where(
+                        (element) =>
+                    !state.wordBank.dictionaries.keys.contains(element),
+                  )
+                      .toList(),
+                );
               },
               style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  Theme.of(context).accentColor,
+                ),
                 shape: MaterialStateProperty.all(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(radius),

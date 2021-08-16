@@ -50,7 +50,7 @@ class WordBankControls extends StatelessWidget {
                 height: 1.w,
                 color: Theme.of(context).accentColor,
               ),
-              hint: const Text(addNewLanguageString),
+              hint: const Text(emptyString),
               elevation: 0,
               value: state.currentLanguage,
               onChanged: (value) => state.changeCurrentLanguage(context, value),

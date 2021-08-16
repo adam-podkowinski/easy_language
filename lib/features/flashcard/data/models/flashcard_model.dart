@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:easy_language/features/flashcards/domain/entities/flashcard.dart';
+import 'package:easy_language/features/flashcard/domain/entities/flashcard.dart';
 import 'package:language_picker/languages.dart';
 
 class FlashcardModel extends Flashcard {

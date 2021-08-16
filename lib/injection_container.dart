@@ -1,6 +1,10 @@
 import 'dart:io';
 
 import 'package:easy_language/core/constants.dart';
+import 'package:easy_language/features/flashcard/data/data_sources/flashcard_local_data_source.dart';
+import 'package:easy_language/features/flashcard/data/repositories/flashcard_repository_impl.dart';
+import 'package:easy_language/features/flashcard/domain/repositories/flashcard_repository.dart';
+import 'package:easy_language/features/flashcard/presentation/manager/flashcard_provider.dart';
 import 'package:easy_language/features/settings/data/data_sources/settings_local_data_source.dart';
 import 'package:easy_language/features/settings/data/repositories/settings_repository_impl.dart';
 import 'package:easy_language/features/settings/domain/repositories/settings_repository.dart';
@@ -57,6 +61,28 @@ Future registerWordBank() async {
   );
 }
 
+Future registerFlashcard() async {
+  // Provider
+  sl.registerFactory(
+    () => FlashcardProvider(
+      flashcardRepository: sl<FlashcardRepository>(),
+    ),
+  );
+
+  // Repositories
+  sl.registerLazySingleton<FlashcardRepository>(
+    () => FlashcardRepositoryImpl(
+      localDataSource: sl<FlashcardLocalDataSource>(),
+    ),
+  );
+
+  // Data sources
+  final flashcardBox = await Hive.openBox(cachedCurrentFlashcardId);
+  sl.registerLazySingleton<FlashcardLocalDataSource>(
+    () => FlashcardLocalDataSourceImpl(flashcardBox: flashcardBox),
+  );
+}
+
 Future init() async {
   // Initial
   final Directory dir = await getApplicationDocumentsDirectory();
@@ -65,4 +91,5 @@ Future init() async {
   // Features
   await registerSettings();
   await registerWordBank();
+  await registerFlashcard();
 }
