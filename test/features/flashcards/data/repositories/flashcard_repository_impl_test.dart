@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/error/exceptions.dart';
+import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/features/flashcards/data/data_sources/flashcard_local_data_source.dart';
 import 'package:easy_language/features/flashcards/data/models/flashcard_model.dart';
 import 'package:easy_language/features/flashcards/data/repositories/flashcard_repository_impl.dart';
@@ -17,10 +18,10 @@ class MockFlashcardLocalDataSource extends Mock
     implements FlashcardLocalDataSource {}
 
 void main() {
-  late final FlashcardRepositoryImpl repository;
-  late final MockFlashcardLocalDataSource flashcardLocalDataSource;
+  late FlashcardRepositoryImpl repository;
+  late MockFlashcardLocalDataSource flashcardLocalDataSource;
 
-  setUpAll(() {
+  setUp(() {
     flashcardLocalDataSource = MockFlashcardLocalDataSource();
     repository = FlashcardRepositoryImpl(
       localDataSource: flashcardLocalDataSource,
@@ -103,9 +104,8 @@ void main() {
     );
 
     test(
-      '''
-      should return a valid flashcard when there is nothing cached
-      and there are words in word bank''',
+      'should return a valid flashcard when there is nothing cached'
+      ' and there are words in word bank at a given argument',
       () async {
         when(() => flashcardLocalDataSource.getLocalFlashcard())
             .thenThrow(CacheException());
@@ -114,11 +114,34 @@ void main() {
           (_) => Future.value(),
         );
 
-        final result = await repository.getNextFlashcard(tWordBank);
+        final result = await repository.getNextFlashcard(tWordBank,
+            language: Languages.polish);
         expect(result, Right(tFlashcard));
 
         final secondResult = await repository.getNextFlashcard(tWordBank);
         expect(secondResult, Right(tFlashcardIndexOne));
+      },
+    );
+
+    test(
+      'should return a failure when there is nothing cached'
+      ' and there are no words in word bank at a given argument',
+      () async {
+        when(() => flashcardLocalDataSource.getLocalFlashcard())
+            .thenThrow(CacheException());
+        when(() => flashcardLocalDataSource.cacheCurrentFlashcard(any()))
+            .thenAnswer(
+          (_) => Future.value(),
+        );
+
+        final result = await repository.getNextFlashcard(
+          tWordBank,
+          language: Languages.azerbaijani,
+        );
+        expect(result, Left(FlashcardGetFailure()));
+
+        final secondResult = await repository.getNextFlashcard(tWordBank);
+        expect(secondResult, Left(FlashcardGetFailure()));
       },
     );
   });

@@ -31,9 +31,17 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
     }
 
     try {
-      Language flashcardLang = language ??
-          _flashcard?.wordLanguage ??
-          wordBank.dictionaries.keys.first;
+      final Language? flashcardLang = language ?? _flashcard?.wordLanguage;
+      if (flashcardLang == null) {
+        throw Exception('flashcard lang is equal to null');
+      }
+
+      // Assure there are words available to become a flashcard
+      if (wordBank.dictionaries[flashcardLang]?.isEmpty ?? true) {
+        throw Exception(
+          'word bank dictionary at flashcardLang is empty or null',
+        );
+      }
 
       // Assign a starting index
       // If we get flashcard for a first time we want it to have the same index
@@ -43,14 +51,6 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
         flashcardIndex = _flashcard?.wordIndex ?? 0;
       } else {
         flashcardIndex = (_flashcard?.wordIndex ?? -1) + 1;
-      }
-
-      // Assure there are words available to become a flashcard
-      if (wordBank.dictionaries[flashcardLang]?.isEmpty ?? true) {
-        flashcardLang = wordBank.dictionaries.keys.firstWhere(
-          (lang) => wordBank.dictionaries[lang]?.isNotEmpty ?? false,
-          orElse: () => throw Exception(),
-        );
       }
 
       // If we changed language we want to reset index from cached flashcard
@@ -75,7 +75,8 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
       _initial = false;
 
       return Right(_flashcard!);
-    } catch (_) {
+    } catch (e) {
+      Logger().e(e);
       return Left(FlashcardGetFailure());
     }
   }
@@ -88,7 +89,8 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
       });
       await localDataSource.cacheCurrentFlashcard(_flashcard!);
       return Right(_flashcard!);
-    } catch (_) {
+    } catch (e) {
+      Logger().e(e);
       return Left(FlashcardTurnFailure());
     }
   }
