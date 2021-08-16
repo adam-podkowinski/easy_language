@@ -37,14 +37,14 @@ class NoLanguagesWidget extends StatelessWidget {
               onPressed: () {
                 showLanguagePickerDialog(
                   context,
-                      (lang) async {
+                  (lang) async {
                     return state.addLanguage(context, lang);
                   },
                   Languages.defaultLanguages
                       .where(
                         (element) =>
-                    !state.wordBank.dictionaries.keys.contains(element),
-                  )
+                            !state.wordBank.dictionaries.keys.contains(element),
+                      )
                       .toList(),
                 );
               },

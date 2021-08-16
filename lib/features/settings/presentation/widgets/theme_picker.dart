@@ -13,11 +13,9 @@ class ThemePicker extends StatelessWidget {
       return DropdownButton(
         iconEnabledColor: Theme.of(context).primaryColor,
         value: state.themeModeString,
-        onChanged: (value) {
-          state.changeSettings({
-            Settings.themeModeId: value ?? Settings.systemThemeId,
-          });
-        },
+        onChanged: (value) async => state.changeSettings({
+          Settings.themeModeId: value ?? Settings.systemThemeId,
+        }),
         items: Settings.availableThemesIds
             .map(
               (e) => DropdownMenuItem<String>(

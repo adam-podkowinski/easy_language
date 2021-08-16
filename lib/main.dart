@@ -19,7 +19,7 @@ class EasyLanguage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: screenSize,
-      builder: () => ChangeNotifierProvider(
+      builder: () => ChangeNotifierProvider<SettingsProvider>(
         create: (context) {
           final settings = di.sl<SettingsProvider>();
           settings.initSettings();

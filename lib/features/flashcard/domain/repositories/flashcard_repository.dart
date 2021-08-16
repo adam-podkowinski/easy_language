@@ -8,7 +8,7 @@ abstract class FlashcardRepository {
   Future<Either<Failure, Flashcard>> getNextFlashcard(
     WordBank wordBank, {
     Language? language,
-        bool? init,
+    bool? init,
   });
 
   Future<Either<Failure, Flashcard>> turnCurrentFlashcard();

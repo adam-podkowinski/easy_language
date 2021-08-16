@@ -28,6 +28,11 @@ class SettingsProvider extends ChangeNotifier {
     settingsFailure = null;
   }
 
+  void _finishMethod() {
+    loading = false;
+    notifyListeners();
+  }
+
   Future initSettings() async {
     _prepareMethod();
 
@@ -42,9 +47,7 @@ class SettingsProvider extends ChangeNotifier {
       (r) => settings = r,
     );
 
-    loading = false;
-    notifyListeners();
-    return settings;
+    _finishMethod();
   }
 
   Future changeSettings(Map<String, dynamic> changedSettings) async {
@@ -63,7 +66,6 @@ class SettingsProvider extends ChangeNotifier {
       (r) => settings = r,
     );
 
-    loading = false;
-    notifyListeners();
+    _finishMethod();
   }
 }

@@ -1,6 +1,5 @@
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/circular_progress_indicator.dart';
-import 'package:easy_language/core/presentation/styles.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/flashcard/domain/entities/flashcard.dart';
 import 'package:easy_language/features/flashcard/presentation/manager/flashcard_provider.dart';
@@ -242,10 +241,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
                       children: [
                         Text(
                           'Not enough words to use flashcards',
-                          style:
-                              Theme.of(context).textTheme.headline6!.copyWith(
-                                    color: CustomTheme.onBackgroundDark,
-                                  ),
+                          style: Theme.of(context).textTheme.headline6,
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(

@@ -74,11 +74,17 @@ void main() {
           (_) => Future.value(),
         );
 
-        final result = await repository.getNextFlashcard(tWordBank);
+        final result = await repository.getNextFlashcard(tWordBank, init: true);
         expect(result, Right(tFlashcard));
 
         final secondResult = await repository.getNextFlashcard(tWordBank);
         expect(secondResult, Right(tFlashcardIndexOne));
+
+        final thirdResult = await repository.getNextFlashcard(
+          tWordBank,
+          init: true,
+        );
+        expect(thirdResult, Right(tFlashcardIndexOne));
       },
     );
 

@@ -21,14 +21,10 @@ class IntroductionPage extends StatelessWidget {
         body: IntroductionScreen(
           pages: _buildPages(context),
           onDone: () {
-            Navigator.of(context)
-                .pushNamedAndRemoveUntil(wordBankPageId, (_) => false)
-                .then(
-                  (_) => {
-                    state.changeSettings({
-                      Settings.isStartupId: false,
-                    }),
-                  },
+            Navigator.of(context).pushReplacementNamed(wordBankPageId).then(
+                  (_) async => state.changeSettings({
+                    Settings.isStartupId: false,
+                  }),
                 );
           },
           showSkipButton: true,

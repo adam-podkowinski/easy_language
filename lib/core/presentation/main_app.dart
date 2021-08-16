@@ -62,6 +62,7 @@ class MainApp extends StatelessWidget {
                 },
                 child: const FlashcardPage(),
               ),
+          // TODO: add settings screen.
         },
       ),
     );
