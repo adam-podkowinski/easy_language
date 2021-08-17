@@ -30,6 +30,16 @@ extension LearningStatusExtension on LearningStatus {
         return LearningStatus.reviewing;
     }
   }
+
+  static LearningStatus fromTimesReviewed(int timesReviewed) {
+    if (timesReviewed <= 1) {
+      return LearningStatus.reviewing;
+    } else if (timesReviewed <= 9) {
+      return LearningStatus.learning;
+    } else {
+      return LearningStatus.mastered;
+    }
+  }
 }
 
 class Word extends Equatable {

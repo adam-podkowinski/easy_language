@@ -41,7 +41,11 @@ class CustomTheme {
         fontWeight: FontWeight.w900,
         color: onBackground,
       ),
-      headline3: const TextStyle(),
+      headline3: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w900,
+        color: onBackground,
+      ),
       headline2: const TextStyle(),
       headline1: const TextStyle(),
       caption: const TextStyle(),
