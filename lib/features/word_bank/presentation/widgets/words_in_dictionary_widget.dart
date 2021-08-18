@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
@@ -15,29 +16,65 @@ class WordsInDictionaryWidget extends StatelessWidget {
   const WordsInDictionaryWidget({
     Key? key,
     required this.wordList,
+    required this.searchController,
   }) : super(key: key);
 
   final List<Word> wordList;
+  final TextEditingController searchController;
 
   @override
   Widget build(BuildContext context) {
     final state = context.watch<WordBankProvider>();
-    return ImplicitlyAnimatedReorderableList<Word>(
-      items: wordList,
-      areItemsTheSame: (a, b) => a == b,
-      onReorderFinished: (item, from, to, newItems) async {
-        await state.reorderWordList(newItems);
-      },
-      itemBuilder: (context, itemAnimation, item, index) {
-        return Reorderable(
-          key: ValueKey(item),
-          builder: (context, dragAnimation, inDrag) => WordListItem(
-            word: item,
-            index: index,
-            itemAnimation: itemAnimation,
-          ),
-        );
-      },
+
+    List<Word> items = wordList;
+
+    bool couldNotFind = false;
+    bool searching = false;
+
+    if (searchController.text != '') {
+      searching = true;
+      if (state.searchedWords?.isNotEmpty ?? false) {
+        items = state.searchedWords!;
+        couldNotFind = false;
+      } else {
+        couldNotFind = true;
+      }
+    } else {
+      items = wordList;
+      searching = false;
+    }
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      child: couldNotFind
+          ? Center(
+              child: AutoSizeText(
+                'Could not find words',
+                style: Theme.of(context).textTheme.headline6!.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                maxLines: 1,
+              ),
+            )
+          : ImplicitlyAnimatedReorderableList<Word>(
+              items: items,
+              areItemsTheSame: (a, b) => a == b,
+              onReorderFinished: !searching
+                  ? (item, from, to, newItems) async {
+                      await state.reorderWordList(newItems);
+                    }
+                  : (_, __, ___, ____) {},
+              itemBuilder: (context, itemAnimation, item, index) {
+                return Reorderable(
+                  key: ValueKey(item),
+                  builder: (context, dragAnimation, inDrag) => WordListItem(
+                    word: item,
+                    index: index,
+                    itemAnimation: itemAnimation,
+                  ),
+                );
+              },
+            ),
     );
   }
 }
@@ -74,7 +111,7 @@ class WordListItem extends StatelessWidget {
                   caption: 'Delete',
                   color: Theme.of(context).errorColor,
                   icon: Icons.delete,
-                  onTap: () => _state.removeWord(index),
+                  onTap: () => _state.removeWord(word),
                 ),
               ],
               child: Padding(
@@ -101,7 +138,7 @@ class WordListItem extends StatelessWidget {
                         context,
                         editWordTitle,
                         (newWord) => _state.editWord(
-                          index,
+                          word,
                           newWord,
                         ),
                         wordToEdit: word,

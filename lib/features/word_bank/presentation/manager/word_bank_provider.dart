@@ -1,5 +1,6 @@
 import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/core/error/failures.dart';
+import 'package:easy_language/core/util/simplify_string.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/word_bank/domain/entities/word_bank.dart';
 import 'package:easy_language/features/word_bank/domain/repositories/word_bank_repository.dart';
@@ -20,6 +21,8 @@ class WordBankProvider extends ChangeNotifier {
   WordBankProvider({
     required this.wordBankRepository,
   });
+
+  List<Word>? searchedWords;
 
   int getLearningWords(Language language) {
     if (wordBank.dictionaries.containsKey(language)) {
@@ -65,6 +68,34 @@ class WordBankProvider extends ChangeNotifier {
 
   void _finishMethod() {
     loading = false;
+    notifyListeners();
+  }
+
+  List<Word>? searchWords(String phrase, {Language? language}) {
+    final Language? languageToSearch = language ?? currentLanguage;
+
+    if (languageToSearch == null) {
+      return null;
+    }
+
+    final wordsToSearchThrough = wordBank.dictionaries[languageToSearch];
+
+    if (wordsToSearchThrough == null) {
+      return null;
+    }
+
+    searchedWords = wordsToSearchThrough
+        .where(
+          (e) =>
+              simplifyString(e.wordForeign).contains(
+                simplifyString(phrase),
+              ) ||
+              simplifyString(e.wordTranslation).contains(
+                simplifyString(phrase),
+              ),
+        )
+        .toList();
+
     notifyListeners();
   }
 
@@ -185,7 +216,7 @@ class WordBankProvider extends ChangeNotifier {
   }
 
   Future editWord(
-    int index,
+    Word oldWord,
     Word newWord, {
     Language? language,
   }) async {
@@ -199,7 +230,11 @@ class WordBankProvider extends ChangeNotifier {
     }
 
     final newWordList = wordBank.dictionaries[changeOnLang];
-    newWordList?[index] = newWord;
+    if (newWordList == null) {
+      return;
+    }
+    final index = newWordList.indexWhere((element) => element == oldWord);
+    newWordList[index] = newWord;
     final wordBankEither = await wordBankRepository.editWordsList(
       languageFrom: changeOnLang,
       newWordList: newWordList,
@@ -219,7 +254,7 @@ class WordBankProvider extends ChangeNotifier {
   }
 
   Future removeWord(
-    int index, {
+    Word wordToRemove, {
     Language? language,
   }) async {
     _prepareMethod();
@@ -238,7 +273,8 @@ class WordBankProvider extends ChangeNotifier {
       throw UnexpectedException();
     }
 
-    newWordList.removeAt(index);
+    newWordList.remove(wordToRemove);
+    searchedWords?.remove(wordToRemove);
     final wordBankEither = await wordBankRepository.editWordsList(
       languageFrom: changeOnLang,
       newWordList: newWordList,

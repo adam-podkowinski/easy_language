@@ -13,8 +13,38 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:language_picker/languages.dart';
 import 'package:provider/provider.dart';
 
-class WordBankPage extends StatelessWidget {
+class WordBankPage extends StatefulWidget {
   const WordBankPage({Key? key}) : super(key: key);
+
+  @override
+  _WordBankPageState createState() => _WordBankPageState();
+}
+
+class _WordBankPageState extends State<WordBankPage> {
+  bool _searching = false;
+
+  void _controllerCallback() {
+    context.read<WordBankProvider>().searchWords(
+          _controller.text,
+        );
+  }
+
+  final TextEditingController _controller = TextEditingController();
+  final FocusNode _focus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(_controllerCallback);
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_controllerCallback);
+    _controller.dispose();
+    _focus.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +53,62 @@ class WordBankPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           toolbarHeight: 75.r,
-          title: Text(pageTitlesFromIds[wordBankPageId] ?? 'Word Bank'),
+          title: AnimatedSwitcher(
+            switchInCurve: Curves.easeInOut,
+            switchOutCurve: Curves.easeInOut,
+            duration: const Duration(milliseconds: 300),
+            child: _searching
+                ? TextFormField(
+                    controller: _controller,
+                    focusNode: _focus,
+                    decoration: InputDecoration(
+                      hintText: 'Search...',
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Theme.of(context).accentColor,
+                      ),
+                      fillColor: Theme.of(context).accentColor,
+                      focusColor: Theme.of(context).accentColor,
+                      hoverColor: Theme.of(context).accentColor,
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                    ),
+                  )
+                : Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      pageTitlesFromIds[wordBankPageId] ?? 'Word Bank',
+                    ),
+                  ),
+          ),
           actions: [
             Builder(
               builder: (context) {
                 return _addWordWidget(context);
               },
             ),
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {},
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: _searching
+                  ? IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        setState(() {
+                          _controller.clear();
+                          _focus.unfocus();
+                          _searching = false;
+                        });
+                      },
+                    )
+                  : IconButton(
+                      icon: const Icon(Icons.search),
+                      onPressed: () {
+                        setState(() {
+                          _searching = true;
+                          _focus.requestFocus();
+                        });
+                      },
+                    ),
             ),
           ],
         ),
@@ -43,7 +119,7 @@ class WordBankPage extends StatelessWidget {
             children: [
               Center(child: WordBankControls(radius: radius)),
               SizedBox(height: 10.h),
-              WordBankSheet(radius: radius),
+              WordBankSheet(radius: radius, controller: _controller),
             ],
           ),
         ),

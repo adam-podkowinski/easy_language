@@ -30,9 +30,11 @@ class WordBankSheet extends StatefulWidget {
   const WordBankSheet({
     Key? key,
     required this.radius,
+    required this.controller,
   }) : super(key: key);
 
   final double radius;
+  final TextEditingController controller;
 
   @override
   _WordBankSheetState createState() => _WordBankSheetState();
@@ -74,6 +76,7 @@ class _WordBankSheetState extends State<WordBankSheet> {
         if (dictionary.isNotEmpty) {
           currentWidget = WordsInDictionaryWidget(
             wordList: dictionary,
+            searchController: widget.controller,
           );
         } else {
           currentWidget = NoWordsInDictionaryWidget(

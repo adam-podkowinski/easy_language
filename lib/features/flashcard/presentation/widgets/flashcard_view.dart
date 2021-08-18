@@ -31,7 +31,7 @@ class FlashcardView extends StatelessWidget {
     final newTimesReviewed = word.timesReviewed + 1;
 
     wordBankProvider.editWord(
-      flashcard.wordIndex,
+      word,
       word.copyWithMap({
         Word.timesReviewedId: newTimesReviewed,
         Word.learningStatusId: LearningStatusExtension.fromTimesReviewed(
