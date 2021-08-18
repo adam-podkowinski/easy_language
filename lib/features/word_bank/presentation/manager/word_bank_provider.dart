@@ -21,6 +21,42 @@ class WordBankProvider extends ChangeNotifier {
     required this.wordBankRepository,
   });
 
+  int getLearningWords(Language language) {
+    if (wordBank.dictionaries.containsKey(language)) {
+      return wordBank.dictionaries[language]!
+          .where(
+            (element) => element.learningStatus == LearningStatus.learning,
+          )
+          .length;
+    } else {
+      return -1;
+    }
+  }
+
+  int getReviewingLength(Language language) {
+    if (wordBank.dictionaries.containsKey(language)) {
+      return wordBank.dictionaries[language]!
+          .where(
+            (element) => element.learningStatus == LearningStatus.reviewing,
+          )
+          .length;
+    } else {
+      return -1;
+    }
+  }
+
+  int getMasteredLength(Language language) {
+    if (wordBank.dictionaries.containsKey(language)) {
+      return wordBank.dictionaries[language]!
+          .where(
+            (element) => element.learningStatus == LearningStatus.mastered,
+          )
+          .length;
+    } else {
+      return -1;
+    }
+  }
+
   void _prepareMethod() {
     loading = true;
     wordBankFailure = null;

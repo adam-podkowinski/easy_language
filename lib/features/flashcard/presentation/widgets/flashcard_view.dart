@@ -207,33 +207,21 @@ class FlashcardView extends StatelessWidget {
         StatusWidget(
           color: Theme.of(context).primaryColor,
           numberString: wordBankProvider
-              .wordBank.dictionaries[flashcard.wordLanguage]!
-              .where(
-                (element) => element.learningStatus == LearningStatus.learning,
-              )
-              .length
+              .getLearningWords(flashcard.wordLanguage)
               .toString(),
           text: 'Learning',
         ),
         StatusWidget(
           color: Colors.grey,
           numberString: wordBankProvider
-              .wordBank.dictionaries[flashcard.wordLanguage]!
-              .where(
-                (element) => element.learningStatus == LearningStatus.reviewing,
-              )
-              .length
+              .getReviewingLength(flashcard.wordLanguage)
               .toString(),
           text: 'Reviewing',
         ),
         StatusWidget(
           color: Theme.of(context).accentColor,
           numberString: wordBankProvider
-              .wordBank.dictionaries[flashcard.wordLanguage]!
-              .where(
-                (element) => element.learningStatus == LearningStatus.mastered,
-              )
-              .length
+              .getMasteredLength(flashcard.wordLanguage)
               .toString(),
           text: 'Mastered',
         ),
