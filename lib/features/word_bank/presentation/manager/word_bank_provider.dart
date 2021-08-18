@@ -24,6 +24,8 @@ class WordBankProvider extends ChangeNotifier {
 
   List<Word>? searchedWords;
 
+  String searchPhrase = '';
+
   int getLearningWords(Language language) {
     if (wordBank.dictionaries.containsKey(language)) {
       return wordBank.dictionaries[language]!
@@ -71,7 +73,14 @@ class WordBankProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<Word>? searchWords(String phrase, {Language? language}) {
+  List<Word>? searchWords(String? phraseToSearch, {Language? language}) {
+    var phrase = searchPhrase;
+
+    if (phraseToSearch != null) {
+      phrase = phraseToSearch;
+      searchPhrase = phraseToSearch;
+    }
+
     final Language? languageToSearch = language ?? currentLanguage;
 
     if (languageToSearch == null) {
@@ -219,6 +228,7 @@ class WordBankProvider extends ChangeNotifier {
     Word oldWord,
     Word newWord, {
     Language? language,
+    bool? searching,
   }) async {
     _prepareMethod();
 
@@ -235,6 +245,7 @@ class WordBankProvider extends ChangeNotifier {
     }
     final index = newWordList.indexWhere((element) => element == oldWord);
     newWordList[index] = newWord;
+
     final wordBankEither = await wordBankRepository.editWordsList(
       languageFrom: changeOnLang,
       newWordList: newWordList,
@@ -250,12 +261,17 @@ class WordBankProvider extends ChangeNotifier {
       (r) => wordBank = r,
     );
 
+    if (searching ?? false) {
+      searchWords(null);
+    }
+
     _finishMethod();
   }
 
   Future removeWord(
     Word wordToRemove, {
     Language? language,
+    bool? searching,
   }) async {
     _prepareMethod();
 
@@ -274,7 +290,6 @@ class WordBankProvider extends ChangeNotifier {
     }
 
     newWordList.remove(wordToRemove);
-    searchedWords?.remove(wordToRemove);
     final wordBankEither = await wordBankRepository.editWordsList(
       languageFrom: changeOnLang,
       newWordList: newWordList,
@@ -289,6 +304,10 @@ class WordBankProvider extends ChangeNotifier {
       },
       (r) => wordBank = r,
     );
+
+    if (searching ?? false) {
+      searchWords(null);
+    }
 
     _finishMethod();
   }

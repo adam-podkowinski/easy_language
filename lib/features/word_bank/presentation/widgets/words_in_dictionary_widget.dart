@@ -71,6 +71,7 @@ class WordsInDictionaryWidget extends StatelessWidget {
                     word: item,
                     index: index,
                     itemAnimation: itemAnimation,
+                    searching: searching,
                   ),
                 );
               },
@@ -85,11 +86,13 @@ class WordListItem extends StatelessWidget {
     required this.word,
     required this.index,
     required this.itemAnimation,
+    required this.searching,
   }) : super(key: key);
 
   final Word word;
   final int index;
   final Animation<double> itemAnimation;
+  final bool searching;
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +114,10 @@ class WordListItem extends StatelessWidget {
                   caption: 'Delete',
                   color: Theme.of(context).errorColor,
                   icon: Icons.delete,
-                  onTap: () => _state.removeWord(word),
+                  onTap: () => _state.removeWord(
+                    word,
+                    searching: searching,
+                  ),
                 ),
               ],
               child: Padding(
@@ -140,6 +146,7 @@ class WordListItem extends StatelessWidget {
                         (newWord) => _state.editWord(
                           word,
                           newWord,
+                          searching: searching,
                         ),
                         wordToEdit: word,
                       );
