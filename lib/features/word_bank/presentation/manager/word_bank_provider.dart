@@ -73,6 +73,7 @@ class WordBankProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // TODO: move searchWords to a repository
   List<Word>? searchWords(String? phraseToSearch, {Language? language}) {
     var phrase = searchPhrase;
 

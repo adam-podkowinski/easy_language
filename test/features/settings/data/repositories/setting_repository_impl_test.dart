@@ -7,6 +7,7 @@ import 'package:easy_language/features/settings/data/repositories/settings_repos
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:language_picker/languages.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockSettingsLocalDataSource extends Mock
@@ -19,15 +20,16 @@ void main() {
   setUp(() {
     mockLocalDataSource = MockSettingsLocalDataSource();
     repository = SettingsRepositoryImpl(localDataSource: mockLocalDataSource);
-    registerFallbackValue(const SettingsModel());
+    registerFallbackValue(SettingsModel(nativeLanguage: Languages.english));
   });
 
   group('getSettings', () {
-    const tSettings = SettingsModel(
+    final tSettings = SettingsModel(
       isStartup: false,
       themeMode: ThemeMode.dark,
+      nativeLanguage: Languages.english,
     );
-    const tBlankSettings = SettingsModel();
+    final tBlankSettings = SettingsModel(nativeLanguage: Languages.english);
 
     test(
       '''
@@ -40,7 +42,7 @@ void main() {
         final result = await repository.getSettings();
         verify(() => mockLocalDataSource.getLocalSettings());
         verifyNoMoreInteractions(mockLocalDataSource);
-        expect(result, equals(const Right(tSettings)));
+        expect(result, equals(Right(tSettings)));
       },
     );
 
@@ -59,7 +61,7 @@ void main() {
   });
 
   group('changeSettings', () {
-    const tBlankSettings = SettingsModel();
+    final tBlankSettings = SettingsModel(nativeLanguage: Languages.english);
     final tNewThemeMode = SettingsModel.mapThemeModeToString(ThemeMode.dark);
     const tNewIsStartup = false;
     final tNewSettingsMap = {

@@ -7,6 +7,7 @@ import 'package:easy_language/features/settings/data/models/settings_model.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
+import 'package:language_picker/languages.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../fixtures/fixture_reader.dart';
@@ -64,9 +65,10 @@ void main() {
   });
 
   group('cacheSettings', () {
-    const tSettingsModel = SettingsModel(
+    final tSettingsModel = SettingsModel(
       isStartup: false,
       themeMode: ThemeMode.dark,
+      nativeLanguage: Languages.english,
     );
 
     test(

@@ -4,6 +4,7 @@ import 'package:easy_language/core/presentation/styles.dart';
 import 'package:easy_language/features/flashcard/presentation/manager/flashcard_provider.dart';
 import 'package:easy_language/features/flashcard/presentation/pages/flashcard_page.dart';
 import 'package:easy_language/features/login/presentation/pages/introduction_page.dart';
+import 'package:easy_language/features/settings/presentation/pages/settings_page.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
 import 'package:easy_language/features/word_bank/presentation/pages/word_bank_page.dart';
 import 'package:easy_language/injection_container.dart';
@@ -50,6 +51,7 @@ class MainApp extends StatelessWidget {
         routes: {
           wordBankPageId: (context) => const WordBankPage(),
           introductionPageId: (context) => const IntroductionPage(),
+          settingsPageId: (context) => const SettingsPage(),
           flashcardsPageId: (context) => ChangeNotifierProvider(
                 create: (context) {
                   final provider = sl<FlashcardProvider>();

@@ -24,7 +24,7 @@ class FlashcardModel extends Flashcard {
       isTurned: cast(flashcardMap[isTurnedId]) ?? false,
       wordIndex: cast(flashcardMap[wordIndexId]) ?? 0,
       wordLanguage: Language.fromIsoCode(
-        cast(flashcardMap[wordLanguageId]) ?? 'en-US',
+        cast(flashcardMap[wordLanguageId]) ?? Languages.english.isoCode,
       ),
     );
   }

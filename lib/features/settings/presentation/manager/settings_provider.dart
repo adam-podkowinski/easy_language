@@ -3,15 +3,17 @@ import 'package:easy_language/features/settings/data/models/settings_model.dart'
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:easy_language/features/settings/domain/repositories/settings_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:language_picker/languages.dart';
 
 class SettingsProvider extends ChangeNotifier {
   bool loading = true;
 
   final SettingsRepository settingsRepository;
 
-  Settings settings = const Settings(
+  Settings settings = Settings(
     isStartup: false,
     themeMode: ThemeMode.system,
+    nativeLanguage: Languages.english,
   );
 
   SettingsFailure? settingsFailure;

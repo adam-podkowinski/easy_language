@@ -4,10 +4,13 @@ import 'package:easy_language/features/settings/data/data_sources/settings_local
 import 'package:easy_language/features/settings/data/models/settings_model.dart';
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:easy_language/features/settings/domain/repositories/settings_repository.dart';
+import 'package:language_picker/languages.dart';
 
 class SettingsRepositoryImpl implements SettingsRepository {
   bool _initial = true;
-  SettingsModel _settings = const SettingsModel();
+  SettingsModel _settings = SettingsModel(
+    nativeLanguage: Languages.english,
+  );
   final SettingsLocalDataSource localDataSource;
 
   SettingsRepositoryImpl({required this.localDataSource});

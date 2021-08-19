@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/constants.dart';
+import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:easy_language/features/settings/presentation/manager/settings_provider.dart';
 import 'package:easy_language/features/settings/presentation/widgets/theme_picker.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:language_picker/languages.dart';
 import 'package:provider/provider.dart';
 
 class IntroductionPage extends StatelessWidget {
@@ -20,12 +22,11 @@ class IntroductionPage extends StatelessWidget {
       child: Scaffold(
         body: IntroductionScreen(
           pages: _buildPages(context),
-          onDone: () {
-            Navigator.of(context).pushReplacementNamed(wordBankPageId).then(
-                  (_) async => state.changeSettings({
-                    Settings.isStartupId: false,
-                  }),
-                );
+          onDone: () async {
+            await state.changeSettings({
+              Settings.isStartupId: false,
+            });
+            Navigator.of(context).pushReplacementNamed(wordBankPageId);
           },
           showSkipButton: true,
           skip: const Text('Skip'),
@@ -60,6 +61,28 @@ class IntroductionPage extends StatelessWidget {
         '$svgPrefix/dark_mode.svg',
         'Choose your preferable theme for this application',
         footer: const ThemePicker(),
+      ),
+      _buildPage(
+        context,
+        'Native language',
+        '$svgPrefix/languages.svg',
+        "What language do you translate to most often?",
+        footer: ElevatedButton(
+          onPressed: () => showLanguagePickerDialog(
+            context,
+            (Language language) {
+              context.read<SettingsProvider>().changeSettings(
+                {
+                  Settings.nativeLanguageId: language.isoCode,
+                },
+              );
+            },
+            Languages.defaultLanguages,
+          ),
+          child: Text(
+            context.watch<SettingsProvider>().settings.nativeLanguage.name,
+          ),
+        ),
       ),
       _buildPage(
         context,

@@ -54,11 +54,11 @@ class EasyLanguageDrawer extends StatelessWidget {
           ),
           DrawerListTile(
             name: 'Settings',
-            isFocused: pageId == introductionPageId,
+            isFocused: pageId == settingsPageId,
             leadingIconData: Icons.settings,
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.of(context).pushNamed(introductionPageId);
+              Navigator.of(context).pushNamed(settingsPageId);
             },
           ),
         ],
