@@ -138,15 +138,41 @@ class WordBankProvider extends ChangeNotifier {
     _finishMethod();
   }
 
-  Future addLanguage(BuildContext context, Language? lang) async {
+  Future addLanguage(Language lang) async {
     _prepareMethod();
 
-    if (lang == null) {
-      _finishMethod();
-      throw UnexpectedException();
-    }
-
     final wordBankEither = await wordBankRepository.addLanguageToWordBank(lang);
+
+    wordBankEither.fold(
+      (l) {
+        if (l is WordBankFailure) {
+          wordBankFailure = l;
+          wordBank = l.wordBank;
+        }
+      },
+      (r) => wordBank = r,
+    );
+
+    final currentLanguageEither = await wordBankRepository.getCurrentLanguage();
+    currentLanguageEither.fold(
+      (l) {
+        if (l is LanguageFailure) {
+          currentLanguage = l.currentLanguage;
+          currentLanguageFailure = l;
+        }
+      },
+      (r) => currentLanguage = r,
+    );
+
+    _finishMethod();
+  }
+
+  Future removeLanguage(Language lang) async {
+    _prepareMethod();
+
+    final wordBankEither = await wordBankRepository.removeLanguageFromWordBank(
+      lang,
+    );
 
     wordBankEither.fold(
       (l) {

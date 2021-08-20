@@ -54,6 +54,30 @@ class WordBankRepositoryImpl implements WordBankRepository {
   }
 
   @override
+  Future<Either<Failure, WordBank>> removeLanguageFromWordBank(
+    Language language,
+  ) async {
+    try {
+      await _ensureWordBankInitialized();
+      if (_wordBank.dictionaries[language] != null) {
+        _wordBank.dictionaries.removeWhere((key, value) => key == language);
+      }
+
+      await localDataSource.cacheWordBank(_wordBank);
+
+      if (_wordBank.dictionaries.isNotEmpty) {
+        await changeCurrentLanguage(_wordBank.dictionaries.keys.first);
+      } else {
+        _currentLanguage = null;
+      }
+
+      return Right(_wordBank);
+    } catch (_) {
+      return Left(WordBankCacheFailure(_wordBank));
+    }
+  }
+
+  @override
   Future<Either<Failure, Language>> changeCurrentLanguage(
       Language language) async {
     try {

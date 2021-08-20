@@ -4,6 +4,7 @@ import 'package:easy_language/core/presentation/show_language_picker_dialog.dart
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:easy_language/features/settings/presentation/manager/settings_provider.dart';
 import 'package:easy_language/features/settings/presentation/widgets/theme_picker.dart';
+import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:language_picker/languages.dart';
@@ -78,6 +79,50 @@ class SettingsPage extends StatelessWidget {
                 leading: const Icon(Icons.translate),
                 title: const AutoSizeText(
                   'Native Language',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  maxLines: 2,
+                ),
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              Divider(
+                color: Theme.of(context).primaryColor,
+                height: 1,
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              ListTile(
+                trailing: ElevatedButton(
+                  onPressed:
+                      context.read<WordBankProvider>().currentLanguage == null
+                          ? null
+                          : () => showLanguagePickerDialog(
+                                context,
+                                (Language languagePicked) {
+                                  context
+                                      .read<WordBankProvider>()
+                                      .changeCurrentLanguage(
+                                        context,
+                                        languagePicked,
+                                      );
+                                },
+                                context
+                                    .read<WordBankProvider>()
+                                    .wordBank
+                                    .dictionaries
+                                    .keys
+                                    .toList(),
+                              ),
+                  child: Text(
+                    context.watch<WordBankProvider>().currentLanguage?.name ??
+                        'None',
+                  ),
+                ),
+                leading: const Icon(Icons.translate),
+                title: const AutoSizeText(
+                  'Learning',
                   style: TextStyle(fontWeight: FontWeight.bold),
                   maxLines: 2,
                 ),

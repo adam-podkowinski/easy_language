@@ -10,6 +10,10 @@ abstract class WordBankRepository {
     List<Word>? initialWords,
   });
 
+  Future<Either<Failure, WordBank>> removeLanguageFromWordBank(
+    Language language,
+  );
+
   Future<Either<Failure, WordBank>> editWordsList({
     required Language languageFrom,
     Language? languageTo,

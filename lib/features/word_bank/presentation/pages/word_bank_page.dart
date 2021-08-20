@@ -141,7 +141,7 @@ class _WordBankPageState extends State<WordBankPage> {
         if (state.wordBank.dictionaries.isEmpty) {
           showLanguagePickerDialog(
             context,
-            (lang) async => state.addLanguage(context, lang),
+            (lang) async => state.addLanguage(lang),
             Languages.defaultLanguages
                 .where(
                   (element) =>

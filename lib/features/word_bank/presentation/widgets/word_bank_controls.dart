@@ -17,6 +17,40 @@ class WordBankControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<WordBankProvider>();
+
+    void showRemoveLanguageConfirmationDialog(BuildContext context) {
+      final Widget cancelButton = OutlinedButton(
+        onPressed: () => Navigator.of(context).pop(),
+        child: const Text('Cancel'),
+      );
+      final Widget continueButton = OutlinedButton(
+        onPressed: () {
+          if (state.currentLanguage != null) {
+            state.removeLanguage(state.currentLanguage!);
+          }
+          Navigator.of(context).pop();
+        },
+        child: const Text('Continue'),
+      );
+      final AlertDialog alert = AlertDialog(
+        title: const Text('Remove language?'),
+        content: const Text(
+          "Removing this language from your word bank can't be undone!",
+        ),
+        actions: [
+          cancelButton,
+          continueButton,
+        ],
+      );
+      // show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    }
+
     if (!state.loading) {
       final languagesList = state.wordBank.dictionaries.keys.toList();
 
@@ -30,7 +64,7 @@ class WordBankControls extends StatelessWidget {
                 showLanguagePickerDialog(
                   context,
                   (lang) async {
-                    return state.addLanguage(context, lang);
+                    return state.addLanguage(lang);
                   },
                   Languages.defaultLanguages
                       .where(
@@ -68,6 +102,15 @@ class WordBankControls extends StatelessWidget {
                     ),
                   )
                   .toList(),
+            ),
+            IconButton(
+              onPressed: state.currentLanguage != null
+                  ? () => showRemoveLanguageConfirmationDialog(context)
+                  : null,
+              icon: Icon(
+                Icons.remove,
+                color: Theme.of(context).accentColor,
+              ),
             ),
           ],
         ),
