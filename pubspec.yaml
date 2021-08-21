@@ -30,7 +30,8 @@ dependencies:
   path_provider: ^2.0.2
   play_games:
     git:
-      url: https://github.com/adam-podkowinski/play_games
+      url: https://github.com/adam-podkowinski/play_games.git
+      ref: master
   provider: ^6.0.0
 
 dev_dependencies:

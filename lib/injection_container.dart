@@ -5,6 +5,7 @@ import 'package:easy_language/features/flashcard/data/data_sources/flashcard_loc
 import 'package:easy_language/features/flashcard/data/repositories/flashcard_repository_impl.dart';
 import 'package:easy_language/features/flashcard/domain/repositories/flashcard_repository.dart';
 import 'package:easy_language/features/flashcard/presentation/manager/flashcard_provider.dart';
+import 'package:easy_language/features/login/presentation/manager/login_provider.dart';
 import 'package:easy_language/features/settings/data/data_sources/settings_local_data_source.dart';
 import 'package:easy_language/features/settings/data/repositories/settings_repository_impl.dart';
 import 'package:easy_language/features/settings/domain/repositories/settings_repository.dart';
@@ -83,6 +84,10 @@ Future registerFlashcard() async {
   );
 }
 
+Future registerLogin() async {
+  sl.registerFactory(() => LoginProvider());
+}
+
 Future init() async {
   // Initial
   final Directory dir = await getApplicationDocumentsDirectory();
@@ -92,4 +97,5 @@ Future init() async {
   await registerSettings();
   await registerWordBank();
   await registerFlashcard();
+  await registerLogin();
 }

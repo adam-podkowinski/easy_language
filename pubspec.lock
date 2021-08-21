@@ -423,11 +423,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: "1b23a646ad45d13a87fe28735c27c39f62adae41"
-      url: "https://github.com/adam-podkowinski/play_games"
+      ref: master
+      resolved-ref: d9724ea00eb7fc78373df00b709990a2d5f2937f
+      url: "https://github.com/adam-podkowinski/play_games.git"
     source: git
-    version: "0.5.5"
+    version: "0.5.3"
   plugin_platform_interface:
     dependency: transitive
     description:
