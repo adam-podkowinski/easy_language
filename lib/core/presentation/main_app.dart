@@ -9,7 +9,6 @@ import 'package:easy_language/features/word_bank/presentation/manager/word_bank_
 import 'package:easy_language/features/word_bank/presentation/pages/word_bank_page.dart';
 import 'package:easy_language/injection_container.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class MainApp extends StatelessWidget {
@@ -26,15 +25,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (failure is SettingsCacheFailure) {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-        msg: 'Error while changing settings ${failure.toString()}',
-        backgroundColor: Colors.deepOrange,
-        textColor: Colors.white,
-      );
-    }
-
     return ChangeNotifierProvider<WordBankProvider>(
       create: (context) {
         final provider = sl<WordBankProvider>();

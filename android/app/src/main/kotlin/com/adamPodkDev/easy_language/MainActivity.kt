@@ -1,4 +1,4 @@
-package com.adamPodk.easy_language
+package com.adamPodkDev.easy_language
 
 import io.flutter.embedding.android.FlutterActivity
 

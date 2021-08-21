@@ -124,7 +124,7 @@ class FlashcardView extends StatelessWidget {
         return SlideTransition(
           position: Tween<Offset>(
             begin: const Offset(-2.5, 0),
-            end: const Offset(0, 0),
+            end: Offset.zero,
           ).animate(animation),
           child: ch,
         );
@@ -177,7 +177,7 @@ class FlashcardView extends StatelessWidget {
                   child: SlideTransition(
                     position: Tween<Offset>(
                       begin: const Offset(-2, 0),
-                      end: const Offset(0, 0),
+                      end: Offset.zero,
                     ).animate(animation),
                     child: child,
                   ),

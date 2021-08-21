@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.adamPodk.easy_language">
+    package="com.adamPodkDev.easy_language">
    <application
         android:label="Easy Language"
         android:icon="@mipmap/ic_launcher">

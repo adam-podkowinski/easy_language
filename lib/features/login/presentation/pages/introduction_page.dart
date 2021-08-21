@@ -22,8 +22,8 @@ class IntroductionPage extends StatelessWidget {
       child: Scaffold(
         body: IntroductionScreen(
           pages: _buildPages(context),
-          onDone: () async {
-            await state.changeSettings({
+          onDone: () {
+            state.changeSettings({
               Settings.isStartupId: false,
             });
             Navigator.of(context).pushReplacementNamed(wordBankPageId);
