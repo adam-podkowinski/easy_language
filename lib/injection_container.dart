@@ -7,6 +7,7 @@ import 'package:easy_language/features/flashcard/domain/repositories/flashcard_r
 import 'package:easy_language/features/flashcard/presentation/manager/flashcard_provider.dart';
 import 'package:easy_language/features/login/presentation/manager/login_provider.dart';
 import 'package:easy_language/features/settings/data/data_sources/settings_local_data_source.dart';
+import 'package:easy_language/features/settings/data/data_sources/settings_remote_data_source.dart';
 import 'package:easy_language/features/settings/data/repositories/settings_repository_impl.dart';
 import 'package:easy_language/features/settings/domain/repositories/settings_repository.dart';
 import 'package:easy_language/features/settings/presentation/manager/settings_provider.dart';
@@ -30,13 +31,20 @@ Future registerSettings() async {
 
   // Repositories
   sl.registerLazySingleton<SettingsRepository>(
-    () => SettingsRepositoryImpl(localDataSource: sl()),
+    () => SettingsRepositoryImpl(
+      localDataSource: sl(),
+      remoteDataSource: sl(),
+    ),
   );
 
   // Data sources
   final settingsBox = await Hive.openBox(cachedSettingsId);
   sl.registerLazySingleton<SettingsLocalDataSource>(
     () => SettingsLocalDataSourceImpl(settingsBox: settingsBox),
+  );
+
+  sl.registerLazySingleton<SettingsRemoteDataSource>(
+    () => SettingsRemoteDataSourceImpl(),
   );
 }
 

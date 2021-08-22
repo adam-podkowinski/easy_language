@@ -70,4 +70,21 @@ class SettingsProvider extends ChangeNotifier {
 
     _finishMethod();
   }
+
+  Future fetchSettings() async {
+    _prepareMethod();
+
+    final settingsEither = await settingsRepository.fetchSettingsRemotely();
+    settingsEither.fold(
+      (l) {
+        if (l is SettingsFailure) {
+          settingsFailure = l;
+          settings = l.settings;
+        }
+      },
+      (r) => settings = r,
+    );
+
+    _finishMethod();
+  }
 }

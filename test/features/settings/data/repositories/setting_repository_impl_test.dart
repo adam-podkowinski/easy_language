@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/features/settings/data/data_sources/settings_local_data_source.dart';
+import 'package:easy_language/features/settings/data/data_sources/settings_remote_data_source.dart';
 import 'package:easy_language/features/settings/data/models/settings_model.dart';
 import 'package:easy_language/features/settings/data/repositories/settings_repository_impl.dart';
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
@@ -13,13 +14,21 @@ import 'package:mocktail/mocktail.dart';
 class MockSettingsLocalDataSource extends Mock
     implements SettingsLocalDataSource {}
 
+class MockSettingsRemoteDataSource extends Mock
+    implements SettingsRemoteDataSource {}
+
 void main() {
   late SettingsRepositoryImpl repository;
   late MockSettingsLocalDataSource mockLocalDataSource;
+  late MockSettingsRemoteDataSource mockRemoteDataSource;
 
   setUp(() {
     mockLocalDataSource = MockSettingsLocalDataSource();
-    repository = SettingsRepositoryImpl(localDataSource: mockLocalDataSource);
+    mockRemoteDataSource = MockSettingsRemoteDataSource();
+    repository = SettingsRepositoryImpl(
+      localDataSource: mockLocalDataSource,
+      remoteDataSource: mockRemoteDataSource,
+    );
     registerFallbackValue(SettingsModel(nativeLanguage: Languages.english));
   });
 
