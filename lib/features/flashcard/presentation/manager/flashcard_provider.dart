@@ -36,6 +36,9 @@ class FlashcardProvider extends ChangeNotifier {
       (l) {
         if (l is FlashcardFailure) {
           flashcardFailure = l;
+          if (l is FlashcardGetFailure) {
+            currentFlashcard = null;
+          }
         }
       },
       (r) => currentFlashcard = r,
@@ -61,11 +64,38 @@ class FlashcardProvider extends ChangeNotifier {
       (l) {
         if (l is FlashcardFailure) {
           flashcardFailure = l;
+          if (l is FlashcardGetFailure) {
+            currentFlashcard = null;
+          }
         }
       },
       (r) => currentFlashcard = r,
     );
 
     _finishMethod();
+  }
+
+  Future fetchFlashcard() async {
+    _prepareMethod();
+
+    final result = await flashcardRepository.fetchFlashcardRemotely();
+
+    result.fold(
+      (l) {
+        if (l is FlashcardFailure) {
+          flashcardFailure = l;
+          if (l is FlashcardGetFailure) {
+            currentFlashcard = null;
+          }
+        }
+      },
+      (r) => currentFlashcard = r,
+    );
+
+    _finishMethod();
+  }
+
+  Future saveFlashcard() async {
+    await flashcardRepository.saveFlashcard();
   }
 }

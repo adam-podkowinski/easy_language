@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
+import 'package:easy_language/core/util/login_branch.dart';
 import 'package:easy_language/features/login/presentation/manager/login_provider.dart';
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:easy_language/features/settings/presentation/manager/settings_provider.dart';
@@ -180,7 +181,12 @@ class SettingsPage extends StatelessWidget {
               ),
               ListTile(
                 trailing: ElevatedButton(
-                  onPressed: login.isSignedIn ? login.signOut : login.signIn,
+                  onPressed: login.isSignedIn
+                      ? login.signOut
+                      : () => loginBranch(
+                            context,
+                            login,
+                          ),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
                       login.isSignedIn ? Colors.red : Colors.green,

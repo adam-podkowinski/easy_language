@@ -62,11 +62,26 @@ class SettingsRepositoryImpl implements SettingsRepository {
   Future<Either<Failure, Settings>> fetchSettingsRemotely() async {
     try {
       _settings = await remoteDataSource.fetchSettings();
+      localDataSource.cacheSettings(_settings);
       _initial = false;
       return Right(_settings);
     } catch (_) {
       _initial = false;
+      _settings = SettingsModel(
+        nativeLanguage: Languages.english,
+      );
+      localDataSource.cacheSettings(_settings);
       return Left(SettingsGetFailure(_settings));
+    }
+  }
+
+  @override
+  Future saveSettings() async {
+    try {
+      localDataSource.cacheSettings(_settings);
+      await remoteDataSource.saveSettings(_settings);
+    } catch (_) {
+      return;
     }
   }
 }

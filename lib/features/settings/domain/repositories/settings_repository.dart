@@ -10,4 +10,6 @@ abstract class SettingsRepository {
   Future<Either<Failure, Settings>> getSettings();
 
   Future<Either<Failure, Settings>> fetchSettingsRemotely();
+
+  Future saveSettings();
 }

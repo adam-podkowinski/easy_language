@@ -25,12 +25,28 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<WordBankProvider>(
-      create: (context) {
-        final provider = sl<WordBankProvider>();
-        provider.initWordBank();
-        return provider;
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<WordBankProvider>(
+          create: (context) {
+            final provider = sl<WordBankProvider>();
+            provider.initWordBank();
+            return provider;
+          },
+        ),
+        ChangeNotifierProvider(
+          lazy: true,
+          create: (context) {
+            final provider = sl<FlashcardProvider>();
+            provider.getNextFlashcard(
+              context.read<WordBankProvider>().wordBank,
+              language: context.read<WordBankProvider>().currentLanguage,
+              init: true,
+            );
+            return provider;
+          },
+        ),
+      ],
       child: MaterialApp(
         title: 'Easy Language',
         themeMode: themeMode,
@@ -42,18 +58,7 @@ class MainApp extends StatelessWidget {
           wordBankPageId: (context) => const WordBankPage(),
           introductionPageId: (context) => const IntroductionPage(),
           settingsPageId: (context) => const SettingsPage(),
-          flashcardsPageId: (context) => ChangeNotifierProvider(
-                create: (context) {
-                  final provider = sl<FlashcardProvider>();
-                  provider.getNextFlashcard(
-                    context.read<WordBankProvider>().wordBank,
-                    language: context.read<WordBankProvider>().currentLanguage,
-                    init: true,
-                  );
-                  return provider;
-                },
-                child: const FlashcardPage(),
-              ),
+          flashcardsPageId: (context) => const FlashcardPage(),
         },
       ),
     );

@@ -14,6 +14,7 @@ const emptyString = 'Empty';
 const addNewWordTitle = 'Add a new word';
 const editWordTitle = 'Edit a word';
 const svgPrefix = 'assets/svgs';
+const playGamesSnapshotId = 'easy_language.main';
 
 const Map<String, String> pageTitlesFromIds = {
   wordBankPageId: 'Word Bank',

@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/features/flashcard/data/data_sources/flashcard_local_data_source.dart';
+import 'package:easy_language/features/flashcard/data/data_sources/flashcard_remote_data_source.dart';
 import 'package:easy_language/features/flashcard/data/models/flashcard_model.dart';
 import 'package:easy_language/features/flashcard/data/repositories/flashcard_repository_impl.dart';
 import 'package:easy_language/features/word_bank/data/models/word_bank_model.dart';
@@ -25,6 +26,7 @@ void main() {
     flashcardLocalDataSource = MockFlashcardLocalDataSource();
     repository = FlashcardRepositoryImpl(
       localDataSource: flashcardLocalDataSource,
+      remoteDataSource: FlashcardRemoteDataSourceImpl(),
     );
     registerFallbackValue(
       FlashcardModel(

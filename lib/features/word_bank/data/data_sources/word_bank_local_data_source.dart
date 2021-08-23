@@ -9,11 +9,11 @@ import 'package:logger/logger.dart';
 abstract class WordBankLocalDataSource {
   Future<WordBankModel> getLocalWordBank();
 
-  Future<Language?> getLocalCurrentLanguage();
+  Future<Language> getLocalCurrentLanguage();
 
   Future<void> cacheWordBank(WordBankModel wordBankModel);
 
-  Future<void> cacheCurrentLanguage(Language wordBankModel);
+  Future<void> cacheCurrentLanguage(Language? wordBankModel);
 }
 
 class WordBankLocalDataSourceImpl implements WordBankLocalDataSource {
@@ -65,9 +65,13 @@ class WordBankLocalDataSourceImpl implements WordBankLocalDataSource {
   }
 
   @override
-  Future cacheCurrentLanguage(Language language) async {
+  Future cacheCurrentLanguage(Language? language) async {
     try {
-      await wordBankBox.put(cachedCurrentLanguageId, language.isoCode);
+      if (language == null) {
+        await wordBankBox.delete(cachedCurrentLanguageId);
+      } else {
+        await wordBankBox.put(cachedCurrentLanguageId, language.isoCode);
+      }
     } catch (e) {
       Logger().e(e);
       throw CacheException();

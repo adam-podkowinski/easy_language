@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/word_bank/data/data_sources/word_bank_local_data_source.dart';
+import 'package:easy_language/features/word_bank/data/data_sources/word_bank_remote_data_source.dart';
 import 'package:easy_language/features/word_bank/data/models/word_bank_model.dart';
 import 'package:easy_language/features/word_bank/domain/entities/word_bank.dart';
 import 'package:easy_language/features/word_bank/domain/repositories/word_bank_repository.dart';
@@ -17,8 +18,12 @@ class WordBankRepositoryImpl implements WordBankRepository {
   Language? _currentLanguage;
 
   final WordBankLocalDataSource localDataSource;
+  final WordBankRemoteDataSource remoteDataSource;
 
-  WordBankRepositoryImpl(this.localDataSource);
+  WordBankRepositoryImpl({
+    required this.localDataSource,
+    required this.remoteDataSource,
+  });
 
   Future<void> _ensureWordBankInitialized() async {
     if (_initialWordBank) {
@@ -43,7 +48,8 @@ class WordBankRepositoryImpl implements WordBankRepository {
         _wordBank.dictionaries[language] = initialWords ?? [];
       }
 
-      await localDataSource.cacheWordBank(_wordBank);
+      localDataSource.cacheWordBank(_wordBank);
+      remoteDataSource.saveWordBank(_wordBank);
 
       await changeCurrentLanguage(language);
 
@@ -63,7 +69,8 @@ class WordBankRepositoryImpl implements WordBankRepository {
         _wordBank.dictionaries.removeWhere((key, value) => key == language);
       }
 
-      await localDataSource.cacheWordBank(_wordBank);
+      localDataSource.cacheWordBank(_wordBank);
+      remoteDataSource.saveWordBank(_wordBank);
 
       if (_wordBank.dictionaries.isNotEmpty) {
         await changeCurrentLanguage(_wordBank.dictionaries.keys.first);
@@ -79,13 +86,15 @@ class WordBankRepositoryImpl implements WordBankRepository {
 
   @override
   Future<Either<Failure, Language>> changeCurrentLanguage(
-      Language language) async {
+    Language language,
+  ) async {
     try {
       await _ensureCurrentLanguageInitialized();
 
       _currentLanguage = language;
 
-      await localDataSource.cacheCurrentLanguage(_currentLanguage!);
+      localDataSource.cacheCurrentLanguage(_currentLanguage!);
+      remoteDataSource.saveCurrentLanguage(_currentLanguage!);
     } catch (_) {
       // we are sure current language is not null because we asign it previously
       // with a non-nullable function argument
@@ -134,7 +143,8 @@ class WordBankRepositoryImpl implements WordBankRepository {
         _wordBank.dictionaries[languageFrom]!.clear();
       }
 
-      await localDataSource.cacheWordBank(_wordBank);
+      localDataSource.cacheWordBank(_wordBank);
+      remoteDataSource.saveWordBank(_wordBank);
     } catch (_) {
       return Left(WordBankCacheFailure(_wordBank));
     }
@@ -171,5 +181,57 @@ class WordBankRepositoryImpl implements WordBankRepository {
     }
 
     return Right(_wordBank);
+  }
+
+  @override
+  Future<Either<Failure, WordBank>> fetchWordBankRemotely() async {
+    try {
+      _wordBank = await remoteDataSource.fetchWordBank();
+      localDataSource.cacheWordBank(_wordBank);
+      _initialWordBank = false;
+      return Right(_wordBank);
+    } catch (_) {
+      _initialWordBank = false;
+      _wordBank = WordBankModel(dictionaries: {});
+      localDataSource.cacheWordBank(_wordBank);
+      return Left(WordBankGetFailure(_wordBank));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Language?>> fetchCurrentLanguageRemotely() async {
+    try {
+      _currentLanguage = await remoteDataSource.fetchCurrentLanguage();
+      localDataSource.cacheCurrentLanguage(_currentLanguage!);
+      _initialCurrentLanguage = false;
+      return Right(_currentLanguage);
+    } catch (_) {
+      _initialCurrentLanguage = false;
+      _currentLanguage = null;
+      localDataSource.cacheCurrentLanguage(_currentLanguage);
+      return Left(LanguageGetFailure(_currentLanguage));
+    }
+  }
+
+  @override
+  Future saveCurrentLanguage() async {
+    try {
+      if (_currentLanguage != null) {
+        localDataSource.cacheCurrentLanguage(_currentLanguage);
+        await remoteDataSource.saveCurrentLanguage(_currentLanguage!);
+      }
+    } catch (_) {
+      return;
+    }
+  }
+
+  @override
+  Future saveWordBank() async {
+    try {
+      localDataSource.cacheWordBank(_wordBank);
+      await remoteDataSource.saveWordBank(_wordBank);
+    } catch (_) {
+      return;
+    }
   }
 }

@@ -7,16 +7,11 @@ import 'package:easy_language/injection_container.dart' as di;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:play_games/play_games.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
-  final SigninResult result = await PlayGames.signIn(silentSignInOnly: true);
-  if (result.success) {
-    await PlayGames.setPopupOptions();
-  }
   runApp(EasyLanguage());
 }
 

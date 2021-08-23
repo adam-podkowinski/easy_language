@@ -1,4 +1,5 @@
 import 'package:easy_language/core/constants.dart';
+import 'package:easy_language/core/util/login_branch.dart';
 import 'package:easy_language/features/login/presentation/manager/login_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,12 @@ class SignInButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final login = context.watch<LoginProvider>();
     return ElevatedButton(
-      onPressed: login.isSignedIn ? login.signOut : login.signIn,
+      onPressed: login.isSignedIn
+          ? login.signOut
+          : () => loginBranch(
+                context,
+                login,
+              ),
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(
           login.isSignedIn ? Colors.red : Colors.green,

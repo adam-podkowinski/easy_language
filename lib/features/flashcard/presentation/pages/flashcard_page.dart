@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+// TODO: when loaded save, it always show not enough words
 class FlashcardPage extends StatefulWidget {
   const FlashcardPage({Key? key}) : super(key: key);
 
@@ -36,6 +37,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
       flashcardProvider = context.watch<FlashcardProvider>()
         ..addListener(listenToFlashcardProvider);
       wordBankProvider = context.watch<WordBankProvider>();
+      // flashcardProvider.getNextFlashcard(wordBankProvider.wordBank, init: true);
       listenToFlashcardProvider();
 
       _init = false;

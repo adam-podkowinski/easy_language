@@ -22,7 +22,15 @@ abstract class WordBankRepository {
 
   Future<Either<Failure, WordBank>> getWordBank();
 
+  Future<Either<Failure, WordBank>> fetchWordBankRemotely();
+
   Future<Either<Failure, Language?>> getCurrentLanguage();
 
+  Future<Either<Failure, Language?>> fetchCurrentLanguageRemotely();
+
   Future<Either<Failure, Language>> changeCurrentLanguage(Language language);
+
+  Future saveWordBank();
+
+  Future saveCurrentLanguage();
 }

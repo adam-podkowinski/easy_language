@@ -87,4 +87,8 @@ class SettingsProvider extends ChangeNotifier {
 
     _finishMethod();
   }
+
+  Future saveSettings() async {
+    await settingsRepository.saveSettings();
+  }
 }

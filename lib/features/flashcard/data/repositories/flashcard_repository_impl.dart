@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/features/flashcard/data/data_sources/flashcard_local_data_source.dart';
+import 'package:easy_language/features/flashcard/data/data_sources/flashcard_remote_data_source.dart';
 import 'package:easy_language/features/flashcard/data/models/flashcard_model.dart';
 import 'package:easy_language/features/flashcard/domain/entities/flashcard.dart';
 import 'package:easy_language/features/flashcard/domain/repositories/flashcard_repository.dart';
@@ -10,9 +11,14 @@ import 'package:logger/logger.dart';
 
 class FlashcardRepositoryImpl implements FlashcardRepository {
   FlashcardModel? _flashcard;
-  final FlashcardLocalDataSource localDataSource;
 
-  FlashcardRepositoryImpl({required this.localDataSource});
+  final FlashcardLocalDataSource localDataSource;
+  final FlashcardRemoteDataSource remoteDataSource;
+
+  FlashcardRepositoryImpl({
+    required this.localDataSource,
+    required this.remoteDataSource,
+  });
 
   @override
   Future<Either<Failure, Flashcard>> getNextFlashcard(
@@ -74,11 +80,15 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
         wordLanguage: flashcardLang,
       );
 
-      await localDataSource.cacheCurrentFlashcard(_flashcard!);
+      try {
+        localDataSource.cacheCurrentFlashcard(_flashcard!);
+        if (!(init ?? false)) {
+          remoteDataSource.saveFlashcard(_flashcard!);
+        }
+      } catch (_) {}
 
       return Right(_flashcard!);
-    } catch (e) {
-      Logger().e(e);
+    } catch (_) {
       return Left(FlashcardGetFailure());
     }
   }
@@ -89,11 +99,35 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
       _flashcard = _flashcard!.copyWithMap({
         FlashcardModel.isTurnedId: !_flashcard!.isTurned,
       });
-      await localDataSource.cacheCurrentFlashcard(_flashcard!);
+      localDataSource.cacheCurrentFlashcard(_flashcard!);
+      remoteDataSource.saveFlashcard(_flashcard!);
       return Right(_flashcard!);
-    } catch (e) {
-      Logger().e(e);
+    } catch (_) {
       return Left(FlashcardTurnFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Flashcard?>> fetchFlashcardRemotely() async {
+    try {
+      _flashcard = await remoteDataSource.fetchFlashcard();
+      localDataSource.cacheCurrentFlashcard(_flashcard!);
+      return Right(_flashcard);
+    } catch (_) {
+      _flashcard = null;
+      return Left(FlashcardGetFailure());
+    }
+  }
+
+  @override
+  Future saveFlashcard() async {
+    try {
+      if (_flashcard != null) {
+        localDataSource.cacheCurrentFlashcard(_flashcard!);
+        await remoteDataSource.saveFlashcard(_flashcard!);
+      }
+    } catch (_) {
+      return;
     }
   }
 }

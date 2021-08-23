@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/features/flashcard/data/data_sources/flashcard_local_data_source.dart';
+import 'package:easy_language/features/flashcard/data/data_sources/flashcard_remote_data_source.dart';
 import 'package:easy_language/features/flashcard/data/repositories/flashcard_repository_impl.dart';
 import 'package:easy_language/features/flashcard/domain/repositories/flashcard_repository.dart';
 import 'package:easy_language/features/flashcard/presentation/manager/flashcard_provider.dart';
@@ -12,6 +13,7 @@ import 'package:easy_language/features/settings/data/repositories/settings_repos
 import 'package:easy_language/features/settings/domain/repositories/settings_repository.dart';
 import 'package:easy_language/features/settings/presentation/manager/settings_provider.dart';
 import 'package:easy_language/features/word_bank/data/data_sources/word_bank_local_data_source.dart';
+import 'package:easy_language/features/word_bank/data/data_sources/word_bank_remote_data_source.dart';
 import 'package:easy_language/features/word_bank/data/repositories/word_bank_repository_impl.dart';
 import 'package:easy_language/features/word_bank/domain/repositories/word_bank_repository.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
@@ -25,7 +27,7 @@ Future registerSettings() async {
   // Provider
   sl.registerLazySingleton(
     () => SettingsProvider(
-      settingsRepository: sl<SettingsRepository>(),
+      settingsRepository: sl(),
     ),
   );
 
@@ -52,14 +54,15 @@ Future registerWordBank() async {
   // Provider
   sl.registerFactory(
     () => WordBankProvider(
-      wordBankRepository: sl<WordBankRepository>(),
+      wordBankRepository: sl(),
     ),
   );
 
   // Repositories
   sl.registerLazySingleton<WordBankRepository>(
     () => WordBankRepositoryImpl(
-      sl(),
+      localDataSource: sl(),
+      remoteDataSource: sl(),
     ),
   );
 
@@ -68,20 +71,24 @@ Future registerWordBank() async {
   sl.registerLazySingleton<WordBankLocalDataSource>(
     () => WordBankLocalDataSourceImpl(wordBankBox: wordBankBox),
   );
+  sl.registerLazySingleton<WordBankRemoteDataSource>(
+    () => WordBankRemoteDataSourceImpl(),
+  );
 }
 
 Future registerFlashcard() async {
   // Provider
   sl.registerFactory(
     () => FlashcardProvider(
-      flashcardRepository: sl<FlashcardRepository>(),
+      flashcardRepository: sl(),
     ),
   );
 
   // Repositories
   sl.registerLazySingleton<FlashcardRepository>(
     () => FlashcardRepositoryImpl(
-      localDataSource: sl<FlashcardLocalDataSource>(),
+      localDataSource: sl(),
+      remoteDataSource: sl(),
     ),
   );
 
@@ -90,10 +97,19 @@ Future registerFlashcard() async {
   sl.registerLazySingleton<FlashcardLocalDataSource>(
     () => FlashcardLocalDataSourceImpl(flashcardBox: flashcardBox),
   );
+  sl.registerLazySingleton<FlashcardRemoteDataSource>(
+    () => FlashcardRemoteDataSourceImpl(),
+  );
 }
 
 Future registerLogin() async {
   sl.registerFactory(() => LoginProvider());
+}
+
+Future clearAllBoxes() async {
+  await (await Hive.openBox(cachedSettingsId)).clear();
+  await (await Hive.openBox(cachedCurrentFlashcardId)).clear();
+  await (await Hive.openBox(cachedWordBankId)).clear();
 }
 
 Future init() async {

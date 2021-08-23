@@ -12,4 +12,8 @@ abstract class FlashcardRepository {
   });
 
   Future<Either<Failure, Flashcard>> turnCurrentFlashcard();
+
+  Future<Either<Failure, Flashcard?>> fetchFlashcardRemotely();
+
+  Future saveFlashcard();
 }

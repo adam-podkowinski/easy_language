@@ -377,4 +377,42 @@ class WordBankProvider extends ChangeNotifier {
 
     _finishMethod();
   }
+
+  Future fetchWordBankAndCurrentLanguage() async {
+    _prepareMethod();
+
+    final wordBankEither = await wordBankRepository.fetchWordBankRemotely();
+    final currentLanguageEither =
+        await wordBankRepository.fetchCurrentLanguageRemotely();
+
+    wordBankEither.fold(
+      (l) {
+        if (l is WordBankFailure) {
+          wordBank = l.wordBank;
+          wordBankFailure = l;
+        }
+      },
+      (r) => wordBank = r,
+    );
+
+    currentLanguageEither.fold(
+      (l) {
+        if (l is LanguageFailure) {
+          currentLanguage = l.currentLanguage;
+          currentLanguageFailure = l;
+        }
+      },
+      (r) => currentLanguage = r,
+    );
+
+    _finishMethod();
+  }
+
+  Future saveWordBank() async {
+    await wordBankRepository.saveWordBank();
+  }
+
+  Future saveCurrentLanguage() async {
+    await wordBankRepository.saveCurrentLanguage();
+  }
 }
