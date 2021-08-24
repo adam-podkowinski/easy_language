@@ -27,10 +27,10 @@ class LoginProvider extends ChangeNotifier {
     try {
       signInResult = await PlayGames.signIn(scopeSnapshot: true);
       if (signInResult?.success ?? false) {
-        PlayGames.setPopupOptions();
+        await PlayGames.setPopupOptions();
       }
-      final snapshot = await openSnapshot(playGamesSnapshotId);
       notifyListeners();
+      final snapshot = await openSnapshot(playGamesSnapshotId);
       if (snapshot.content != null ||
           (snapshot.content?.trim().isNotEmpty ?? false)) {
         return true;

@@ -93,7 +93,7 @@ class WordBankRepositoryImpl implements WordBankRepository {
 
       _currentLanguage = language;
 
-      localDataSource.cacheCurrentLanguage(_currentLanguage!);
+      localDataSource.cacheCurrentLanguage(_currentLanguage);
       remoteDataSource.saveCurrentLanguage(_currentLanguage!);
     } catch (_) {
       // we are sure current language is not null because we asign it previously
@@ -202,7 +202,7 @@ class WordBankRepositoryImpl implements WordBankRepository {
   Future<Either<Failure, Language?>> fetchCurrentLanguageRemotely() async {
     try {
       _currentLanguage = await remoteDataSource.fetchCurrentLanguage();
-      localDataSource.cacheCurrentLanguage(_currentLanguage!);
+      localDataSource.cacheCurrentLanguage(_currentLanguage);
       _initialCurrentLanguage = false;
       return Right(_currentLanguage);
     } catch (_) {

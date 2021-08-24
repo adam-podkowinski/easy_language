@@ -5,7 +5,7 @@ import '../constants.dart';
 
 Future<Snapshot> openSnapshot(String name) async {
   try {
-    final Snapshot save = await PlayGames.openSnapshot(playGamesSnapshotId);
+    final Snapshot save = await PlayGames.openSnapshot(name);
     if (save.content == null || (save.content?.trim().isEmpty ?? true)) {
       throw RemoteException();
     } else {

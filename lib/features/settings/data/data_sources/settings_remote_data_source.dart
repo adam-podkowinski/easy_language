@@ -54,7 +54,6 @@ class SettingsRemoteDataSourceImpl implements SettingsRemoteDataSource {
         if (save.content != null &&
             (save.content?.trim().isNotEmpty ?? false)) {
           mapToSave = cast(jsonDecode(save.content!));
-          Logger().d("Map found is: ${mapToSave.toString()}");
         }
 
         mapToSave[cachedSettingsId] = settingsToCache.toMap();
