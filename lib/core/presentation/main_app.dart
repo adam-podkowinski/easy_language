@@ -50,8 +50,8 @@ class MainApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Easy Language',
         themeMode: themeMode,
-        theme: CustomTheme.buildLight(context),
-        darkTheme: CustomTheme.buildDark(context),
+        theme: buildLight(context),
+        darkTheme: buildDark(context),
         debugShowCheckedModeBanner: false,
         initialRoute: showIntroduction ? introductionPageId : wordBankPageId,
         routes: {

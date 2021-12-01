@@ -37,7 +37,6 @@ class _FlashcardPageState extends State<FlashcardPage> {
       flashcardProvider = context.watch<FlashcardProvider>()
         ..addListener(listenToFlashcardProvider);
       wordBankProvider = context.watch<WordBankProvider>();
-      // flashcardProvider.getNextFlashcard(wordBankProvider.wordBank, init: true);
       listenToFlashcardProvider();
 
       _init = false;
@@ -53,12 +52,11 @@ class _FlashcardPageState extends State<FlashcardPage> {
   void listenToFlashcardProvider() {
     flashcard = flashcardProvider.currentFlashcard;
     if (wordBankProvider.currentLanguage != null && flashcard != null) {
-      if (wordBankProvider
-              .wordBank.dictionaries[wordBankProvider.currentLanguage]!.length >
-          flashcard!.wordIndex) {
-        wordToShow = wordBankProvider
-                .wordBank.dictionaries[wordBankProvider.currentLanguage!]
-            ?[flashcard!.wordIndex];
+      final wordList = wordBankProvider
+          .wordBank.dictionaries[wordBankProvider.currentLanguage!];
+
+      if (wordList!.length > flashcard!.wordIndex) {
+        wordToShow = wordList[flashcard!.wordIndex];
       }
     }
     isTurned = flashcard?.isTurned ?? false;

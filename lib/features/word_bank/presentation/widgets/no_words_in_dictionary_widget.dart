@@ -26,7 +26,7 @@ class NoWordsInDictionaryWidget extends StatelessWidget {
             Text(
               'Add your first word to remember it',
               style: Theme.of(context).textTheme.headline6!.copyWith(
-                    color: CustomTheme.onBackgroundDark,
+                    color: onBackgroundDark,
                   ),
               textAlign: TextAlign.center,
             ),
@@ -43,7 +43,7 @@ class NoWordsInDictionaryWidget extends StatelessWidget {
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(
-                  Theme.of(context).accentColor,
+                  Theme.of(context).colorScheme.secondary,
                 ),
                 shape: MaterialStateProperty.all(
                   RoundedRectangleBorder(

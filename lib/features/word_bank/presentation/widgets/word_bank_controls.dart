@@ -76,19 +76,19 @@ class WordBankControls extends StatelessWidget {
               },
               icon: Icon(
                 Icons.add,
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
               ),
             ),
             DropdownButton<Language>(
               underline: Divider(
                 height: 1.w,
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
               ),
               hint: const Text(emptyString),
               elevation: 0,
               value: state.currentLanguage,
               onChanged: (value) => state.changeCurrentLanguage(context, value),
-              iconEnabledColor: Theme.of(context).accentColor,
+              iconEnabledColor: Theme.of(context).colorScheme.secondary,
               items: languagesList
                   .map(
                     (e) => DropdownMenuItem<Language>(
@@ -109,7 +109,7 @@ class WordBankControls extends StatelessWidget {
                   : null,
               icon: Icon(
                 Icons.remove,
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
               ),
             ),
           ],
@@ -120,7 +120,7 @@ class WordBankControls extends StatelessWidget {
         items: const [],
         underline: Divider(
           height: 1.w,
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).colorScheme.secondary,
         ),
         hint: const Text('Loading...'),
         elevation: 0,

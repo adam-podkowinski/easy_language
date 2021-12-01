@@ -68,7 +68,9 @@ class FlashcardView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Card(
-          color: isTurned ? Colors.lightGreen : Theme.of(context).accentColor,
+          color: isTurned
+              ? Colors.lightGreen
+              : Theme.of(context).colorScheme.secondary,
           elevation: 15.r,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25.r),
@@ -94,7 +96,7 @@ class FlashcardView extends StatelessWidget {
           width: 20.w,
         ),
         Card(
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).colorScheme.secondary,
           elevation: 15.r,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25.r),
@@ -207,7 +209,7 @@ class FlashcardView extends StatelessWidget {
         StatusWidget(
           color: Theme.of(context).primaryColor,
           numberString: wordBankProvider
-              .getLearningWords(flashcard.wordLanguage)
+              .getLearningLength(flashcard.wordLanguage)
               .toString(),
           text: 'Learning',
         ),
@@ -219,7 +221,7 @@ class FlashcardView extends StatelessWidget {
           text: 'Reviewing',
         ),
         StatusWidget(
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).colorScheme.secondary,
           numberString: wordBankProvider
               .getMasteredLength(flashcard.wordLanguage)
               .toString(),

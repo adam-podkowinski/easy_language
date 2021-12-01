@@ -1,9 +1,9 @@
+import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
 import 'package:easy_language/core/presentation/styles.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:language_picker/languages.dart';
-import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
 
 class NoLanguagesWidget extends StatelessWidget {
   const NoLanguagesWidget({
@@ -26,7 +26,7 @@ class NoLanguagesWidget extends StatelessWidget {
             Text(
               'Add your first foreign language',
               style: Theme.of(context).textTheme.headline6!.copyWith(
-                    color: CustomTheme.onBackgroundDark,
+                    color: onBackgroundDark,
                   ),
               textAlign: TextAlign.center,
             ),
@@ -50,7 +50,7 @@ class NoLanguagesWidget extends StatelessWidget {
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(
-                  Theme.of(context).accentColor,
+                  Theme.of(context).colorScheme.secondary,
                 ),
                 shape: MaterialStateProperty.all(
                   RoundedRectangleBorder(

@@ -26,7 +26,7 @@ class WordBankProvider extends ChangeNotifier {
 
   String searchPhrase = '';
 
-  int getLearningWords(Language language) {
+  int getLearningLength(Language language) {
     if (wordBank.dictionaries.containsKey(language)) {
       return wordBank.dictionaries[language]!
           .where(

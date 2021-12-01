@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class NoFlashcards extends StatelessWidget {
@@ -24,7 +24,7 @@ class NoFlashcards extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(
-              Theme.of(context).accentColor,
+              Theme.of(context).colorScheme.secondary,
             ),
             shape: MaterialStateProperty.all(
               RoundedRectangleBorder(
