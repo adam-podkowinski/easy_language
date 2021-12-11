@@ -14,8 +14,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_screenutil: ^5.0.0+2
-  flutter_slidable: ^0.6.0
-  flutter_svg: ^0.22.0
+  flutter_slidable: ^1.1.0
+  flutter_svg: ^1.0.0
   get_it: ^7.1.3
   hive: ^2.0.4
   hive_flutter: ^1.1.0
@@ -25,13 +25,9 @@ dependencies:
     git:
       url: https://github.com/adam-podkowinski/flutter_language_pickers
   logger: ^1.0.0
-  mocktail: ^0.1.4
+  mocktail: ^0.2.0
   uuid: ^3.0.4
-  path_provider: ^2.0.2
-#  play_games:
-#    git:
-#      url: https://github.com/adam-podkowinski/play_games.git
-#      ref: master
+  path_provider: ^2.0.8
   provider: ^6.0.0
 
 dev_dependencies:

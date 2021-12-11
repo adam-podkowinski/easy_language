@@ -109,18 +109,20 @@ class WordListItem extends StatelessWidget {
             sizeFraction: 0.7,
             animation: itemAnimation,
             child: Slidable(
-              actionPane: const SlidableDrawerActionPane(),
-              secondaryActions: <Widget>[
-                IconSlideAction(
-                  caption: 'Delete',
-                  color: Theme.of(context).errorColor,
-                  icon: Icons.delete,
-                  onTap: () => _state.removeWord(
-                    word,
-                    searching: searching,
+              endActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                children: [
+                  SlidableAction(
+                    label: 'Delete',
+                    backgroundColor: Theme.of(context).errorColor,
+                    icon: Icons.delete,
+                    onPressed: (context) => _state.removeWord(
+                      word,
+                      searching: searching,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
               child: Padding(
                 padding: EdgeInsets.all(8.w),
                 child: ListTile(
