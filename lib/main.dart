@@ -32,7 +32,7 @@ class EasyLanguage extends StatelessWidget {
           ChangeNotifierProvider<LoginProvider>(
             create: (context) {
               final login = di.sl<LoginProvider>();
-              login.silentSignIn();
+              // login.silentSignIn();
               return login;
             },
           ),

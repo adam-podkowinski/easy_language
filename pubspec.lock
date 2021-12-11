@@ -426,15 +426,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.2"
-  play_games:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: master
-      resolved-ref: d9724ea00eb7fc78373df00b709990a2d5f2937f
-      url: "https://github.com/adam-podkowinski/play_games.git"
-    source: git
-    version: "0.5.3"
   plugin_platform_interface:
     dependency: transitive
     description:

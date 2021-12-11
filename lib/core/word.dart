@@ -1,7 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:language_picker/languages.dart';
-import 'package:uuid/uuid.dart';
 
 enum LearningStatus { learning, reviewing, mastered }
 
@@ -45,14 +43,13 @@ extension LearningStatusExtension on LearningStatus {
 
 class Word extends Equatable {
   /// 10 variables
-  final String id;
+  final int id;
   final String wordForeign;
   final String wordTranslation;
   final LearningStatus learningStatus;
   final int timesReviewed;
-  final Language language;
-  final int order;
-  final BigInt userId;
+  final int dictionaryId;
+  final int userId;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -60,8 +57,7 @@ class Word extends Equatable {
     required this.id,
     required this.wordForeign,
     required this.wordTranslation,
-    required this.language,
-    required this.order,
+    required this.dictionaryId,
     required this.userId,
     this.learningStatus = LearningStatus.reviewing,
     this.timesReviewed = 0,
@@ -72,28 +68,24 @@ class Word extends Equatable {
   static const idId = 'id';
   static const wordForeignId = 'word_foreign';
   static const wordTranslationId = 'word_translation';
-  static const languageId = 'language';
   static const learningStatusId = 'learning_status';
   static const timesReviewedId = 'times_reviewed';
-  static const orderId = 'order_index';
   static const userIdId = 'user_id';
+  static const dictionaryIdId = 'dictionary_id';
   static const createdAtId = 'created_at';
   static const updatedAtId = 'updated_at';
 
   factory Word.fromMap(Map<dynamic, dynamic> map) {
     return Word(
-      id: cast(map[Word.idId]) ?? const Uuid().v1(),
+      id: cast(map[Word.idId]) ?? 0,
       wordForeign: cast(map[Word.wordForeignId]) ?? '',
       wordTranslation: cast(map[Word.wordTranslationId]) ?? '',
       learningStatus: LearningStatusExtension.fromString(
         cast(map[Word.learningStatusId]),
       ),
       timesReviewed: cast(map[Word.timesReviewedId]) ?? 0,
-      order: cast(map[Word.orderId]) ?? 0,
-      userId: cast(map[Word.userIdId]) ?? BigInt.from(0),
-      language: Language.fromIsoCode(
-        cast(map[Word.languageId]) ?? Languages.english.isoCode,
-      ),
+      userId: cast(map[Word.userIdId]) ?? 0,
+      dictionaryId: cast(map[Word.dictionaryIdId]) ?? 0,
       createdAt: DateTime.tryParse(
             cast(map[Word.createdAtId]),
           ) ??
@@ -115,9 +107,8 @@ class Word extends Equatable {
         Word.wordTranslationId: wordTranslation,
         Word.learningStatusId: learningStatus.statusToString,
         Word.timesReviewedId: timesReviewed,
-        Word.orderId: order,
         Word.userIdId: userId,
-        Word.languageId: language,
+        Word.dictionaryIdId: dictionaryId,
         Word.createdAtId: createdAt.toIso8601String(),
         Word.updatedAtId: updatedAt.toIso8601String(),
       };
@@ -130,8 +121,7 @@ class Word extends Equatable {
         learningStatus,
         timesReviewed,
         userId,
-        order,
-        language,
+        dictionaryId,
         createdAt,
         updatedAt,
       ];

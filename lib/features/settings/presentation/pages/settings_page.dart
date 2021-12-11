@@ -181,18 +181,21 @@ class SettingsPage extends StatelessWidget {
               ),
               ListTile(
                 trailing: ElevatedButton(
-                  onPressed: login.isSignedIn
-                      ? login.signOut
-                      : () => loginBranch(
-                            context,
-                            login,
-                          ),
+                  onPressed: null,
+                  // onPressed: login.isSignedIn
+                  //     ? login.signOut
+                  //     : () => loginBranch(
+                  //           context,
+                  //           login,
+                  //         ),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
-                      login.isSignedIn ? Colors.red : Colors.green,
+                      // login.isSignedIn ? Colors.red : Colors.green,
+                      Colors.red,
                     ),
                   ),
-                  child: Text(login.isSignedIn ? 'Sign out' : 'Sign in'),
+                  // child: Text(login.isSignedIn ? 'Sign out' : 'Sign in'),
+                  child: const Text('Log In'),
                 ),
                 leading: const Icon(Icons.login),
                 title: const Text(

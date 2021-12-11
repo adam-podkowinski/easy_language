@@ -59,11 +59,12 @@ class WordsInDictionaryWidget extends StatelessWidget {
           : ImplicitlyAnimatedReorderableList<Word>(
               items: items,
               areItemsTheSame: (a, b) => a == b,
-              onReorderFinished: !searching
-                  ? (item, from, to, newItems) async {
-                      await state.reorderWordList(newItems);
-                    }
-                  : (_, __, ___, ____) {},
+              onReorderFinished: (_, __, ___, ____) {},
+              // onReorderFinished: !searching
+              //     ? (item, from, to, newItems) async {
+              //         await state.reorderWordList(newItems);
+              //       }
+              //     : (_, __, ___, ____) {},
               itemBuilder: (context, itemAnimation, item, index) {
                 return Reorderable(
                   key: ValueKey(item),

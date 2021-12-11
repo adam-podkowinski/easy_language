@@ -16,15 +16,17 @@ class SignInButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final login = context.watch<LoginProvider>();
     return ElevatedButton(
-      onPressed: login.isSignedIn
-          ? login.signOut
-          : () => loginBranch(
-                context,
-                login,
-              ),
+      onPressed: null,
+      // onPressed: login.isSignedIn
+      //     ? login.signOut
+      //     : () => loginBranch(
+      //           context,
+      //           login,
+      //         ),
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(
-          login.isSignedIn ? Colors.red : Colors.green,
+          // login.isSignedIn ? Colors.red : Colors.green,
+          Colors.red,
         ),
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(
@@ -43,7 +45,8 @@ class SignInButton extends StatelessWidget {
             width: 5.w,
           ),
           Text(
-            login.isSignedIn ? 'Sign out' : 'Sign in',
+            // login.isSignedIn ? 'Sign out' : 'Sign in',
+            'Sign in',
             style: const TextStyle(fontSize: 18),
           ),
         ],
