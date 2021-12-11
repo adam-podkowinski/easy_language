@@ -28,6 +28,7 @@ class ThemePicker extends StatelessWidget {
     } else {
       return DropdownButton(
         items: const [],
+        onChanged: null,
       );
     }
   }

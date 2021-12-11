@@ -118,6 +118,7 @@ class WordBankControls extends StatelessWidget {
     } else {
       return DropdownButton(
         items: const [],
+        onChanged: null,
         underline: Divider(
           height: 1.w,
           color: Theme.of(context).colorScheme.secondary,
