@@ -1,3 +1,4 @@
+import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/util/simplify_string.dart';
@@ -10,13 +11,13 @@ import 'package:language_picker/languages.dart';
 class WordBankProvider extends ChangeNotifier {
   bool loading = true;
 
-  final WordBankRepository wordBankRepository;
+  final DictionaryRepository wordBankRepository;
 
-  Language? currentLanguage;
-  WordBank wordBank = const WordBank(dictionaries: {});
+  Dictionary? currentDictionary;
+  Dictionaries dictionaries = {};
 
-  WordBankFailure? wordBankFailure;
-  LanguageFailure? currentLanguageFailure;
+  DictionariesFailure? wordBankFailure;
+  DictionaryFailure? currentDictionaryFailure;
 
   WordBankProvider({
     required this.wordBankRepository,
@@ -27,8 +28,9 @@ class WordBankProvider extends ChangeNotifier {
   String searchPhrase = '';
 
   int getLearningLength(Language language) {
-    if (wordBank.dictionaries.containsKey(language)) {
-      return wordBank.dictionaries[language]!
+    if (dictionaries.containsKey(language)) {
+      return dictionaries[language]!
+          .words
           .where(
             (element) => element.learningStatus == LearningStatus.learning,
           )
@@ -39,8 +41,9 @@ class WordBankProvider extends ChangeNotifier {
   }
 
   int getReviewingLength(Language language) {
-    if (wordBank.dictionaries.containsKey(language)) {
-      return wordBank.dictionaries[language]!
+    if (dictionaries.containsKey(language)) {
+      return dictionaries[language]!
+          .words
           .where(
             (element) => element.learningStatus == LearningStatus.reviewing,
           )
@@ -51,8 +54,9 @@ class WordBankProvider extends ChangeNotifier {
   }
 
   int getMasteredLength(Language language) {
-    if (wordBank.dictionaries.containsKey(language)) {
-      return wordBank.dictionaries[language]!
+    if (dictionaries.containsKey(language)) {
+      return dictionaries[language]!
+          .words
           .where(
             (element) => element.learningStatus == LearningStatus.mastered,
           )
@@ -65,7 +69,7 @@ class WordBankProvider extends ChangeNotifier {
   void _prepareMethod() {
     loading = true;
     wordBankFailure = null;
-    currentLanguageFailure = null;
+    currentDictionaryFailure = null;
   }
 
   void _finishMethod() {
@@ -74,7 +78,7 @@ class WordBankProvider extends ChangeNotifier {
   }
 
   // TODO: move searchWords to a repository
-  List<Word>? searchWords(String? phraseToSearch, {Language? language}) {
+  List<Word>? searchWords(String? phraseToSearch) {
     var phrase = searchPhrase;
 
     if (phraseToSearch != null) {
@@ -82,13 +86,11 @@ class WordBankProvider extends ChangeNotifier {
       searchPhrase = phraseToSearch;
     }
 
-    final Language? languageToSearch = language ?? currentLanguage;
-
-    if (languageToSearch == null) {
+    if (currentDictionary == null) {
       return null;
     }
 
-    final wordsToSearchThrough = wordBank.dictionaries[languageToSearch];
+    final wordsToSearchThrough = currentDictionary?.words;
 
     if (wordsToSearchThrough == null) {
       return null;
@@ -113,26 +115,27 @@ class WordBankProvider extends ChangeNotifier {
     _prepareMethod();
 
     final wordBankEither = await wordBankRepository.getWordBank();
-    final currentLanguageEither = await wordBankRepository.getCurrentLanguage();
+    final currentDictionaryEither =
+        await wordBankRepository.getCurrentDictionary();
 
     wordBankEither.fold(
       (l) {
-        if (l is WordBankFailure) {
-          wordBank = l.wordBank;
+        if (l is DictionariesFailure) {
+          dictionaries = l.dictionaries;
           wordBankFailure = l;
         }
       },
-      (r) => wordBank = r,
+      (r) => dictionaries = r,
     );
 
-    currentLanguageEither.fold(
+    currentDictionaryEither.fold(
       (l) {
-        if (l is LanguageFailure) {
-          currentLanguage = l.currentLanguage;
-          currentLanguageFailure = l;
+        if (l is DictionaryFailure) {
+          currentDictionary = l.currentDictionary;
+          currentDictionaryFailure = l;
         }
       },
-      (r) => currentLanguage = r,
+      (r) => currentDictionary = r,
     );
 
     _finishMethod();
@@ -141,27 +144,28 @@ class WordBankProvider extends ChangeNotifier {
   Future addLanguage(Language lang) async {
     _prepareMethod();
 
-    final wordBankEither = await wordBankRepository.addLanguageToWordBank(lang);
+    final wordBankEither = await wordBankRepository.addDictionary(lang);
 
     wordBankEither.fold(
       (l) {
-        if (l is WordBankFailure) {
+        if (l is DictionariesFailure) {
           wordBankFailure = l;
-          wordBank = l.wordBank;
+          dictionaries = l.dictionaries;
         }
       },
-      (r) => wordBank = r,
+      (r) => dictionaries = r,
     );
 
-    final currentLanguageEither = await wordBankRepository.getCurrentLanguage();
-    currentLanguageEither.fold(
+    final currentDictionaryEither =
+        await wordBankRepository.getCurrentDictionary();
+    currentDictionaryEither.fold(
       (l) {
-        if (l is LanguageFailure) {
-          currentLanguage = l.currentLanguage;
-          currentLanguageFailure = l;
+        if (l is DictionaryFailure) {
+          currentDictionary = l.currentDictionary;
+          currentDictionaryFailure = l;
         }
       },
-      (r) => currentLanguage = r,
+      (r) => currentDictionary = r,
     );
 
     _finishMethod();
@@ -170,53 +174,53 @@ class WordBankProvider extends ChangeNotifier {
   Future removeLanguage(Language lang) async {
     _prepareMethod();
 
-    final wordBankEither = await wordBankRepository.removeLanguageFromWordBank(
+    final wordBankEither = await wordBankRepository.removeDictionary(
       lang,
     );
 
     wordBankEither.fold(
       (l) {
-        if (l is WordBankFailure) {
+        if (l is DictionariesFailure) {
           wordBankFailure = l;
-          wordBank = l.wordBank;
+          dictionaries = l.dictionaries;
         }
       },
-      (r) => wordBank = r,
+      (r) => dictionaries = r,
     );
 
-    final currentLanguageEither = await wordBankRepository.getCurrentLanguage();
-    currentLanguageEither.fold(
+    final currentDictionaryEither =
+        await wordBankRepository.getCurrentDictionary();
+    currentDictionaryEither.fold(
       (l) {
-        if (l is LanguageFailure) {
-          currentLanguage = l.currentLanguage;
-          currentLanguageFailure = l;
+        if (l is DictionaryFailure) {
+          currentDictionary = l.currentDictionary;
+          currentDictionaryFailure = l;
         }
       },
-      (r) => currentLanguage = r,
+      (r) => currentDictionary = r,
     );
 
     _finishMethod();
   }
 
-  Future addWordToCurrentLanguage(BuildContext context, Word wordToAdd) async {
+  Future addWord(
+    BuildContext context,
+    Map<String, dynamic> wordToAddMap,
+  ) async {
     _prepareMethod();
 
-    if (currentLanguage != null) {
-      if (wordBank.dictionaries[currentLanguage] != null) {
-        final wordBankEither = await wordBankRepository.editWordsList(
-          languageFrom: currentLanguage!,
-          newWordList: wordBank.dictionaries[currentLanguage]!
-            ..insert(0, wordToAdd),
-        );
+    if (currentDictionary != null) {
+      if (dictionaries[currentDictionary] != null) {
+        final wordBankEither = await wordBankRepository.addWord(wordToAddMap);
 
         wordBankEither.fold(
           (l) {
-            if (l is WordBankFailure) {
+            if (l is DictionariesFailure) {
               wordBankFailure = l;
-              wordBank = l.wordBank;
+              dictionaries = l.dictionaries;
             }
           },
-          (r) => wordBank = r,
+          (r) => dictionaries = r,
         );
       }
     }
@@ -224,7 +228,8 @@ class WordBankProvider extends ChangeNotifier {
     _finishMethod();
   }
 
-  Future changeCurrentLanguage(BuildContext context, Language? language) async {
+  Future changeCurrentDictionary(
+      BuildContext context, Language? language) async {
     _prepareMethod();
 
     if (language == null) {
@@ -232,19 +237,19 @@ class WordBankProvider extends ChangeNotifier {
       throw UnexpectedException();
     }
 
-    if (wordBank.dictionaries[language] != null) {
-      final currentLanguageEither =
-          await wordBankRepository.changeCurrentLanguage(
+    if (dictionaries[language] != null) {
+      final currentDictionaryEither =
+          await wordBankRepository.changeCurrentDictionary(
         language,
       );
-      currentLanguageEither.fold(
+      currentDictionaryEither.fold(
         (l) {
-          if (l is LanguageFailure) {
-            currentLanguage = l.currentLanguage;
-            currentLanguageFailure = l;
+          if (l is DictionaryFailure) {
+            currentDictionary = l.currentDictionary;
+            currentDictionaryFailure = l;
           }
         },
-        (r) => currentLanguage = r,
+        (r) => currentDictionary = r,
       );
     }
 
@@ -253,39 +258,24 @@ class WordBankProvider extends ChangeNotifier {
 
   Future editWord(
     Word oldWord,
-    Word newWord, {
-    Language? language,
+    Map<String, dynamic> newWordMap, {
     bool? searching,
   }) async {
     _prepareMethod();
 
-    final changeOnLang = language ?? currentLanguage;
-
-    if (changeOnLang == null) {
-      _finishMethod();
-      throw UnexpectedException();
-    }
-
-    final newWordList = wordBank.dictionaries[changeOnLang];
-    if (newWordList == null) {
-      return;
-    }
-    final index = newWordList.indexWhere((element) => element == oldWord);
-    newWordList[index] = newWord;
-
-    final wordBankEither = await wordBankRepository.editWordsList(
-      languageFrom: changeOnLang,
-      newWordList: newWordList,
+    final wordBankEither = await wordBankRepository.editWord(
+      oldWord.id,
+      newWordMap,
     );
 
     wordBankEither.fold(
       (l) {
-        if (l is WordBankFailure) {
+        if (l is DictionariesFailure) {
           wordBankFailure = l;
-          wordBank = l.wordBank;
+          dictionaries = l.dictionaries;
         }
       },
-      (r) => wordBank = r,
+      (r) => dictionaries = r,
     );
 
     if (searching ?? false) {
@@ -297,39 +287,22 @@ class WordBankProvider extends ChangeNotifier {
 
   Future removeWord(
     Word wordToRemove, {
-    Language? language,
     bool? searching,
   }) async {
     _prepareMethod();
 
-    final changeOnLang = language ?? currentLanguage;
-
-    if (changeOnLang == null) {
-      _finishMethod();
-      throw UnexpectedException();
-    }
-
-    final newWordList = wordBank.dictionaries[changeOnLang];
-
-    if (newWordList == null) {
-      _finishMethod();
-      throw UnexpectedException();
-    }
-
-    newWordList.remove(wordToRemove);
-    final wordBankEither = await wordBankRepository.editWordsList(
-      languageFrom: changeOnLang,
-      newWordList: newWordList,
+    final dictionariesEither = await wordBankRepository.removeWord(
+      wordToRemove,
     );
 
-    wordBankEither.fold(
+    dictionariesEither.fold(
       (l) {
-        if (l is WordBankFailure) {
+        if (l is Dictionaries) {
           wordBankFailure = l;
-          wordBank = l.wordBank;
+          dictionaries = l.dictionaries;
         }
       },
-      (r) => wordBank = r,
+      (r) => dictionaries = r,
     );
 
     if (searching ?? false) {
@@ -339,70 +312,70 @@ class WordBankProvider extends ChangeNotifier {
     _finishMethod();
   }
 
-  Future reorderWordList(
-    List<Word> newWordList, {
-    Language? language,
-  }) async {
-    _prepareMethod();
+  //Future reorderWordList(
+  //  List<Word> newWordList, {
+  //  Language? language,
+  //}) async {
+  //  _prepareMethod();
 
-    final changeOnLang = language ?? currentLanguage;
+  //  final changeOnLang = language ?? currentDictionary;
 
-    if (changeOnLang == null) {
-      _finishMethod();
-      throw UnexpectedException();
-    }
+  //  if (changeOnLang == null) {
+  //    _finishMethod();
+  //    throw UnexpectedException();
+  //  }
 
-    wordBank.dictionaries[changeOnLang] = newWordList;
-    final wordList = wordBank.dictionaries[changeOnLang];
+  //  dictionaries.dictionaries[changeOnLang] = newWordList;
+  //  final wordList = dictionaries.dictionaries[changeOnLang];
 
-    if (wordList == null) {
-      _finishMethod();
-      throw UnexpectedException();
-    }
+  //  if (wordList == null) {
+  //    _finishMethod();
+  //    throw UnexpectedException();
+  //  }
 
-    final wordBankEither = await wordBankRepository.editWordsList(
-      languageFrom: changeOnLang,
-      newWordList: wordList,
-    );
+  //  final wordBankEither = await wordBankRepository.editWordsList(
+  //    languageFrom: changeOnLang,
+  //    newWordList: wordList,
+  //  );
 
-    wordBankEither.fold(
-      (l) {
-        if (l is WordBankFailure) {
-          wordBankFailure = l;
-          wordBank = l.wordBank;
-        }
-      },
-      (r) => wordBank = r,
-    );
+  //  wordBankEither.fold(
+  //    (l) {
+  //      if (l is WordBankFailure) {
+  //        wordBankFailure = l;
+  //        dictionaries = l.wordBank;
+  //      }
+  //    },
+  //    (r) => dictionaries = r,
+  //  );
 
-    _finishMethod();
-  }
+  //  _finishMethod();
+  //}
 
-  Future fetchWordBankAndCurrentLanguage() async {
+  Future fetchDictionaries() async {
     _prepareMethod();
 
     final wordBankEither = await wordBankRepository.fetchWordBankRemotely();
-    final currentLanguageEither =
-        await wordBankRepository.fetchCurrentLanguageRemotely();
+    final currentDictionaryEither =
+        await wordBankRepository.fetchCurrentDictionaryRemotely();
 
     wordBankEither.fold(
       (l) {
-        if (l is WordBankFailure) {
-          wordBank = l.wordBank;
+        if (l is Dictionaries) {
+          dictionaries = l.dictionaries;
           wordBankFailure = l;
         }
       },
-      (r) => wordBank = r,
+      (r) => dictionaries = r,
     );
 
-    currentLanguageEither.fold(
+    currentDictionaryEither.fold(
       (l) {
-        if (l is LanguageFailure) {
-          currentLanguage = l.currentLanguage;
-          currentLanguageFailure = l;
+        if (l is DictionaryFailure) {
+          currentDictionary = l.currentDictionary;
+          currentDictionaryFailure = l;
         }
       },
-      (r) => currentLanguage = r,
+      (r) => currentDictionary = r,
     );
 
     _finishMethod();
@@ -412,7 +385,7 @@ class WordBankProvider extends ChangeNotifier {
     await wordBankRepository.saveWordBank();
   }
 
-  Future saveCurrentLanguage() async {
-    await wordBankRepository.saveCurrentLanguage();
+  Future savecurrentDictionary() async {
+    await wordBankRepository.savecurrentDictionary();
   }
 }

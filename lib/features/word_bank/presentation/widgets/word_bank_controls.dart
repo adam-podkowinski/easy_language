@@ -25,8 +25,8 @@ class WordBankControls extends StatelessWidget {
       );
       final Widget continueButton = OutlinedButton(
         onPressed: () {
-          if (state.currentLanguage != null) {
-            state.removeLanguage(state.currentLanguage!);
+          if (state.currentDictionary != null) {
+            state.removeLanguage(state.currentDictionary!.language);
           }
           Navigator.of(context).pop();
         },
@@ -52,7 +52,7 @@ class WordBankControls extends StatelessWidget {
     }
 
     if (!state.loading) {
-      final languagesList = state.wordBank.dictionaries.keys.toList();
+      final languagesList = state.dictionaries.keys.toList();
 
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 25.w),
@@ -68,8 +68,7 @@ class WordBankControls extends StatelessWidget {
                   },
                   Languages.defaultLanguages
                       .where(
-                        (element) =>
-                            !state.wordBank.dictionaries.keys.contains(element),
+                        (element) => !state.dictionaries.keys.contains(element),
                       )
                       .toList(),
                 );
@@ -86,8 +85,9 @@ class WordBankControls extends StatelessWidget {
               ),
               hint: const Text(emptyString),
               elevation: 0,
-              value: state.currentLanguage,
-              onChanged: (value) => state.changeCurrentLanguage(context, value),
+              value: state.currentDictionary?.language,
+              onChanged: (value) =>
+                  state.changeCurrentDictionary(context, value),
               iconEnabledColor: Theme.of(context).colorScheme.secondary,
               items: languagesList
                   .map(
@@ -104,7 +104,7 @@ class WordBankControls extends StatelessWidget {
                   .toList(),
             ),
             IconButton(
-              onPressed: state.currentLanguage != null
+              onPressed: state.currentDictionary != null
                   ? () => showRemoveLanguageConfirmationDialog(context)
                   : null,
               icon: Icon(

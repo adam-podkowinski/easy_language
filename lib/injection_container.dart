@@ -59,8 +59,8 @@ Future registerWordBank() async {
   );
 
   // Repositories
-  sl.registerLazySingleton<WordBankRepository>(
-    () => WordBankRepositoryImpl(
+  sl.registerLazySingleton<DictionaryRepository>(
+    () => DictionaryRepositoryImpl(
       localDataSource: sl(),
       remoteDataSource: sl(),
     ),

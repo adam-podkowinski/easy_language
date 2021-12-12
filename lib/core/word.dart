@@ -1,6 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 
+import 'constants.dart';
+
 enum LearningStatus { learning, reviewing, mastered }
 
 extension LearningStatusExtension on LearningStatus {
@@ -42,14 +44,13 @@ extension LearningStatusExtension on LearningStatus {
 }
 
 class Word extends Equatable {
-  /// 10 variables
+  /// 8 variables
   final int id;
   final String wordForeign;
   final String wordTranslation;
   final LearningStatus learningStatus;
   final int timesReviewed;
   final int dictionaryId;
-  final int userId;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -58,40 +59,34 @@ class Word extends Equatable {
     required this.wordForeign,
     required this.wordTranslation,
     required this.dictionaryId,
-    required this.userId,
     this.learningStatus = LearningStatus.reviewing,
     this.timesReviewed = 0,
     required this.createdAt,
     required this.updatedAt,
   });
 
-  static const idId = 'id';
+  static const dictionaryIdId = 'dictionary_id';
   static const wordForeignId = 'word_foreign';
   static const wordTranslationId = 'word_translation';
   static const learningStatusId = 'learning_status';
   static const timesReviewedId = 'times_reviewed';
-  static const userIdId = 'user_id';
-  static const dictionaryIdId = 'dictionary_id';
-  static const createdAtId = 'created_at';
-  static const updatedAtId = 'updated_at';
 
   factory Word.fromMap(Map<dynamic, dynamic> map) {
     return Word(
-      id: cast(map[Word.idId]) ?? 0,
+      id: cast(map[idId]) ?? 0,
       wordForeign: cast(map[Word.wordForeignId]) ?? '',
       wordTranslation: cast(map[Word.wordTranslationId]) ?? '',
       learningStatus: LearningStatusExtension.fromString(
         cast(map[Word.learningStatusId]),
       ),
       timesReviewed: cast(map[Word.timesReviewedId]) ?? 0,
-      userId: cast(map[Word.userIdId]) ?? 0,
       dictionaryId: cast(map[Word.dictionaryIdId]) ?? 0,
       createdAt: DateTime.tryParse(
-            cast(map[Word.createdAtId]),
+            cast(map[createdAtId]),
           ) ??
           DateTime.now(),
       updatedAt: DateTime.tryParse(
-            cast(map[Word.updatedAtId]),
+            cast(map[updatedAtId]),
           ) ??
           DateTime.now(),
     );
@@ -102,15 +97,14 @@ class Word extends Equatable {
   }
 
   Map<dynamic, dynamic> toMap() => {
-        Word.idId: id,
+        idId: id,
+        createdAtId: createdAt.toIso8601String(),
+        updatedAtId: updatedAt.toIso8601String(),
         Word.wordForeignId: wordForeign,
         Word.wordTranslationId: wordTranslation,
         Word.learningStatusId: learningStatus.statusToString,
         Word.timesReviewedId: timesReviewed,
-        Word.userIdId: userId,
         Word.dictionaryIdId: dictionaryId,
-        Word.createdAtId: createdAt.toIso8601String(),
-        Word.updatedAtId: updatedAt.toIso8601String(),
       };
 
   @override
@@ -120,7 +114,6 @@ class Word extends Equatable {
         wordTranslation,
         learningStatus,
         timesReviewed,
-        userId,
         dictionaryId,
         createdAt,
         updatedAt,

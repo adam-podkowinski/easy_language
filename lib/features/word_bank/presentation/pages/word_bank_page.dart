@@ -129,23 +129,23 @@ class _WordBankPageState extends State<WordBankPage> {
 
   Widget _addWordWidget(BuildContext context) {
     final state = context.watch<WordBankProvider>();
-    if (state.currentLanguageFailure is LanguageCacheFailure) {
+    if (state.currentLanguageFailure is DictionaryCacheFailure) {
       showError(context, state.currentLanguageFailure.toString());
     }
-    if (state.wordBankFailure is WordBankCacheFailure) {
+    if (state.wordBankFailure is DictionariesCacheFailure) {
       showError(context, state.wordBankFailure.toString());
     }
     return IconButton(
       icon: const Icon(Icons.add),
       onPressed: () {
-        if (state.wordBank.dictionaries.isEmpty) {
+        if (state.dictionaries.dictionaries.isEmpty) {
           showLanguagePickerDialog(
             context,
             (lang) async => state.addLanguage(lang),
             Languages.defaultLanguages
                 .where(
                   (element) =>
-                      !state.wordBank.dictionaries.keys.contains(element),
+                      !state.dictionaries.dictionaries.keys.contains(element),
                 )
                 .toList(),
           );

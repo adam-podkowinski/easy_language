@@ -1,4 +1,6 @@
+import 'package:easy_language/features/word_bank/domain/entities/word_bank.dart';
 import 'package:flutter/material.dart';
+import 'package:language_picker/languages.dart';
 
 const Size screenSize = Size(393, 781);
 
@@ -14,7 +16,12 @@ const emptyString = 'Empty';
 const addNewWordTitle = 'Add a new word';
 const editWordTitle = 'Edit a word';
 const svgPrefix = 'assets/svgs';
-const playGamesSnapshotId = 'easy_language.main';
+
+const idId = 'id';
+const userIdId = 'user_id';
+const languageId = 'language';
+const createdAtId = 'created_at';
+const updatedAtId = 'updated_at';
 
 const Map<String, String> pageTitlesFromIds = {
   wordBankPageId: 'Word Bank',
@@ -22,3 +29,5 @@ const Map<String, String> pageTitlesFromIds = {
   flashcardsPageId: 'Flashcards',
   settingsPageId: 'Settings',
 };
+
+typedef Dictionaries = Map<Language, Dictionary>;

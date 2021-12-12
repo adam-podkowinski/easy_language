@@ -43,7 +43,7 @@ class NoLanguagesWidget extends StatelessWidget {
                   Languages.defaultLanguages
                       .where(
                         (element) =>
-                            !state.wordBank.dictionaries.keys.contains(element),
+                            !state.dictionaries.dictionaries.keys.contains(element),
                       )
                       .toList(),
                 );

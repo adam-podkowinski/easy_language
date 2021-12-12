@@ -1,7 +1,7 @@
+import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:easy_language/features/word_bank/domain/entities/word_bank.dart';
 import 'package:equatable/equatable.dart';
-import 'package:language_picker/languages.dart';
 
 abstract class Failure extends Equatable {
   @override
@@ -27,38 +27,40 @@ class SettingsGetFailure extends SettingsFailure {
   SettingsGetFailure(Settings settings) : super(settings);
 }
 
-abstract class WordBankFailure extends Failure {
-  final WordBank wordBank;
+abstract class DictionariesFailure extends Failure {
+  final Dictionaries dictionaries;
 
-  WordBankFailure(this.wordBank);
-
-  @override
-  List<Object?> get props => [wordBank];
-}
-
-class WordBankCacheFailure extends WordBankFailure {
-  WordBankCacheFailure(WordBank wordBank) : super(wordBank);
-}
-
-class WordBankGetFailure extends WordBankFailure {
-  WordBankGetFailure(WordBank wordBank) : super(wordBank);
-}
-
-abstract class LanguageFailure extends Failure {
-  final Language? currentLanguage;
-
-  LanguageFailure(this.currentLanguage);
+  DictionariesFailure(this.dictionaries);
 
   @override
-  List<Object?> get props => [currentLanguage];
+  List<Object?> get props => [dictionaries];
 }
 
-class LanguageCacheFailure extends LanguageFailure {
-  LanguageCacheFailure(Language currentLanguage) : super(currentLanguage);
+class DictionariesCacheFailure extends DictionariesFailure {
+  DictionariesCacheFailure(Dictionaries dictionaries) : super(dictionaries);
 }
 
-class LanguageGetFailure extends LanguageFailure {
-  LanguageGetFailure(Language? currentLanguage) : super(currentLanguage);
+class DictionariesGetFailure extends DictionariesFailure {
+  DictionariesGetFailure(Dictionaries dictionaries) : super(dictionaries);
+}
+
+abstract class DictionaryFailure extends Failure {
+  final Dictionary? currentDictionary;
+
+  DictionaryFailure(this.currentDictionary);
+
+  @override
+  List<Object?> get props => [currentDictionary];
+}
+
+class DictionaryCacheFailure extends DictionaryFailure {
+  DictionaryCacheFailure(Dictionary? currentDictionary)
+      : super(currentDictionary);
+}
+
+class DictionaryGetFailure extends DictionaryFailure {
+  DictionaryGetFailure(Dictionary? currentDictionary)
+      : super(currentDictionary);
 }
 
 abstract class FlashcardFailure extends Failure {}

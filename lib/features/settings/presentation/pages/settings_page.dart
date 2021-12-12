@@ -99,7 +99,7 @@ class SettingsPage extends StatelessWidget {
               ListTile(
                 trailing: ElevatedButton(
                   onPressed:
-                      context.read<WordBankProvider>().currentLanguage == null
+                      context.read<WordBankProvider>().currentDictionary == null
                           ? null
                           : () => showLanguagePickerDialog(
                                 context,
@@ -113,17 +113,17 @@ class SettingsPage extends StatelessWidget {
                                 },
                                 context
                                     .read<WordBankProvider>()
-                                    .wordBank
+                                    .dictionaries
                                     .dictionaries
                                     .keys
                                     .toList(),
                               ),
                   child: Text(
-                    context.watch<WordBankProvider>().currentLanguage?.name ??
+                    context.watch<WordBankProvider>().currentDictionary?.name ??
                         'None',
                     style: TextStyle(
                       color:
-                          context.watch<WordBankProvider>().currentLanguage ==
+                          context.watch<WordBankProvider>().currentDictionary ==
                                   null
                               ? Theme.of(context)
                                   .colorScheme

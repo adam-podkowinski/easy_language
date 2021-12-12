@@ -51,9 +51,9 @@ class _FlashcardPageState extends State<FlashcardPage> {
 
   void listenToFlashcardProvider() {
     flashcard = flashcardProvider.currentFlashcard;
-    if (wordBankProvider.currentLanguage != null && flashcard != null) {
+    if (wordBankProvider.currentDictionary != null && flashcard != null) {
       final wordList = wordBankProvider
-          .wordBank.dictionaries[wordBankProvider.currentLanguage!];
+          .dictionaries.dictionaries[wordBankProvider.currentDictionary!];
 
       if (wordList!.length > flashcard!.wordIndex) {
         wordToShow = wordList[flashcard!.wordIndex];

@@ -111,6 +111,7 @@ class WordListItem extends StatelessWidget {
             child: Slidable(
               endActionPane: ActionPane(
                 motion: const ScrollMotion(),
+                extentRatio: 0.3,
                 children: [
                   SlidableAction(
                     label: 'Delete',

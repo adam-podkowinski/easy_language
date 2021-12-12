@@ -25,7 +25,7 @@ class FlashcardView extends StatelessWidget {
 
   void nextFlashcard() {
     flashcardProvider.getNextFlashcard(
-      wordBankProvider.wordBank,
+      wordBankProvider.dictionaries,
     );
 
     final newTimesReviewed = word.timesReviewed + 1;
@@ -45,7 +45,7 @@ class FlashcardView extends StatelessWidget {
   Widget build(BuildContext context) {
     final value = isTurned ? word.wordTranslation : word.wordForeign;
     final currentDictionary =
-        wordBankProvider.wordBank.dictionaries[flashcard.wordLanguage]!;
+        wordBankProvider.dictionaries.dictionaries[flashcard.wordLanguage]!;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

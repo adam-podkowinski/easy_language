@@ -136,7 +136,6 @@ class _WordDialogState extends State<WordDialog> {
                         LearningStatus.reviewing,
                     dictionaryId: widget.wordToEdit?.dictionaryId ?? 0,
                     timesReviewed: widget.wordToEdit?.timesReviewed ?? 0,
-                    userId: widget.wordToEdit?.userId ?? 0,
                   ),
                 );
                 Navigator.of(context).pop();
