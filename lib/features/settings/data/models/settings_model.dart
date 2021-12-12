@@ -3,7 +3,7 @@ import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:language_picker/languages.dart';
 
-class SettingsModel extends Settings {
+class SettingsModel extends User {
   const SettingsModel({
     bool isStartup = true,
     ThemeMode themeMode = ThemeMode.system,
@@ -18,10 +18,10 @@ class SettingsModel extends Settings {
   /// Map's object should be a basic type (int, string, bool) and NOT enum
   factory SettingsModel.fromMap(Map<dynamic, dynamic> map) {
     return SettingsModel(
-      isStartup: cast(map[Settings.isStartupId]) ?? true,
-      themeMode: mapStringToThemeMode(cast(map[Settings.themeModeId])),
+      isStartup: cast(map[User.isStartupId]) ?? true,
+      themeMode: mapStringToThemeMode(cast(map[User.themeModeId])),
       nativeLanguage: Language.fromIsoCode(
-        cast(map[Settings.nativeLanguageId]) ?? Languages.english.isoCode,
+        cast(map[User.nativeLanguageId]) ?? Languages.english.isoCode,
       ),
     );
   }
@@ -31,16 +31,16 @@ class SettingsModel extends Settings {
   }
 
   Map<dynamic, dynamic> toMap() => {
-        Settings.isStartupId: isStartup,
-        Settings.themeModeId: mapThemeModeToString(themeMode),
-        Settings.nativeLanguageId: nativeLanguage.isoCode,
+        User.isStartupId: isStartup,
+        User.themeModeId: mapThemeModeToString(themeMode),
+        User.nativeLanguageId: nativeLanguage.isoCode,
       };
 
   static ThemeMode mapStringToThemeMode(String? theme) {
     switch (theme) {
-      case Settings.lightThemeId:
+      case User.lightThemeId:
         return ThemeMode.light;
-      case Settings.darkThemeId:
+      case User.darkThemeId:
         return ThemeMode.dark;
       default:
         return ThemeMode.system;
@@ -50,11 +50,11 @@ class SettingsModel extends Settings {
   static String mapThemeModeToString(ThemeMode theme) {
     switch (theme) {
       case ThemeMode.light:
-        return Settings.lightThemeId;
+        return User.lightThemeId;
       case ThemeMode.dark:
-        return Settings.darkThemeId;
+        return User.darkThemeId;
       default:
-        return Settings.systemThemeId;
+        return User.systemThemeId;
     }
   }
 }

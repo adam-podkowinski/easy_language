@@ -37,6 +37,7 @@ class DictionaryLocalDataSourceImpl implements DictionaryLocalDataSource {
     // TODO: implement getLocalWordBank
     throw UnimplementedError();
   }
+
  final Box wordBankBox;
 
  DictionaryLocalDataSourceImpl({required this.wordBankBox});

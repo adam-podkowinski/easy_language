@@ -6,12 +6,11 @@ import 'package:easy_language/features/flashcard/data/data_sources/flashcard_rem
 import 'package:easy_language/features/flashcard/data/repositories/flashcard_repository_impl.dart';
 import 'package:easy_language/features/flashcard/domain/repositories/flashcard_repository.dart';
 import 'package:easy_language/features/flashcard/presentation/manager/flashcard_provider.dart';
-import 'package:easy_language/features/login/presentation/manager/login_provider.dart';
 import 'package:easy_language/features/settings/data/data_sources/settings_local_data_source.dart';
 import 'package:easy_language/features/settings/data/data_sources/settings_remote_data_source.dart';
 import 'package:easy_language/features/settings/data/repositories/settings_repository_impl.dart';
 import 'package:easy_language/features/settings/domain/repositories/settings_repository.dart';
-import 'package:easy_language/features/settings/presentation/manager/settings_provider.dart';
+import 'package:easy_language/features/settings/presentation/manager/user_provider.dart';
 import 'package:easy_language/features/word_bank/data/data_sources/dictionary_local_data_source.dart';
 import 'package:easy_language/features/word_bank/data/data_sources/dictionary_remote_data_source.dart';
 import 'package:easy_language/features/word_bank/data/repositories/dictionary_repository_impl.dart';
@@ -26,7 +25,7 @@ final sl = GetIt.instance;
 Future registerSettings() async {
   // Provider
   sl.registerLazySingleton(
-    () => SettingsProvider(
+    () => UserProvider(
       settingsRepository: sl(),
     ),
   );
@@ -102,10 +101,6 @@ Future registerFlashcard() async {
   );
 }
 
-Future registerLogin() async {
-  sl.registerFactory(() => LoginProvider());
-}
-
 Future clearAllBoxes() async {
   await (await Hive.openBox(cachedSettingsId)).clear();
   await (await Hive.openBox(cachedCurrentFlashcardId)).clear();
@@ -121,5 +116,4 @@ Future init() async {
   await registerSettings();
   await registerWordBank();
   await registerFlashcard();
-  await registerLogin();
 }

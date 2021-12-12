@@ -8,65 +8,14 @@ abstract class FlashcardRemoteDataSource {
 
 class FlashcardRemoteDataSourceImpl implements FlashcardRemoteDataSource {
   @override
-  Future<FlashcardModel> fetchFlashcard() async {
+  Future<FlashcardModel> fetchFlashcard() {
+    // TODO: implement fetchFlashcard
     throw UnimplementedError();
-    // try {
-    //   final result = await PlayGames.getLastSignedInAccount();
-    //   if (result.success) {
-    //     final Snapshot save = await openSnapshot(playGamesSnapshotId);
-    //     if (save.content == null || (save.content?.trim().isEmpty ?? true)) {
-    //       throw RemoteException();
-    //     } else {
-    //       final Map<String, dynamic> readMap = cast(
-    //         jsonDecode(save.content!),
-    //       );
-    //
-    //       final Map<String, dynamic> flashcardField = cast(
-    //         readMap[cachedCurrentFlashcardId],
-    //       );
-    //
-    //       return FlashcardModel.fromMap(flashcardField);
-    //     }
-    //   } else {
-    //     throw RemoteException();
-    //   }
-    // } catch (e) {
-    //   Logger().e(e);
-    //   throw RemoteException();
-    // }
   }
 
   @override
-  Future<void> saveFlashcard(FlashcardModel flashcardToCache) async {
+  Future<void> saveFlashcard(FlashcardModel flashcardToCache) {
+    // TODO: implement saveFlashcard
     throw UnimplementedError();
-    // try {
-    //   final result = await PlayGames.getLastSignedInAccount();
-    //   if (result.success) {
-    //     Map<String, dynamic> mapToSave = {};
-    //     final Snapshot save = await openSnapshot(playGamesSnapshotId);
-    //
-    //     if (save.content != null &&
-    //         (save.content?.trim().isNotEmpty ?? false)) {
-    //       mapToSave = cast(jsonDecode(save.content!));
-    //     }
-    //
-    //     mapToSave[cachedCurrentFlashcardId] = flashcardToCache.toMap();
-    //
-    //     final bool couldSave = await PlayGames.saveSnapshot(
-    //           'easy_language.main',
-    //           jsonEncode(mapToSave),
-    //         ) ??
-    //         false;
-    //
-    //     if (!couldSave) {
-    //       throw RemoteException();
-    //     }
-    //   } else {
-    //     throw RemoteException();
-    //   }
-    // } catch (e) {
-    //   Logger().e(e);
-    //   throw RemoteException();
-    // }
   }
 }

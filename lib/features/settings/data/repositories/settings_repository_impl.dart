@@ -28,7 +28,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, Settings>> changeSettings({
+  Future<Either<Failure, User>> changeSettings({
     required Map<dynamic, dynamic> settingsMap,
   }) async {
     try {
@@ -45,7 +45,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, Settings>> getSettings() async {
+  Future<Either<Failure, User>> getSettings() async {
     try {
       if (_initial) {
         _settings = await localDataSource.getLocalSettings();
@@ -59,7 +59,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, Settings>> fetchSettingsRemotely() async {
+  Future<Either<Failure, User>> fetchSettingsRemotely() async {
     try {
       _settings = await remoteDataSource.fetchSettings();
       localDataSource.cacheSettings(_settings);

@@ -11,7 +11,7 @@ abstract class Failure extends Equatable {
 class UnknownFailure extends Failure {}
 
 abstract class SettingsFailure extends Failure {
-  final Settings settings;
+  final User settings;
 
   SettingsFailure(this.settings);
 
@@ -20,11 +20,11 @@ abstract class SettingsFailure extends Failure {
 }
 
 class SettingsCacheFailure extends SettingsFailure {
-  SettingsCacheFailure(Settings settings) : super(settings);
+  SettingsCacheFailure(User settings) : super(settings);
 }
 
 class SettingsGetFailure extends SettingsFailure {
-  SettingsGetFailure(Settings settings) : super(settings);
+  SettingsGetFailure(User settings) : super(settings);
 }
 
 abstract class DictionariesFailure extends Failure {

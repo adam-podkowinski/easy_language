@@ -7,6 +7,8 @@ abstract class DictionaryRemoteDataSource {
 
   Future<DictionaryModel> fetchCurrentDictionary();
 
+  Future<DictionaryModel> addDictionary();
+
   Future<void> saveDictionaries(DictionariesModel wordBankToCache);
 
   Future<void> saveCurrentDictionary(DictionaryModel dictionaryToCache);
@@ -34,6 +36,12 @@ class DictionaryRemoteDataSourceImpl implements DictionaryRemoteDataSource {
   @override
   Future<void> saveDictionaries(DictionariesModel wordBankToCache) {
     // TODO: implement saveWordBank
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DictionaryModel> addDictionary() {
+    // TODO: implement addDictionary
     throw UnimplementedError();
   }
   // @override

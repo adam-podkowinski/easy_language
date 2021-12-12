@@ -2,12 +2,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:language_picker/languages.dart';
 
-class Settings extends Equatable {
+class User extends Equatable {
   final bool isStartup;
   final ThemeMode themeMode;
   final Language nativeLanguage;
 
-  const Settings({
+  const User({
     required this.isStartup,
     required this.themeMode,
     required this.nativeLanguage,

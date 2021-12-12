@@ -1,5 +1,4 @@
-// iignore_for_file: prefer_const_constructors
-// iignore_for_file: prefer_const_literals_to_create_immutables
+import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/constants.dart';
@@ -10,7 +9,9 @@ import 'package:easy_language/features/word_bank/data/data_sources/dictionary_re
 import 'package:easy_language/features/word_bank/data/models/dictionary_model.dart';
 import 'package:easy_language/features/word_bank/domain/entities/dictionary.dart';
 import 'package:easy_language/features/word_bank/domain/repositories/dictionary_repository.dart';
+import 'package:http/http.dart' as http;
 import 'package:language_picker/languages.dart';
+import 'package:logger/logger.dart';
 
 class DictionaryRepositoryImpl implements DictionaryRepository {
   bool _initialDictionaries = true;
@@ -43,22 +44,35 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
     return Future.value([]);
   }
 
+  Future<DictionaryModel> addDictionaryRemote(Language language) async {
+    final response = await http.post(
+      Uri.parse('$api/api/v1/dictionaries'),
+      body: {'language': language.isoCode},
+      headers: {
+        'Authorization': 'Bearer fxdChHFr3whvY4LwHTZHQ8GFslhBP3OcZlqH8cdV',
+        'Accept': 'application/json'
+      },
+    );
+
+    final Map dictJSON = cast(jsonDecode(response.body));
+
+    return DictionaryModel.fromMap(dictJSON);
+  }
+
   @override
-  Future<Either<Failure, Dictionaries>> addDictionary(
-    Language language, {
-    List<Word>? initialWords,
-  }) async {
+  Future<Either<Failure, Dictionaries>> addDictionary(Language language) async {
     try {
       await _ensureWordBankInitialized();
 
+      if (_dictionaries.containsKey(language)) {
+        await changeCurrentDictionary(language);
+      } else {
+        _dictionaries[language] = await addDictionaryRemote(language);
+        await changeCurrentDictionary(language);
+      }
+
       localDataSource.cacheDictionaries(_dictionaries);
       remoteDataSource.saveDictionaries(_dictionaries);
-
-      await changeCurrentDictionary(language);
-
-      if (_dictionaries[language]?.words.isEmpty ?? false) {
-        _dictionaries[language]!.words.addAll(initialWords ?? []);
-      }
 
       return Right(_dictionaries);
     } catch (_) {

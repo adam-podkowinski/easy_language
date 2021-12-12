@@ -2,7 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
-import 'package:easy_language/features/settings/presentation/manager/settings_provider.dart';
+import 'package:easy_language/features/settings/presentation/manager/user_provider.dart';
 import 'package:easy_language/features/settings/presentation/widgets/theme_picker.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
 import 'package:flutter/material.dart';
@@ -61,9 +61,9 @@ class SettingsPage extends StatelessWidget {
                   onPressed: () => showLanguagePickerDialog(
                     context,
                     (Language languagePicked) {
-                      context.read<SettingsProvider>().changeSettings(
+                      context.read<UserProvider>().changeSettings(
                         {
-                          Settings.nativeLanguageId: languagePicked.isoCode,
+                          User.nativeLanguageId: languagePicked.isoCode,
                         },
                       );
                     },
@@ -71,7 +71,7 @@ class SettingsPage extends StatelessWidget {
                   ),
                   child: Text(
                     context
-                        .watch<SettingsProvider>()
+                        .watch<UserProvider>()
                         .settings
                         .nativeLanguage
                         .name,

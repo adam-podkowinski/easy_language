@@ -1,5 +1,5 @@
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
-import 'package:easy_language/features/settings/presentation/manager/settings_provider.dart';
+import 'package:easy_language/features/settings/presentation/manager/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,15 +8,15 @@ class ThemePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<SettingsProvider>();
+    final state = context.watch<UserProvider>();
     if (!state.loading) {
       return DropdownButton(
         iconEnabledColor: Theme.of(context).primaryColor,
         value: state.themeModeString,
         onChanged: (value) async => state.changeSettings({
-          Settings.themeModeId: value ?? Settings.systemThemeId,
+          User.themeModeId: value ?? User.systemThemeId,
         }),
-        items: Settings.availableThemesIds
+        items: User.availableThemesIds
             .map(
               (e) => DropdownMenuItem<String>(
                 value: e,

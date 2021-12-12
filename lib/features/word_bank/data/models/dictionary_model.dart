@@ -20,20 +20,34 @@ class DictionaryModel extends Dictionary {
         );
 
   factory DictionaryModel.fromMap(Map jsonMap) {
-    final Map data = cast(jsonMap['data']);
-    final Map dictMap = cast(data[Dictionary.dictionaryIdId]);
-    final Language lang = Language.fromIsoCode(cast(dictMap[languageId]));
-    final List<Map> wordsList = cast(data[Dictionary.wordsId]);
-    final List<Word> words = wordsList.map((e) => Word.fromMap(e)).toList();
-    final int id = cast(dictMap[idId]);
-    final DateTime createdAt = DateTime.tryParse(
-          cast(dictMap[createdAtId]),
-        ) ??
-        DateTime.now();
-    final DateTime updatedAt = DateTime.tryParse(
-          cast(dictMap[updatedAtId]),
-        ) ??
-        DateTime.now();
+    //TODO: fix casting
+    try {
+      final Map data = cast(jsonMap['data']);
+      final Map dictMap = cast(data[Dictionary.dictionaryIdId]);
+      final Language lang = Language.fromIsoCode(cast(dictMap[languageId]));
+      final List<Map> wordsList = cast(data[Dictionary.wordsId]);
+      final List<Word> words = wordsList.map((e) => Word.fromMap(e)).toList();
+      final int id = cast(dictMap[idId]);
+      final DateTime createdAt = DateTime.tryParse(
+        cast(dictMap[createdAtId]),
+      ) ??
+          DateTime.now();
+      final DateTime updatedAt = DateTime.tryParse(
+        cast(dictMap[updatedAtId]),
+      ) ??
+          DateTime.now();
+
+      return DictionaryModel(
+        words: words,
+        id: id,
+        language: lang,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+      );
+    } catch (e) {
+      print(e);
+      throw Error();
+    }
     // final Map<Language, List<Word>> dicts = dictionaryMap.map(
     //   (key, value) {
     //     final isoKey = Language.fromIsoCode(cast(key));
@@ -48,14 +62,6 @@ class DictionaryModel extends Dictionary {
     //     return MapEntry(isoKey, valueMap);
     //   },
     // );
-
-    return DictionaryModel(
-      words: words,
-      id: id,
-      language: lang,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
-    );
   }
 
   Map<dynamic, dynamic> toMap() {

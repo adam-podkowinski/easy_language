@@ -5,12 +5,12 @@ import 'package:easy_language/features/settings/domain/repositories/settings_rep
 import 'package:flutter/material.dart';
 import 'package:language_picker/languages.dart';
 
-class SettingsProvider extends ChangeNotifier {
+class UserProvider extends ChangeNotifier {
   bool loading = true;
 
   final SettingsRepository settingsRepository;
 
-  Settings settings = Settings(
+  User settings = User(
     isStartup: false,
     themeMode: ThemeMode.system,
     nativeLanguage: Languages.english,
@@ -18,7 +18,7 @@ class SettingsProvider extends ChangeNotifier {
 
   SettingsFailure? settingsFailure;
 
-  SettingsProvider({
+  UserProvider({
     required this.settingsRepository,
   });
 

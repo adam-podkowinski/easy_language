@@ -6,10 +6,7 @@ import 'package:easy_language/features/word_bank/domain/entities/dictionary.dart
 import 'package:language_picker/languages.dart';
 
 abstract class DictionaryRepository {
-  Future<Either<Failure, Dictionaries>> addDictionary(
-    Language language, {
-    List<Word>? initialWords,
-  });
+  Future<Either<Failure, Dictionaries>> addDictionary(Language language);
 
   Future<Either<Failure, Dictionaries>> addWord(Map<dynamic, dynamic> wordMap);
 

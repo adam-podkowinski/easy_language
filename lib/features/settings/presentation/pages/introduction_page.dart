@@ -1,9 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
-import 'package:easy_language/features/login/presentation/widgets/sign_in_button.dart';
+import 'package:easy_language/features/settings/presentation/widgets/sign_in_button.dart';
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
-import 'package:easy_language/features/settings/presentation/manager/settings_provider.dart';
+import 'package:easy_language/features/settings/presentation/manager/user_provider.dart';
 import 'package:easy_language/features/settings/presentation/widgets/theme_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,14 +17,14 @@ class IntroductionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<SettingsProvider>();
+    final state = context.watch<UserProvider>();
     return SafeArea(
       child: Scaffold(
         body: IntroductionScreen(
           pages: _buildPages(context),
           onDone: () {
             state.changeSettings({
-              Settings.isStartupId: false,
+              User.isStartupId: false,
             });
             Navigator.of(context).pushReplacementNamed(wordBankPageId);
           },
@@ -71,16 +71,16 @@ class IntroductionPage extends StatelessWidget {
           onPressed: () => showLanguagePickerDialog(
             context,
             (Language language) {
-              context.read<SettingsProvider>().changeSettings(
+              context.read<UserProvider>().changeSettings(
                 {
-                  Settings.nativeLanguageId: language.isoCode,
+                  User.nativeLanguageId: language.isoCode,
                 },
               );
             },
             Languages.defaultLanguages,
           ),
           child: Text(
-            context.watch<SettingsProvider>().settings.nativeLanguage.name,
+            context.watch<UserProvider>().settings.nativeLanguage.name,
           ),
         ),
       ),
