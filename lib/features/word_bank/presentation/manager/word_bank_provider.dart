@@ -16,7 +16,7 @@ class WordBankProvider extends ChangeNotifier {
   Dictionary? currentDictionary;
   Dictionaries dictionaries = {};
 
-  DictionariesFailure? wordBankFailure;
+  DictionariesFailure? dictionariesFailure;
   DictionaryFailure? currentDictionaryFailure;
 
   WordBankProvider({
@@ -68,7 +68,7 @@ class WordBankProvider extends ChangeNotifier {
 
   void _prepareMethod() {
     loading = true;
-    wordBankFailure = null;
+    dictionariesFailure = null;
     currentDictionaryFailure = null;
   }
 
@@ -122,7 +122,7 @@ class WordBankProvider extends ChangeNotifier {
       (l) {
         if (l is DictionariesFailure) {
           dictionaries = l.dictionaries;
-          wordBankFailure = l;
+          dictionariesFailure = l;
         }
       },
       (r) => dictionaries = r,
@@ -149,7 +149,7 @@ class WordBankProvider extends ChangeNotifier {
     wordBankEither.fold(
       (l) {
         if (l is DictionariesFailure) {
-          wordBankFailure = l;
+          dictionariesFailure = l;
           dictionaries = l.dictionaries;
         }
       },
@@ -181,7 +181,7 @@ class WordBankProvider extends ChangeNotifier {
     wordBankEither.fold(
       (l) {
         if (l is DictionariesFailure) {
-          wordBankFailure = l;
+          dictionariesFailure = l;
           dictionaries = l.dictionaries;
         }
       },
@@ -205,7 +205,7 @@ class WordBankProvider extends ChangeNotifier {
 
   Future addWord(
     BuildContext context,
-    Map<String, dynamic> wordToAddMap,
+    Map<dynamic, dynamic> wordToAddMap,
   ) async {
     _prepareMethod();
 
@@ -216,7 +216,7 @@ class WordBankProvider extends ChangeNotifier {
         wordBankEither.fold(
           (l) {
             if (l is DictionariesFailure) {
-              wordBankFailure = l;
+              dictionariesFailure = l;
               dictionaries = l.dictionaries;
             }
           },
@@ -229,7 +229,9 @@ class WordBankProvider extends ChangeNotifier {
   }
 
   Future changeCurrentDictionary(
-      BuildContext context, Language? language) async {
+    BuildContext context,
+    Language? language,
+  ) async {
     _prepareMethod();
 
     if (language == null) {
@@ -258,7 +260,7 @@ class WordBankProvider extends ChangeNotifier {
 
   Future editWord(
     Word oldWord,
-    Map<String, dynamic> newWordMap, {
+    Map<dynamic, dynamic> newWordMap, {
     bool? searching,
   }) async {
     _prepareMethod();
@@ -271,7 +273,7 @@ class WordBankProvider extends ChangeNotifier {
     wordBankEither.fold(
       (l) {
         if (l is DictionariesFailure) {
-          wordBankFailure = l;
+          dictionariesFailure = l;
           dictionaries = l.dictionaries;
         }
       },
@@ -297,8 +299,8 @@ class WordBankProvider extends ChangeNotifier {
 
     dictionariesEither.fold(
       (l) {
-        if (l is Dictionaries) {
-          wordBankFailure = l;
+        if (l is DictionariesFailure) {
+          dictionariesFailure = l;
           dictionaries = l.dictionaries;
         }
       },
@@ -360,9 +362,9 @@ class WordBankProvider extends ChangeNotifier {
 
     wordBankEither.fold(
       (l) {
-        if (l is Dictionaries) {
+        if (l is DictionariesFailure) {
           dictionaries = l.dictionaries;
-          wordBankFailure = l;
+          dictionariesFailure = l;
         }
       },
       (r) => dictionaries = r,
@@ -382,10 +384,10 @@ class WordBankProvider extends ChangeNotifier {
   }
 
   Future saveWordBank() async {
-    await wordBankRepository.saveWordBank();
+    await wordBankRepository.saveDictionaries();
   }
 
-  Future savecurrentDictionary() async {
-    await wordBankRepository.savecurrentDictionary();
+  Future saveCurrentDictionary() async {
+    await wordBankRepository.saveCurrentDictionary();
   }
 }

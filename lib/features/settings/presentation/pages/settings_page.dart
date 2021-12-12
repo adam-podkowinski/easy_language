@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
-import 'package:easy_language/core/util/login_branch.dart';
 import 'package:easy_language/features/login/presentation/manager/login_provider.dart';
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:easy_language/features/settings/presentation/manager/settings_provider.dart';
@@ -17,7 +16,7 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final login = context.watch<LoginProvider>();
+    // final login = context.watch<LoginProvider>();
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -106,7 +105,7 @@ class SettingsPage extends StatelessWidget {
                                 (Language languagePicked) {
                                   context
                                       .read<WordBankProvider>()
-                                      .changeCurrentLanguage(
+                                      .changeCurrentDictionary(
                                         context,
                                         languagePicked,
                                       );
@@ -114,12 +113,15 @@ class SettingsPage extends StatelessWidget {
                                 context
                                     .read<WordBankProvider>()
                                     .dictionaries
-                                    .dictionaries
                                     .keys
                                     .toList(),
                               ),
                   child: Text(
-                    context.watch<WordBankProvider>().currentDictionary?.name ??
+                    context
+                            .watch<WordBankProvider>()
+                            .currentDictionary
+                            ?.language
+                            .name ??
                         'None',
                     style: TextStyle(
                       color:

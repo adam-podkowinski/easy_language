@@ -11,13 +11,13 @@ abstract class DictionaryRepository {
     List<Word>? initialWords,
   });
 
-  Future<Either<Failure, Dictionaries>> addWord(Map<String, dynamic> wordMap);
+  Future<Either<Failure, Dictionaries>> addWord(Map<dynamic, dynamic> wordMap);
 
   Future<Either<Failure, Dictionaries>> removeWord(Word wordToRemove);
 
   Future<Either<Failure, Dictionaries>> editWord(
     int id,
-    Map<String, dynamic> newWordMap,
+    Map<dynamic, dynamic> newWordMap,
   );
 
   Future<Either<Failure, Dictionaries>> removeDictionary(
@@ -38,7 +38,7 @@ abstract class DictionaryRepository {
     Language language,
   );
 
-  Future saveWordBank();
+  Future saveDictionaries();
 
-  Future saveCurrentLanguage();
+  Future saveCurrentDictionary();
 }

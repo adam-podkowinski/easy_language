@@ -1,3 +1,4 @@
+import 'package:easy_language/features/word_bank/data/models/word_bank_model.dart';
 import 'package:easy_language/features/word_bank/domain/entities/word_bank.dart';
 import 'package:flutter/material.dart';
 import 'package:language_picker/languages.dart';
@@ -31,3 +32,5 @@ const Map<String, String> pageTitlesFromIds = {
 };
 
 typedef Dictionaries = Map<Language, Dictionary>;
+typedef DictionariesModel = Map<Language, DictionaryModel>;
+

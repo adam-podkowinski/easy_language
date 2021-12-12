@@ -7,7 +7,7 @@ Future saveAllRemotely(
   FlashcardProvider flashcardProvider,
   SettingsProvider settingsProvider,
 ) async {
-  await wordBankProvider.saveCurrentLanguage();
+  await wordBankProvider.saveCurrentDictionary();
   await wordBankProvider.saveWordBank();
   await flashcardProvider.saveFlashcard();
   await settingsProvider.saveSettings();

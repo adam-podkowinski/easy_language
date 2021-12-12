@@ -6,7 +6,6 @@ import 'package:easy_language/features/flashcard/presentation/manager/flashcard_
 import 'package:easy_language/features/flashcard/presentation/widgets/flashcard_view.dart';
 import 'package:easy_language/features/flashcard/presentation/widgets/no_flashcards.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -52,10 +51,9 @@ class _FlashcardPageState extends State<FlashcardPage> {
   void listenToFlashcardProvider() {
     flashcard = flashcardProvider.currentFlashcard;
     if (wordBankProvider.currentDictionary != null && flashcard != null) {
-      final wordList = wordBankProvider
-          .dictionaries.dictionaries[wordBankProvider.currentDictionary!];
+      final wordList = wordBankProvider.currentDictionary!.words;
 
-      if (wordList!.length > flashcard!.wordIndex) {
+      if (wordList.length > flashcard!.wordIndex) {
         wordToShow = wordList[flashcard!.wordIndex];
       }
     }

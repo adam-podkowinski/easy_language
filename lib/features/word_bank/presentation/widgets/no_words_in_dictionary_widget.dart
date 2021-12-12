@@ -38,7 +38,7 @@ class NoWordsInDictionaryWidget extends StatelessWidget {
                 showWordDialog(
                   context,
                   addNewWordTitle,
-                  (word) => state.addWordToCurrentLanguage(context, word),
+                  (word) => state.addWord(context, word),
                 );
               },
               style: ButtonStyle(

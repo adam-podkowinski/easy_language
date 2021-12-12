@@ -48,15 +48,18 @@ class FlashcardProvider extends ChangeNotifier {
   }
 
   Future getNextFlashcard(
-    WordBank wordBank, {
+    Dictionary? dictionary, {
     Language? language,
     bool? init,
   }) async {
     _prepareMethod();
 
+    if (dictionary == null) {
+      return;
+    }
+
     final result = await flashcardRepository.getNextFlashcard(
-      wordBank,
-      language: language,
+      dictionary,
       init: init,
     );
 

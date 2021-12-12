@@ -22,11 +22,10 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
 
   @override
   Future<Either<Failure, Flashcard>> getNextFlashcard(
-    WordBank wordBank, {
-    Language? language,
+    Dictionary dictionary, {
     bool? init,
   }) async {
-    if (wordBank.dictionaries.isEmpty) {
+    if (dictionary.words.isEmpty) {
       return Left(FlashcardGetFailure());
     }
 
@@ -37,16 +36,12 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
     }
 
     try {
-      final Language? flashcardLang = language ?? _flashcard?.wordLanguage;
+      final Language flashcardLang = _flashcard?.wordLanguage ?? dictionary.language;
       int flashcardIndex = 0;
       bool isTurned = _flashcard?.isTurned ?? false;
 
-      if (flashcardLang == null) {
-        throw Exception('flashcard lang is equal to null');
-      }
-
       // Assure there are words available to become a flashcard
-      if (wordBank.dictionaries[flashcardLang]?.isEmpty ?? true) {
+      if (dictionary.words.isEmpty) {
         throw Exception(
           'word bank dictionary at flashcardLang is empty or null',
         );
@@ -69,7 +64,7 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
       }
 
       // If we go to the end of a word list we want to start over
-      if ((wordBank.dictionaries[flashcardLang]?.length ?? -1) <=
+      if ((dictionary.words.length) <=
           flashcardIndex) {
         flashcardIndex = 0;
       }

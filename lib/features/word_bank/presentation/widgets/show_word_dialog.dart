@@ -1,3 +1,4 @@
+import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 void showWordDialog(
   BuildContext context,
   String title,
-  Function(Word) onAccepted, {
+  Function(Map<dynamic, dynamic>) onAccepted, {
   Word? wordToEdit,
 }) {
   showDialog(
@@ -36,7 +37,7 @@ class WordDialog extends StatefulWidget {
   }) : super(key: key);
 
   final String title;
-  final Function(Word) onAccepted;
+  final Function(Map<dynamic, dynamic>) onAccepted;
 
   final Word? wordToEdit;
 
@@ -126,17 +127,18 @@ class _WordDialogState extends State<WordDialog> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 widget.onAccepted(
-                  Word(
-                    wordForeign: foreignWordController.text.trim(),
-                    wordTranslation: wordTranslationController.text.trim(),
-                    updatedAt: DateTime.now(),
-                    createdAt: widget.wordToEdit?.createdAt ?? DateTime.now(),
-                    id: widget.wordToEdit?.id ?? 0,
-                    learningStatus: widget.wordToEdit?.learningStatus ??
+                  {
+                    Word.wordForeignId: foreignWordController.text.trim(),
+                    Word.wordTranslationId:
+                        wordTranslationController.text.trim(),
+                    updatedAtId: DateTime.now(),
+                    createdAtId: widget.wordToEdit?.createdAt ?? DateTime.now(),
+                    idId: widget.wordToEdit?.id,
+                    Word.learningStatusId: widget.wordToEdit?.learningStatus ??
                         LearningStatus.reviewing,
-                    dictionaryId: widget.wordToEdit?.dictionaryId ?? 0,
-                    timesReviewed: widget.wordToEdit?.timesReviewed ?? 0,
-                  ),
+                    Word.dictionaryIdId: widget.wordToEdit?.dictionaryId ?? 0,
+                    Word.timesReviewedId: widget.wordToEdit?.timesReviewed ?? 0,
+                  },
                 );
                 Navigator.of(context).pop();
               }

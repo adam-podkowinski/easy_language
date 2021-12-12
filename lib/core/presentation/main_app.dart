@@ -39,8 +39,7 @@ class MainApp extends StatelessWidget {
           create: (context) {
             final provider = sl<FlashcardProvider>();
             provider.getNextFlashcard(
-              context.read<WordBankProvider>().dictionaries,
-              language: context.read<WordBankProvider>().currentDictionary,
+              context.read<WordBankProvider>().currentDictionary,
               init: true,
             );
             return provider;

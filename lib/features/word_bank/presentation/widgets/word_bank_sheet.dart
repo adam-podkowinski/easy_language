@@ -65,17 +65,16 @@ class _WordBankSheetState extends State<WordBankSheet> {
 
   void _changeCurrentWidget() {
     if (!state.loading) {
-      if (state.dictionaries.dictionaries.isEmpty) {
+      if (state.dictionaries.isEmpty) {
         currentWidget = NoLanguagesWidget(
           state: state,
           radius: widget.radius,
         );
       } else {
-        final dictionary =
-            state.dictionaries.dictionaries[state.currentDictionary] ?? [];
-        if (dictionary.isNotEmpty) {
+        final dictionary = state.currentDictionary;
+        if (dictionary?.words.isNotEmpty ?? false) {
           currentWidget = WordsInDictionaryWidget(
-            wordList: dictionary,
+            wordList: dictionary!.words,
             searchController: widget.controller,
           );
         } else {

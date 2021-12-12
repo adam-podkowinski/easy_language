@@ -9,6 +9,7 @@ import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_
 import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:language_picker/languages.dart';
 import 'package:provider/provider.dart';
@@ -129,23 +130,27 @@ class _WordBankPageState extends State<WordBankPage> {
 
   Widget _addWordWidget(BuildContext context) {
     final state = context.watch<WordBankProvider>();
-    if (state.currentLanguageFailure is DictionaryCacheFailure) {
-      showError(context, state.currentLanguageFailure.toString());
+    if (state.currentDictionaryFailure is DictionaryCacheFailure) {
+      SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+        showError(context, state.currentDictionaryFailure.toString());
+      });
     }
-    if (state.wordBankFailure is DictionariesCacheFailure) {
-      showError(context, state.wordBankFailure.toString());
+    if (state.dictionariesFailure is DictionariesCacheFailure) {
+      SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+        showError(context, state.dictionariesFailure.toString());
+      });
     }
     return IconButton(
       icon: const Icon(Icons.add),
       onPressed: () {
-        if (state.dictionaries.dictionaries.isEmpty) {
+        if (state.dictionaries.isEmpty) {
           showLanguagePickerDialog(
             context,
             (lang) async => state.addLanguage(lang),
             Languages.defaultLanguages
                 .where(
                   (element) =>
-                      !state.dictionaries.dictionaries.keys.contains(element),
+                      !state.dictionaries.keys.contains(element),
                 )
                 .toList(),
           );
@@ -153,7 +158,7 @@ class _WordBankPageState extends State<WordBankPage> {
           showWordDialog(
             context,
             addNewWordTitle,
-            (word) async => state.addWordToCurrentLanguage(context, word),
+            (word) async => state.addWord(context, word),
           );
         }
       },

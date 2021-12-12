@@ -3,7 +3,6 @@ import 'package:easy_language/features/flashcard/domain/entities/flashcard.dart'
 import 'package:easy_language/features/flashcard/presentation/manager/flashcard_provider.dart';
 import 'package:easy_language/features/flashcard/presentation/widgets/status_widget.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -25,7 +24,7 @@ class FlashcardView extends StatelessWidget {
 
   void nextFlashcard() {
     flashcardProvider.getNextFlashcard(
-      wordBankProvider.dictionaries,
+      wordBankProvider.currentDictionary,
     );
 
     final newTimesReviewed = word.timesReviewed + 1;
@@ -37,15 +36,14 @@ class FlashcardView extends StatelessWidget {
         Word.learningStatusId: LearningStatusExtension.fromTimesReviewed(
           newTimesReviewed,
         ).statusToString,
-      }),
+      }).toMap(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final value = isTurned ? word.wordTranslation : word.wordForeign;
-    final currentDictionary =
-        wordBankProvider.dictionaries.dictionaries[flashcard.wordLanguage]!;
+    final currentDictionary = wordBankProvider.currentDictionary!;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -55,7 +53,7 @@ class FlashcardView extends StatelessWidget {
         Text(
           '${flashcard.wordIndex + 1} '
           '/ '
-          '${currentDictionary.length}',
+          '${currentDictionary.words.length}',
           style: Theme.of(context).textTheme.headline3,
         ),
         buildFlashcardControls(context),

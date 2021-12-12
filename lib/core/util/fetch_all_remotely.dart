@@ -7,7 +7,7 @@ Future fetchAllRemotely(
   FlashcardProvider flashcardProvider,
   SettingsProvider settingsProvider,
 ) async {
-  await wordBankProvider.fetchWordBankAndCurrentLanguage();
+  await wordBankProvider.fetchDictionaries();
   await flashcardProvider.fetchFlashcard();
   await settingsProvider.fetchSettings();
 }
