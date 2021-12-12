@@ -1,11 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/word.dart';
-import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
+import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/show_word_dialog.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
@@ -24,7 +23,7 @@ class WordsInDictionaryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<WordBankProvider>();
+    final state = context.watch<DictionaryProvider>();
 
     List<Word> items = wordList;
 
@@ -97,7 +96,7 @@ class WordListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final WordBankProvider _state = context.watch<WordBankProvider>();
+    final DictionaryProvider _state = context.watch<DictionaryProvider>();
 
     return Column(
       mainAxisSize: MainAxisSize.min,

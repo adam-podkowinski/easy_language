@@ -3,12 +3,12 @@ import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/util/simplify_string.dart';
 import 'package:easy_language/core/word.dart';
-import 'package:easy_language/features/word_bank/domain/entities/word_bank.dart';
-import 'package:easy_language/features/word_bank/domain/repositories/word_bank_repository.dart';
+import 'package:easy_language/features/word_bank/domain/entities/dictionary.dart';
+import 'package:easy_language/features/word_bank/domain/repositories/dictionary_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:language_picker/languages.dart';
 
-class WordBankProvider extends ChangeNotifier {
+class DictionaryProvider extends ChangeNotifier {
   bool loading = true;
 
   final DictionaryRepository wordBankRepository;
@@ -19,7 +19,7 @@ class WordBankProvider extends ChangeNotifier {
   DictionariesFailure? dictionariesFailure;
   DictionaryFailure? currentDictionaryFailure;
 
-  WordBankProvider({
+  DictionaryProvider({
     required this.wordBankRepository,
   });
 
@@ -111,10 +111,10 @@ class WordBankProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future initWordBank() async {
+  Future initDictionaryProvider() async {
     _prepareMethod();
 
-    final wordBankEither = await wordBankRepository.getWordBank();
+    final wordBankEither = await wordBankRepository.getDictionaries();
     final currentDictionaryEither =
         await wordBankRepository.getCurrentDictionary();
 
@@ -356,7 +356,7 @@ class WordBankProvider extends ChangeNotifier {
   Future fetchDictionaries() async {
     _prepareMethod();
 
-    final wordBankEither = await wordBankRepository.fetchWordBankRemotely();
+    final wordBankEither = await wordBankRepository.fetchDictionariesRemotely();
     final currentDictionaryEither =
         await wordBankRepository.fetchCurrentDictionaryRemotely();
 

@@ -1,20 +1,14 @@
 // Only async gap is loginProvider.signIn() and we are sure that
 // it doesn't change the context.
 //ignore_for_file: use_build_context_synchronously
-import 'package:easy_language/core/util/fetch_all_remotely.dart';
-import 'package:easy_language/core/util/save_all_remotely.dart';
-import 'package:easy_language/features/flashcard/presentation/manager/flashcard_provider.dart';
 import 'package:easy_language/features/login/presentation/manager/login_provider.dart';
-import 'package:easy_language/features/settings/presentation/manager/settings_provider.dart';
-import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 Future loginBranch(BuildContext context, LoginProvider loginProvider) async {
-  final WordBankProvider wordBankProvider = context.read<WordBankProvider>();
-  final FlashcardProvider flashcardProvider = context.read<FlashcardProvider>();
-  final SettingsProvider settingsProvider = context.read<SettingsProvider>();
+  // final DictionaryProvider wordBankProvider = context.read<DictionaryProvider>();
+  // final FlashcardProvider flashcardProvider = context.read<FlashcardProvider>();
+  // final SettingsProvider settingsProvider = context.read<SettingsProvider>();
 
   // final bool shouldFetchOrSave = await loginProvider.signIn();
 

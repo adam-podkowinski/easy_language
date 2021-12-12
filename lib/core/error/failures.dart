@@ -1,6 +1,6 @@
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
-import 'package:easy_language/features/word_bank/domain/entities/word_bank.dart';
+import 'package:easy_language/features/word_bank/domain/entities/dictionary.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class Failure extends Equatable {

@@ -1,6 +1,6 @@
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
-import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
+import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:language_picker/languages.dart';
@@ -16,7 +16,7 @@ class WordBankControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<WordBankProvider>();
+    final state = context.watch<DictionaryProvider>();
 
     void showRemoveLanguageConfirmationDialog(BuildContext context) {
       final Widget cancelButton = OutlinedButton(

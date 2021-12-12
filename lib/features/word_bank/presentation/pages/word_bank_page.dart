@@ -3,11 +3,10 @@ import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/presentation/drawer.dart';
 import 'package:easy_language/core/presentation/show_error.dart';
 import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
-import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
+import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/show_word_dialog.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_controls.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_sheet.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,7 +24,7 @@ class _WordBankPageState extends State<WordBankPage> {
   bool _searching = false;
 
   void _controllerCallback() {
-    context.read<WordBankProvider>().searchWords(
+    context.read<DictionaryProvider>().searchWords(
           _controller.text,
         );
   }
@@ -129,7 +128,7 @@ class _WordBankPageState extends State<WordBankPage> {
   }
 
   Widget _addWordWidget(BuildContext context) {
-    final state = context.watch<WordBankProvider>();
+    final state = context.watch<DictionaryProvider>();
     if (state.currentDictionaryFailure is DictionaryCacheFailure) {
       SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
         showError(context, state.currentDictionaryFailure.toString());

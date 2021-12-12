@@ -5,7 +5,7 @@ import 'package:easy_language/features/flashcard/domain/entities/flashcard.dart'
 import 'package:easy_language/features/flashcard/presentation/manager/flashcard_provider.dart';
 import 'package:easy_language/features/flashcard/presentation/widgets/flashcard_view.dart';
 import 'package:easy_language/features/flashcard/presentation/widgets/no_flashcards.dart';
-import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
+import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +27,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
   var _init = true;
 
   late final FlashcardProvider flashcardProvider;
-  late final WordBankProvider wordBankProvider;
+  late final DictionaryProvider wordBankProvider;
 
   @override
   void didChangeDependencies() {
@@ -35,7 +35,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
     if (_init) {
       flashcardProvider = context.watch<FlashcardProvider>()
         ..addListener(listenToFlashcardProvider);
-      wordBankProvider = context.watch<WordBankProvider>();
+      wordBankProvider = context.watch<DictionaryProvider>();
       listenToFlashcardProvider();
 
       _init = false;
@@ -78,7 +78,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
                       word: wordToShow!,
                       flashcard: flashcard!,
                       flashcardProvider: flashcardProvider,
-                      wordBankProvider: wordBankProvider,
+                      dictionaryProvider: wordBankProvider,
                     )
                   : const NoFlashcards()
               : const Center(

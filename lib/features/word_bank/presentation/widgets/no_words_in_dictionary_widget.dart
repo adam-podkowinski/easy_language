@@ -1,6 +1,6 @@
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/styles.dart';
-import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
+import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/show_word_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,7 +12,7 @@ class NoWordsInDictionaryWidget extends StatelessWidget {
     required this.radius,
   }) : super(key: key);
 
-  final WordBankProvider state;
+  final DictionaryProvider state;
   final double radius;
 
   @override

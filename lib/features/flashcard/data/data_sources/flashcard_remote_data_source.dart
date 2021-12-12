@@ -1,10 +1,4 @@
-import 'dart:convert';
-
-import 'package:dartz/dartz.dart';
-import 'package:easy_language/core/constants.dart';
-import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/features/flashcard/data/models/flashcard_model.dart';
-import 'package:logger/logger.dart';
 
 abstract class FlashcardRemoteDataSource {
   Future<FlashcardModel> fetchFlashcard();

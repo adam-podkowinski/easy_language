@@ -1,14 +1,14 @@
 import 'package:easy_language/features/flashcard/presentation/manager/flashcard_provider.dart';
 import 'package:easy_language/features/settings/presentation/manager/settings_provider.dart';
-import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
+import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
 
 Future saveAllRemotely(
-  WordBankProvider wordBankProvider,
+  DictionaryProvider dictionaryProvider,
   FlashcardProvider flashcardProvider,
   SettingsProvider settingsProvider,
 ) async {
-  await wordBankProvider.saveCurrentDictionary();
-  await wordBankProvider.saveWordBank();
+  await dictionaryProvider.saveCurrentDictionary();
+  await dictionaryProvider.saveWordBank();
   await flashcardProvider.saveFlashcard();
   await settingsProvider.saveSettings();
 }

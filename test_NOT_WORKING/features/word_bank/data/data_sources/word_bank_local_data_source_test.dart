@@ -81,7 +81,7 @@ void main() {
           id: 'id',
         )
       ],
-    });
+    },);
 
     test(
       'should call Hive box to cache the data',

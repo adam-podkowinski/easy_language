@@ -1,4 +1,3 @@
-import 'package:easy_language/core/constants.dart';
 import 'package:flutter/cupertino.dart';
 
 class LoginProvider extends ChangeNotifier {

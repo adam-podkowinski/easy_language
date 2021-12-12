@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/word.dart';
-import 'package:easy_language/features/word_bank/domain/entities/word_bank.dart';
+import 'package:easy_language/features/word_bank/domain/entities/dictionary.dart';
 import 'package:language_picker/languages.dart';
 
 abstract class DictionaryRepository {
@@ -24,9 +24,9 @@ abstract class DictionaryRepository {
     Language language,
   );
 
-  Future<Either<Failure, Dictionaries>> getWordBank();
+  Future<Either<Failure, Dictionaries>> getDictionaries();
 
-  Future<Either<Failure, Dictionaries>> fetchWordBankRemotely();
+  Future<Either<Failure, Dictionaries>> fetchDictionariesRemotely();
 
   Future<Either<Failure, Dictionary?>> getCurrentDictionary();
 

@@ -5,7 +5,7 @@ import 'package:easy_language/features/flashcard/presentation/manager/flashcard_
 import 'package:easy_language/features/flashcard/presentation/pages/flashcard_page.dart';
 import 'package:easy_language/features/login/presentation/pages/introduction_page.dart';
 import 'package:easy_language/features/settings/presentation/pages/settings_page.dart';
-import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
+import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
 import 'package:easy_language/features/word_bank/presentation/pages/word_bank_page.dart';
 import 'package:easy_language/injection_container.dart';
 import 'package:flutter/material.dart';
@@ -27,10 +27,10 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<WordBankProvider>(
+        ChangeNotifierProvider<DictionaryProvider>(
           create: (context) {
-            final provider = sl<WordBankProvider>();
-            provider.initWordBank();
+            final provider = sl<DictionaryProvider>();
+            provider.initDictionaryProvider();
             return provider;
           },
         ),
@@ -39,7 +39,7 @@ class MainApp extends StatelessWidget {
           create: (context) {
             final provider = sl<FlashcardProvider>();
             provider.getNextFlashcard(
-              context.read<WordBankProvider>().currentDictionary,
+              context.read<DictionaryProvider>().currentDictionary,
               init: true,
             );
             return provider;

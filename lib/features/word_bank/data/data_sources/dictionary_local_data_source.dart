@@ -1,12 +1,9 @@
-import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/constants.dart';
-import 'package:easy_language/core/error/exceptions.dart';
-import 'package:easy_language/features/word_bank/data/models/word_bank_model.dart';
+import 'package:easy_language/features/word_bank/data/models/dictionary_model.dart';
 import 'package:hive/hive.dart';
 import 'package:language_picker/languages.dart';
-import 'package:logger/logger.dart';
 
-abstract class WordBankLocalDataSource {
+abstract class DictionaryLocalDataSource {
   Future<DictionariesModel> getLocalWordBank();
 
   Future<Language> getLocalCurrentLanguage();
@@ -16,7 +13,7 @@ abstract class WordBankLocalDataSource {
   Future<void> cacheCurrentDictionary(DictionaryModel? wordBankModel);
 }
 
-class WordBankLocalDataSourceImpl implements WordBankLocalDataSource {
+class DictionaryLocalDataSourceImpl implements DictionaryLocalDataSource {
   @override
   Future<void> cacheCurrentDictionary(DictionaryModel? wordBankModel) {
     // TODO: implement cacheCurrentDictionary
@@ -42,7 +39,7 @@ class WordBankLocalDataSourceImpl implements WordBankLocalDataSource {
   }
  final Box wordBankBox;
 
- WordBankLocalDataSourceImpl({required this.wordBankBox});
+ DictionaryLocalDataSourceImpl({required this.wordBankBox});
 //
 //  @override
 //  Future<void> cacheDictionaries(WordBankModel wordBankModel) async {

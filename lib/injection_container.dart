@@ -12,11 +12,11 @@ import 'package:easy_language/features/settings/data/data_sources/settings_remot
 import 'package:easy_language/features/settings/data/repositories/settings_repository_impl.dart';
 import 'package:easy_language/features/settings/domain/repositories/settings_repository.dart';
 import 'package:easy_language/features/settings/presentation/manager/settings_provider.dart';
-import 'package:easy_language/features/word_bank/data/data_sources/word_bank_local_data_source.dart';
-import 'package:easy_language/features/word_bank/data/data_sources/word_bank_remote_data_source.dart';
-import 'package:easy_language/features/word_bank/data/repositories/word_bank_repository_impl.dart';
-import 'package:easy_language/features/word_bank/domain/repositories/word_bank_repository.dart';
-import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
+import 'package:easy_language/features/word_bank/data/data_sources/dictionary_local_data_source.dart';
+import 'package:easy_language/features/word_bank/data/data_sources/dictionary_remote_data_source.dart';
+import 'package:easy_language/features/word_bank/data/repositories/dictionary_repository_impl.dart';
+import 'package:easy_language/features/word_bank/domain/repositories/dictionary_repository.dart';
+import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
@@ -53,7 +53,7 @@ Future registerSettings() async {
 Future registerWordBank() async {
   // Provider
   sl.registerFactory(
-    () => WordBankProvider(
+    () => DictionaryProvider(
       wordBankRepository: sl(),
     ),
   );
@@ -68,11 +68,11 @@ Future registerWordBank() async {
 
   // Data sources
   final wordBankBox = await Hive.openBox(cachedWordBankId);
-  sl.registerLazySingleton<WordBankLocalDataSource>(
-    () => WordBankLocalDataSourceImpl(wordBankBox: wordBankBox),
+  sl.registerLazySingleton<DictionaryLocalDataSource>(
+    () => DictionaryLocalDataSourceImpl(wordBankBox: wordBankBox),
   );
-  sl.registerLazySingleton<WordBankRemoteDataSource>(
-    () => WordBankRemoteDataSourceImpl(),
+  sl.registerLazySingleton<DictionaryRemoteDataSource>(
+    () => DictionaryRemoteDataSourceImpl(),
   );
 }
 

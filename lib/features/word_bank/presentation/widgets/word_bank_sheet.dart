@@ -1,5 +1,5 @@
 import 'package:easy_language/core/presentation/circular_progress_indicator.dart';
-import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
+import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/no_languages_widget.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/no_words_in_dictionary_widget.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/words_in_dictionary_widget.dart';
@@ -41,7 +41,7 @@ class WordBankSheet extends StatefulWidget {
 }
 
 class _WordBankSheetState extends State<WordBankSheet> {
-  late final WordBankProvider state;
+  late final DictionaryProvider state;
   Widget currentWidget = const Center(
     child: CustomCircularProgressIndicator(),
   );
@@ -51,7 +51,7 @@ class _WordBankSheetState extends State<WordBankSheet> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (init) {
-      state = context.watch<WordBankProvider>();
+      state = context.watch<DictionaryProvider>();
       state.addListener(_changeCurrentWidget);
       init = false;
     }

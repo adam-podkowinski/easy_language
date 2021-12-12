@@ -24,7 +24,7 @@ void main() {
         id: 'id',
       )
     ],
-  });
+  },);
 
   group('fromMap', () {
     test(

@@ -1,7 +1,7 @@
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/features/flashcard/domain/entities/flashcard.dart';
 import 'package:easy_language/features/flashcard/domain/repositories/flashcard_repository.dart';
-import 'package:easy_language/features/word_bank/domain/entities/word_bank.dart';
+import 'package:easy_language/features/word_bank/domain/entities/dictionary.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:language_picker/languages.dart';
 

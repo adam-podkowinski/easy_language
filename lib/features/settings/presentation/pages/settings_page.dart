@@ -1,11 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
-import 'package:easy_language/features/login/presentation/manager/login_provider.dart';
 import 'package:easy_language/features/settings/domain/entities/settings.dart';
 import 'package:easy_language/features/settings/presentation/manager/settings_provider.dart';
 import 'package:easy_language/features/settings/presentation/widgets/theme_picker.dart';
-import 'package:easy_language/features/word_bank/presentation/manager/word_bank_provider.dart';
+import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:language_picker/languages.dart';
@@ -98,34 +97,34 @@ class SettingsPage extends StatelessWidget {
               ListTile(
                 trailing: ElevatedButton(
                   onPressed:
-                      context.read<WordBankProvider>().currentDictionary == null
+                      context.read<DictionaryProvider>().currentDictionary == null
                           ? null
                           : () => showLanguagePickerDialog(
                                 context,
                                 (Language languagePicked) {
                                   context
-                                      .read<WordBankProvider>()
+                                      .read<DictionaryProvider>()
                                       .changeCurrentDictionary(
                                         context,
                                         languagePicked,
                                       );
                                 },
                                 context
-                                    .read<WordBankProvider>()
+                                    .read<DictionaryProvider>()
                                     .dictionaries
                                     .keys
                                     .toList(),
                               ),
                   child: Text(
                     context
-                            .watch<WordBankProvider>()
+                            .watch<DictionaryProvider>()
                             .currentDictionary
                             ?.language
                             .name ??
                         'None',
                     style: TextStyle(
                       color:
-                          context.watch<WordBankProvider>().currentDictionary ==
+                          context.watch<DictionaryProvider>().currentDictionary ==
                                   null
                               ? Theme.of(context)
                                   .colorScheme

@@ -1,31 +1,26 @@
-import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/constants.dart';
-import 'package:easy_language/core/error/exceptions.dart';
-import 'package:easy_language/features/word_bank/data/models/word_bank_model.dart';
-import 'package:language_picker/languages.dart';
-import 'package:logger/logger.dart';
+import 'package:easy_language/features/word_bank/data/models/dictionary_model.dart';
 
-abstract class WordBankRemoteDataSource {
-  Future<DictionariesModel> fetchWordBank();
+abstract class DictionaryRemoteDataSource {
+  Future<DictionariesModel> fetchDictionaries();
 
-  Future<DictionaryModel> fetchCurrentLanguage();
+  Future<DictionaryModel> fetchCurrentDictionary();
 
-  Future<void> saveWordBank(DictionariesModel wordBankToCache);
+  Future<void> saveDictionaries(DictionariesModel wordBankToCache);
 
   Future<void> saveCurrentDictionary(DictionaryModel dictionaryToCache);
 }
 
-class WordBankRemoteDataSourceImpl implements WordBankRemoteDataSource {
+class DictionaryRemoteDataSourceImpl implements DictionaryRemoteDataSource {
   @override
-  Future<DictionaryModel> fetchCurrentLanguage() {
+  Future<DictionaryModel> fetchCurrentDictionary() {
     // TODO: implement fetchCurrentLanguage
     throw UnimplementedError();
   }
 
   @override
-  Future<DictionariesModel> fetchWordBank() {
+  Future<DictionariesModel> fetchDictionaries() {
     // TODO: implement fetchWordBank
     throw UnimplementedError();
   }
@@ -37,7 +32,7 @@ class WordBankRemoteDataSourceImpl implements WordBankRemoteDataSource {
   }
 
   @override
-  Future<void> saveWordBank(DictionariesModel wordBankToCache) {
+  Future<void> saveDictionaries(DictionariesModel wordBankToCache) {
     // TODO: implement saveWordBank
     throw UnimplementedError();
   }
