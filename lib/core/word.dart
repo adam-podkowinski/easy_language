@@ -71,7 +71,7 @@ class Word extends Equatable {
   static const learningStatusId = 'learning_status';
   static const timesReviewedId = 'times_reviewed';
 
-  factory Word.fromMap(Map<dynamic, dynamic> map) {
+  factory Word.fromMap(Map map) {
     return Word(
       id: cast(map[idId]) ?? 0,
       wordForeign: cast(map[Word.wordForeignId]) ?? '',
@@ -92,11 +92,11 @@ class Word extends Equatable {
     );
   }
 
-  Word copyWithMap(Map<dynamic, dynamic> map) {
+  Word copyWithMap(Map map) {
     return Word.fromMap({...toMap(), ...map});
   }
 
-  Map<dynamic, dynamic> toMap() => {
+  Map toMap() => {
         idId: id,
         createdAtId: createdAt.toIso8601String(),
         updatedAtId: updatedAt.toIso8601String(),

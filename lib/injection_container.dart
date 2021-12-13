@@ -6,11 +6,11 @@ import 'package:easy_language/features/flashcard/data/data_sources/flashcard_rem
 import 'package:easy_language/features/flashcard/data/repositories/flashcard_repository_impl.dart';
 import 'package:easy_language/features/flashcard/domain/repositories/flashcard_repository.dart';
 import 'package:easy_language/features/flashcard/presentation/manager/flashcard_provider.dart';
-import 'package:easy_language/features/settings/data/data_sources/settings_local_data_source.dart';
-import 'package:easy_language/features/settings/data/data_sources/settings_remote_data_source.dart';
-import 'package:easy_language/features/settings/data/repositories/settings_repository_impl.dart';
-import 'package:easy_language/features/settings/domain/repositories/settings_repository.dart';
-import 'package:easy_language/features/settings/presentation/manager/user_provider.dart';
+import 'package:easy_language/features/user/data/data_sources/settings_local_data_source.dart';
+import 'package:easy_language/features/user/data/data_sources/settings_remote_data_source.dart';
+import 'package:easy_language/features/user/data/repositories/settings_repository_impl.dart';
+import 'package:easy_language/features/user/domain/repositories/settings_repository.dart';
+import 'package:easy_language/features/user/presentation/manager/user_provider.dart';
 import 'package:easy_language/features/word_bank/data/data_sources/dictionary_local_data_source.dart';
 import 'package:easy_language/features/word_bank/data/data_sources/dictionary_remote_data_source.dart';
 import 'package:easy_language/features/word_bank/data/repositories/dictionary_repository_impl.dart';

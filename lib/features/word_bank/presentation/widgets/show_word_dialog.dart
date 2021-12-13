@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 void showWordDialog(
   BuildContext context,
   String title,
-  Function(Map<dynamic, dynamic>) onAccepted, {
+  Function(Map) onAccepted, {
   Word? wordToEdit,
 }) {
   showDialog(
@@ -37,7 +37,7 @@ class WordDialog extends StatefulWidget {
   }) : super(key: key);
 
   final String title;
-  final Function(Map<dynamic, dynamic>) onAccepted;
+  final Function(Map) onAccepted;
 
   final Word? wordToEdit;
 

@@ -205,7 +205,7 @@ class DictionaryProvider extends ChangeNotifier {
 
   Future addWord(
     BuildContext context,
-    Map<dynamic, dynamic> wordToAddMap,
+    Map wordToAddMap,
   ) async {
     _prepareMethod();
 
@@ -260,7 +260,7 @@ class DictionaryProvider extends ChangeNotifier {
 
   Future editWord(
     Word oldWord,
-    Map<dynamic, dynamic> newWordMap, {
+    Map newWordMap, {
     bool? searching,
   }) async {
     _prepareMethod();

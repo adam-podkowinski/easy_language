@@ -79,7 +79,7 @@ class DrawerListTile extends StatelessWidget {
   /// Name of a tile
   final String name;
 
-  /// If the user is in this screen highlight this tile
+  /// If the settings is in this screen highlight this tile
   final bool isFocused;
 
   /// If tile is pressed invoke this function

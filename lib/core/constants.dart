@@ -7,12 +7,12 @@ const Size screenSize = Size(393, 781);
 
 const api = 'http://localhost:8000';
 
-const wordBankPageId = '/word_bank';
+const wordBankPageId = '/dictionary';
 const introductionPageId = '/introduction';
 const flashcardsPageId = '/flashcards';
 const settingsPageId = '/settings';
 const cachedSettingsId = 'settings';
-const cachedWordBankId = 'word_bank';
+const cachedWordBankId = 'dictionary';
 const cachedCurrentLanguageId = 'current_language';
 const cachedCurrentFlashcardId = 'current_flashcard';
 const emptyString = 'Empty';

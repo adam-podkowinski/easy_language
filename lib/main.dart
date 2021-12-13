@@ -1,7 +1,7 @@
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/main_app.dart';
-import 'package:easy_language/features/settings/presentation/manager/user_provider.dart';
-import 'package:easy_language/features/settings/presentation/pages/loading_page.dart';
+import 'package:easy_language/features/user/presentation/manager/user_provider.dart';
+import 'package:easy_language/features/user/presentation/pages/loading_page.dart';
 import 'package:easy_language/injection_container.dart' as di;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

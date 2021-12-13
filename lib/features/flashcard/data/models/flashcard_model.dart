@@ -18,7 +18,7 @@ class FlashcardModel extends Flashcard {
   static const wordLanguageId = 'wordLanguage';
 
   factory FlashcardModel.fromMap(
-    Map<dynamic, dynamic> flashcardMap,
+    Map flashcardMap,
   ) {
     return FlashcardModel(
       isTurned: cast(flashcardMap[isTurnedId]) ?? false,
@@ -29,11 +29,11 @@ class FlashcardModel extends Flashcard {
     );
   }
 
-  FlashcardModel copyWithMap(Map<dynamic, dynamic> map) {
+  FlashcardModel copyWithMap(Map map) {
     return FlashcardModel.fromMap({...toMap(), ...map});
   }
 
-  Map<dynamic, dynamic> toMap() {
+  Map toMap() {
     return {
       isTurnedId: isTurned,
       wordIndexId: wordIndex,

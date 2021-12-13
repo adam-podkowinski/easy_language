@@ -11,7 +11,6 @@ import 'package:easy_language/features/word_bank/domain/entities/dictionary.dart
 import 'package:easy_language/features/word_bank/domain/repositories/dictionary_repository.dart';
 import 'package:http/http.dart' as http;
 import 'package:language_picker/languages.dart';
-import 'package:logger/logger.dart';
 
 class DictionaryRepositoryImpl implements DictionaryRepository {
   bool _initialDictionaries = true;
@@ -261,7 +260,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   }
 
   @override
-  Future<Either<Failure, Dictionaries>> addWord(Map<dynamic, dynamic> wordMap) {
+  Future<Either<Failure, Dictionaries>> addWord(Map wordMap) {
     // TODO: implement addWord
     throw UnimplementedError();
   }
@@ -269,7 +268,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   @override
   Future<Either<Failure, Dictionaries>> editWord(
     int id,
-    Map<dynamic, dynamic> newWordMap,
+    Map newWordMap,
   ) {
     // TODO: implement editWord
     throw UnimplementedError();
