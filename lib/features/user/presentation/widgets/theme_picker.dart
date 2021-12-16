@@ -1,4 +1,4 @@
-import 'package:easy_language/features/user/domain/entities/settings.dart';
+import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/user/presentation/manager/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

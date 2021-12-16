@@ -1,19 +1,21 @@
 import 'package:easy_language/core/error/failures.dart';
-import 'package:easy_language/features/user/data/models/settings_model.dart';
-import 'package:easy_language/features/user/domain/entities/settings.dart';
-import 'package:easy_language/features/user/domain/repositories/settings_repository.dart';
+import 'package:easy_language/features/user/data/models/user_model.dart';
+import 'package:easy_language/features/user/domain/entities/user.dart';
+import 'package:easy_language/features/user/domain/repositories/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:language_picker/languages.dart';
 
 class UserProvider extends ChangeNotifier {
   bool loading = true;
 
-  final SettingsRepository settingsRepository;
+  final UserRepository settingsRepository;
 
   User settings = User(
     isStartup: false,
     themeMode: ThemeMode.system,
+    token: '',
     nativeLanguage: Languages.english,
+    email: '',
   );
 
   SettingsFailure? settingsFailure;
@@ -23,7 +25,7 @@ class UserProvider extends ChangeNotifier {
   });
 
   String get themeModeString =>
-      SettingsModel.mapThemeModeToString(settings.themeMode);
+      UserModel.mapThemeModeToString(settings.themeMode);
 
   void _prepareMethod() {
     loading = true;

@@ -45,7 +45,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
   Future<DictionaryModel> addDictionaryRemote(Language language) async {
     final response = await http.post(
-      Uri.parse('$api/api/v1/dictionaries'),
+      Uri.parse('$api/dictionaries'),
       body: {'language': language.isoCode},
       headers: {
         'Authorization': 'Bearer fxdChHFr3whvY4LwHTZHQ8GFslhBP3OcZlqH8cdV',

@@ -1,5 +1,5 @@
 import 'package:easy_language/core/constants.dart';
-import 'package:easy_language/features/user/domain/entities/settings.dart';
+import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/word_bank/domain/entities/dictionary.dart';
 import 'package:equatable/equatable.dart';
 

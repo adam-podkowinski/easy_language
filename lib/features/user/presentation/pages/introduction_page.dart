@@ -2,7 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
 import 'package:easy_language/features/user/presentation/widgets/sign_in_button.dart';
-import 'package:easy_language/features/user/domain/entities/settings.dart';
+import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/user/presentation/manager/user_provider.dart';
 import 'package:easy_language/features/user/presentation/widgets/theme_picker.dart';
 import 'package:flutter/material.dart';

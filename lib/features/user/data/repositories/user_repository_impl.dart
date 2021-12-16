@@ -1,22 +1,25 @@
 import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/error/failures.dart';
-import 'package:easy_language/features/user/data/data_sources/settings_local_data_source.dart';
-import 'package:easy_language/features/user/data/data_sources/settings_remote_data_source.dart';
-import 'package:easy_language/features/user/data/models/settings_model.dart';
-import 'package:easy_language/features/user/domain/entities/settings.dart';
-import 'package:easy_language/features/user/domain/repositories/settings_repository.dart';
+import 'package:easy_language/features/user/data/data_sources/user_local_data_source.dart';
+import 'package:easy_language/features/user/data/data_sources/user_remote_data_source.dart';
+import 'package:easy_language/features/user/data/models/user_model.dart';
+import 'package:easy_language/features/user/domain/entities/user.dart';
+import 'package:easy_language/features/user/domain/repositories/user_repository.dart';
 import 'package:language_picker/languages.dart';
 
-class SettingsRepositoryImpl implements SettingsRepository {
+//TODO: work on user
+class UserRepositoryImpl implements UserRepository {
   bool _initial = true;
-  SettingsModel _settings = SettingsModel(
+  UserModel _settings = UserModel(
     nativeLanguage: Languages.english,
+    token: '',
+    email: '',
   );
 
   final SettingsLocalDataSource localDataSource;
   final SettingsRemoteDataSource remoteDataSource;
 
-  SettingsRepositoryImpl({
+  UserRepositoryImpl({
     required this.localDataSource,
     required this.remoteDataSource,
   });
@@ -67,8 +70,10 @@ class SettingsRepositoryImpl implements SettingsRepository {
       return Right(_settings);
     } catch (_) {
       _initial = false;
-      _settings = SettingsModel(
+      _settings = UserModel(
         nativeLanguage: Languages.english,
+        email: '',
+        token: '',
       );
       localDataSource.cacheSettings(_settings);
       return Left(SettingsGetFailure(_settings));

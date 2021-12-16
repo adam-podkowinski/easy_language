@@ -5,7 +5,8 @@ import 'package:language_picker/languages.dart';
 
 const Size screenSize = Size(393, 781);
 
-const api = 'http://localhost:8000';
+const baseURL = 'http://localhost:8000';
+const api = 'http://localhost:8000/api/v1';
 
 const wordBankPageId = '/dictionary';
 const introductionPageId = '/introduction';

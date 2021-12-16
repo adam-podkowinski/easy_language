@@ -1,39 +1,51 @@
 import 'package:dartz/dartz.dart';
-import 'package:easy_language/features/user/domain/entities/settings.dart';
+import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:flutter/material.dart';
 import 'package:language_picker/languages.dart';
 
-class SettingsModel extends User {
-  const SettingsModel({
+class UserModel extends User {
+  const UserModel({
     bool isStartup = true,
     ThemeMode themeMode = ThemeMode.system,
     required Language nativeLanguage,
+    required String email,
+    required String token,
+    int currentDictionaryId = 0,
   }) : super(
           themeMode: themeMode,
           isStartup: isStartup,
           nativeLanguage: nativeLanguage,
+          email: email,
+          currentDictionaryId: currentDictionaryId,
+          token: token,
         );
 
-  /// Takes map and returns a [SettingsModel]
+  /// Takes map and returns a [UserModel]
   /// Map's object should be a basic type (int, string, bool) and NOT enum
-  factory SettingsModel.fromMap(Map map) {
-    return SettingsModel(
-      isStartup: cast(map[User.isStartupId]) ?? true,
-      themeMode: mapStringToThemeMode(cast(map[User.themeModeId])),
+  factory UserModel.fromMap(Map map) {
+    final Map data = cast(map['data']['user']);
+    return UserModel(
+      isStartup: cast(data[User.isStartupId]) ?? true,
+      themeMode: mapStringToThemeMode(cast(data[User.themeModeId])),
+      email: cast(data[User.emailId]) ?? '',
+      currentDictionaryId: cast(data[User.currentDictionaryIdId]) ?? 0,
+      token: cast(map[User.tokenId]),
       nativeLanguage: Language.fromIsoCode(
-        cast(map[User.nativeLanguageId]) ?? Languages.english.isoCode,
+        cast(data[User.nativeLanguageId]) ?? Languages.english.isoCode,
       ),
     );
   }
 
-  SettingsModel copyWithMap(Map map) {
-    return SettingsModel.fromMap({...toMap(), ...map});
+  UserModel copyWithMap(Map map) {
+    return UserModel.fromMap({...toMap(), ...map});
   }
 
   Map toMap() => {
         User.isStartupId: isStartup,
         User.themeModeId: mapThemeModeToString(themeMode),
         User.nativeLanguageId: nativeLanguage.isoCode,
+        User.emailId: email,
+        User.currentDictionaryIdId: currentDictionaryId,
       };
 
   static ThemeMode mapStringToThemeMode(String? theme) {
