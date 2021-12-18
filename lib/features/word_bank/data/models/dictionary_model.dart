@@ -10,13 +10,11 @@ class DictionaryModel extends Dictionary {
     required int id,
     required List<Word> words,
     required Language language,
-    required DateTime createdAt,
     required DateTime updatedAt,
   }) : super(
           id: id,
           words: words,
           language: language,
-          createdAt: createdAt,
           updatedAt: updatedAt,
         );
 
@@ -32,10 +30,6 @@ class DictionaryModel extends Dictionary {
           )
           .toList();
       final int id = cast(dictMap[idId]);
-      final DateTime createdAt = DateTime.tryParse(
-            cast(dictMap[createdAtId]),
-          ) ??
-          DateTime.now();
       final DateTime updatedAt = DateTime.tryParse(
             cast(dictMap[updatedAtId]),
           ) ??
@@ -45,7 +39,6 @@ class DictionaryModel extends Dictionary {
         words: words,
         id: id,
         language: lang,
-        createdAt: createdAt,
         updatedAt: updatedAt,
       );
     } catch (e) {
@@ -58,7 +51,6 @@ class DictionaryModel extends Dictionary {
     final Map map = {
       idId: this.id,
       languageId: language,
-      createdAtId: createdAt,
       updatedAtId: updatedAt,
     };
 

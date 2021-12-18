@@ -1,5 +1,4 @@
 import 'package:easy_language/core/constants.dart';
-import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/word_bank/domain/entities/dictionary.dart';
 import 'package:equatable/equatable.dart';
 
@@ -10,21 +9,19 @@ abstract class Failure extends Equatable {
 
 class UnknownFailure extends Failure {}
 
-abstract class SettingsFailure extends Failure {
-  final User settings;
+abstract class UserFailure extends Failure {}
 
-  SettingsFailure(this.settings);
+class UserCacheFailure extends UserFailure {}
+
+class UserGetFailure extends UserFailure {}
+
+class UserUnauthenticatedFailure extends UserFailure {
+  final String errorMessage;
+
+  UserUnauthenticatedFailure(this.errorMessage);
 
   @override
-  List<Object?> get props => [settings];
-}
-
-class SettingsCacheFailure extends SettingsFailure {
-  SettingsCacheFailure(User settings) : super(settings);
-}
-
-class SettingsGetFailure extends SettingsFailure {
-  SettingsGetFailure(User settings) : super(settings);
+  List<Object?> get props => [errorMessage];
 }
 
 abstract class DictionariesFailure extends Failure {

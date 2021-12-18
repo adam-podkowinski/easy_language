@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+import 'package:logger/logger.dart';
 
 import 'constants.dart';
 
@@ -44,14 +45,13 @@ extension LearningStatusExtension on LearningStatus {
 }
 
 class Word extends Equatable {
-  /// 8 variables
+  /// 7 variables
   final int id;
   final String wordForeign;
   final String wordTranslation;
   final LearningStatus learningStatus;
   final int timesReviewed;
   final int dictionaryId;
-  final DateTime createdAt;
   final DateTime updatedAt;
 
   const Word({
@@ -61,7 +61,6 @@ class Word extends Equatable {
     required this.dictionaryId,
     this.learningStatus = LearningStatus.reviewing,
     this.timesReviewed = 0,
-    required this.createdAt,
     required this.updatedAt,
   });
 
@@ -72,24 +71,24 @@ class Word extends Equatable {
   static const timesReviewedId = 'times_reviewed';
 
   factory Word.fromMap(Map map) {
-    return Word(
-      id: cast(map[idId]) ?? 0,
-      wordForeign: cast(map[Word.wordForeignId]) ?? '',
-      wordTranslation: cast(map[Word.wordTranslationId]) ?? '',
-      learningStatus: LearningStatusExtension.fromString(
-        cast(map[Word.learningStatusId]),
-      ),
-      timesReviewed: cast(map[Word.timesReviewedId]) ?? 0,
-      dictionaryId: cast(map[Word.dictionaryIdId]) ?? 0,
-      createdAt: DateTime.tryParse(
-            cast(map[createdAtId]),
-          ) ??
-          DateTime.now(),
-      updatedAt: DateTime.tryParse(
-            cast(map[updatedAtId]),
-          ) ??
-          DateTime.now(),
-    );
+    try {
+      return Word(
+        id: cast(map[idId]) ?? 0,
+        wordForeign: cast(map[Word.wordForeignId]) ?? '',
+        wordTranslation: cast(map[Word.wordTranslationId]) ?? '',
+        learningStatus: LearningStatusExtension.fromString(
+          cast(map[Word.learningStatusId]),
+        ),
+        timesReviewed: cast(map[Word.timesReviewedId]) ?? 0,
+        dictionaryId: cast(map[Word.dictionaryIdId]) ?? 0,
+        updatedAt: DateTime.parse(
+          cast(map[updatedAtId]),
+        ),
+      );
+    } catch (e) {
+      Logger().e(e);
+      rethrow;
+    }
   }
 
   Word copyWithMap(Map map) {
@@ -98,7 +97,6 @@ class Word extends Equatable {
 
   Map toMap() => {
         idId: id,
-        createdAtId: createdAt.toIso8601String(),
         updatedAtId: updatedAt.toIso8601String(),
         Word.wordForeignId: wordForeign,
         Word.wordTranslationId: wordTranslation,
@@ -115,7 +113,6 @@ class Word extends Equatable {
         learningStatus,
         timesReviewed,
         dictionaryId,
-        createdAt,
         updatedAt,
       ];
 }

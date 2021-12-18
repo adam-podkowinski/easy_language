@@ -80,7 +80,7 @@ class IntroductionPage extends StatelessWidget {
             Languages.defaultLanguages,
           ),
           child: Text(
-            context.watch<UserProvider>().settings.nativeLanguage.name,
+            context.watch<UserProvider>().user?.nativeLanguage.name ?? '',
           ),
         ),
       ),

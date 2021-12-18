@@ -36,8 +36,8 @@ class EasyLanguage extends StatelessWidget {
               return const LoadingApp();
             } else {
               return MainApp(
-                state.settings.themeMode,
-                showIntroduction: state.settings.isStartup,
+                state.user?.themeMode,
+                showIntroduction: state.user?.isStartup ?? true,
                 failure: state.settingsFailure,
               );
             }

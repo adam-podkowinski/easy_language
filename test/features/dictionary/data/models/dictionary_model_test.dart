@@ -17,7 +17,7 @@ void main() {
       Word(
         wordForeign: 'gracias',
         wordTranslation: 'hello',
-        createdAt: tDateTime,
+        // createdAt: tDateTime,
         updatedAt: tDateTime,
         id: 1,
         dictionaryId: 1,
@@ -25,7 +25,7 @@ void main() {
       Word(
         wordForeign: 'siema',
         wordTranslation: 'elo',
-        createdAt: tDateTime,
+        // createdAt: tDateTime,
         updatedAt: tDateTime,
         id: 2,
         dictionaryId: 1,
@@ -33,7 +33,7 @@ void main() {
     ],
     language: Languages.english,
     updatedAt: tDateTime,
-    createdAt: tDateTime,
+    // createdAt: tDateTime,
   );
 
   group('fromMap', () {

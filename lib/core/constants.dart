@@ -24,7 +24,6 @@ const svgPrefix = 'assets/svgs';
 const idId = 'id';
 const userIdId = 'user_id';
 const languageId = 'language';
-const createdAtId = 'created_at';
 const updatedAtId = 'updated_at';
 
 const Map<String, String> pageTitlesFromIds = {

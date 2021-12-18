@@ -132,7 +132,6 @@ class _WordDialogState extends State<WordDialog> {
                     Word.wordTranslationId:
                         wordTranslationController.text.trim(),
                     updatedAtId: DateTime.now(),
-                    createdAtId: widget.wordToEdit?.createdAt ?? DateTime.now(),
                     idId: widget.wordToEdit?.id,
                     Word.learningStatusId: widget.wordToEdit?.learningStatus ??
                         LearningStatus.reviewing,

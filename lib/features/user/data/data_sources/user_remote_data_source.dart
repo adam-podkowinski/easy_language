@@ -2,14 +2,14 @@
 import 'package:easy_language/features/user/data/models/user_model.dart';
 
 abstract class SettingsRemoteDataSource {
-  Future<UserModel> fetchSettings();
+  Future<UserModel> fetchUser();
 
-  Future<void> saveSettings(UserModel settingsToCache);
+  Future<void> saveUser(UserModel settingsToCache);
 }
 
 class SettingsRemoteDataSourceImpl implements SettingsRemoteDataSource {
   @override
-  Future<UserModel> fetchSettings() async {
+  Future<UserModel> fetchUser() async {
     throw UnimplementedError();
     // try {
     //   final result = await PlayGames.getLastSignedInAccount();
@@ -38,7 +38,7 @@ class SettingsRemoteDataSourceImpl implements SettingsRemoteDataSource {
   }
 
   @override
-  Future<void> saveSettings(UserModel settingsToCache) async {
+  Future<void> saveUser(UserModel settingsToCache) async {
     throw UnimplementedError();
     // try {
     //   final result = await PlayGames.getLastSignedInAccount();

@@ -70,11 +70,8 @@ class SettingsPage extends StatelessWidget {
                     Languages.defaultLanguages,
                   ),
                   child: Text(
-                    context
-                        .watch<UserProvider>()
-                        .settings
-                        .nativeLanguage
-                        .name,
+                    context.watch<UserProvider>().user?.nativeLanguage.name ??
+                        '',
                   ),
                 ),
                 leading: const Icon(Icons.translate),
@@ -97,7 +94,8 @@ class SettingsPage extends StatelessWidget {
               ListTile(
                 trailing: ElevatedButton(
                   onPressed:
-                      context.read<DictionaryProvider>().currentDictionary == null
+                      context.read<DictionaryProvider>().currentDictionary ==
+                              null
                           ? null
                           : () => showLanguagePickerDialog(
                                 context,
@@ -123,14 +121,15 @@ class SettingsPage extends StatelessWidget {
                             .name ??
                         'None',
                     style: TextStyle(
-                      color:
-                          context.watch<DictionaryProvider>().currentDictionary ==
-                                  null
-                              ? Theme.of(context)
-                                  .colorScheme
-                                  .onBackground
-                                  .withOpacity(0.5)
-                              : null,
+                      color: context
+                                  .watch<DictionaryProvider>()
+                                  .currentDictionary ==
+                              null
+                          ? Theme.of(context)
+                              .colorScheme
+                              .onBackground
+                              .withOpacity(0.5)
+                          : null,
                     ),
                   ),
                 ),

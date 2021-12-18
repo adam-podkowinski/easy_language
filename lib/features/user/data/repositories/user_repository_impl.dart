@@ -5,16 +5,13 @@ import 'package:easy_language/features/user/data/data_sources/user_remote_data_s
 import 'package:easy_language/features/user/data/models/user_model.dart';
 import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/user/domain/repositories/user_repository.dart';
-import 'package:language_picker/languages.dart';
 
-//TODO: work on user
 class UserRepositoryImpl implements UserRepository {
   bool _initial = true;
-  UserModel _settings = UserModel(
-    nativeLanguage: Languages.english,
-    token: '',
-    email: '',
-  );
+
+  UserModel? _user;
+
+  bool get loggedIn => _user != null;
 
   final SettingsLocalDataSource localDataSource;
   final SettingsRemoteDataSource remoteDataSource;
@@ -26,67 +23,88 @@ class UserRepositoryImpl implements UserRepository {
 
   Future<void> _ensureInitialized() async {
     if (_initial) {
-      await getSettings();
+      await getUser();
     }
   }
 
   @override
-  Future<Either<Failure, User>> changeSettings({
-    required Map settingsMap,
+  Future<Either<Failure, User>> editUser({
+    required Map userMap,
   }) async {
     try {
       await _ensureInitialized();
 
-      _settings = _settings.copyWithMap(settingsMap);
+      if (!loggedIn) {
+        return Left(UserUnauthenticatedFailure('user not logged in'));
+      }
 
-      localDataSource.cacheSettings(_settings);
-      remoteDataSource.saveSettings(_settings);
-      return Right(_settings);
+      _user = _user!.copyWithMap(userMap);
+
+      localDataSource.cacheUser(_user!);
+      remoteDataSource.saveUser(_user!);
+      return Right(_user!);
     } catch (_) {
-      return Left(SettingsCacheFailure(_settings));
+      return Left(UserCacheFailure());
     }
   }
 
   @override
-  Future<Either<Failure, User>> getSettings() async {
+  Future<Either<Failure, User>> getUser() async {
     try {
       if (_initial) {
-        _settings = await localDataSource.getLocalSettings();
+        _user = await localDataSource.getCachedUser();
         _initial = false;
       }
-      return Right(_settings);
+      return loggedIn
+          ? Right(_user!)
+          : Left(UserUnauthenticatedFailure("couldn't get a user"));
     } catch (_) {
       _initial = false;
-      return Left(SettingsGetFailure(_settings));
+      return Left(UserUnauthenticatedFailure("couldn't get a user"));
     }
   }
 
   @override
-  Future<Either<Failure, User>> fetchSettingsRemotely() async {
+  Future<Either<Failure, User>> fetchUser() async {
+    if (!loggedIn) {
+      return Left(UserUnauthenticatedFailure("user not logged in"));
+    }
+
     try {
-      _settings = await remoteDataSource.fetchSettings();
-      localDataSource.cacheSettings(_settings);
+      _user = await remoteDataSource.fetchUser();
+      localDataSource.cacheUser(_user!);
       _initial = false;
-      return Right(_settings);
+      return Right(_user!);
     } catch (_) {
       _initial = false;
-      _settings = UserModel(
-        nativeLanguage: Languages.english,
-        email: '',
-        token: '',
-      );
-      localDataSource.cacheSettings(_settings);
-      return Left(SettingsGetFailure(_settings));
+      return Left(UserUnauthenticatedFailure("couldn't fetch user"));
     }
   }
 
   @override
-  Future saveSettings() async {
-    try {
-      localDataSource.cacheSettings(_settings);
-      await remoteDataSource.saveSettings(_settings);
-    } catch (_) {
-      return;
+  Future<Either<Failure, User>> cacheUser() async {
+    if (!loggedIn) {
+      return Left(UserUnauthenticatedFailure("user not logged in"));
     }
+
+    try {
+      localDataSource.cacheUser(_user!);
+      await remoteDataSource.saveUser(_user!);
+      return Right(_user!);
+    } catch (_) {
+      return Right(_user!);
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> login({required Map loginMap}) {
+    // TODO: implement login
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, User>> register({required Map registerMap}) {
+    // TODO: implement register
+    throw UnimplementedError();
   }
 }

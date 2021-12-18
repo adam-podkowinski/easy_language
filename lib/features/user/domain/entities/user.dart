@@ -3,19 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:language_picker/languages.dart';
 
 class User extends Equatable {
+  final int id;
   final bool isStartup;
   final ThemeMode themeMode;
   final Language nativeLanguage;
   final String email;
   final int currentDictionaryId;
   final String token;
+  final DateTime updatedAt;
 
   const User({
+    required this.id,
     required this.isStartup,
     required this.themeMode,
     required this.nativeLanguage,
     required this.email,
     required this.token,
+    required this.updatedAt,
     this.currentDictionaryId = 0,
   });
 
@@ -32,5 +36,14 @@ class User extends Equatable {
   static const availableThemesIds = [systemThemeId, lightThemeId, darkThemeId];
 
   @override
-  List<Object?> get props => [isStartup, themeMode, nativeLanguage];
+  List<Object?> get props => [
+        id,
+        isStartup,
+        themeMode,
+        nativeLanguage,
+        token,
+        currentDictionaryId,
+        email,
+        updatedAt,
+      ];
 }

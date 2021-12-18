@@ -4,9 +4,11 @@ import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
 
 abstract class SettingsLocalDataSource {
-  Future<UserModel> getLocalSettings();
+  Future<UserModel> getCachedUser();
 
-  Future<void> cacheSettings(UserModel settingsToCache);
+  Future cacheUser(UserModel settingsToCache);
+
+  Future clearUser();
 }
 
 class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
@@ -15,7 +17,7 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
   SettingsLocalDataSourceImpl({required this.settingsBox});
 
   @override
-  Future<UserModel> getLocalSettings() {
+  Future<UserModel> getCachedUser() {
     try {
       if (settingsBox.isEmpty) {
         throw CacheException();
@@ -30,12 +32,18 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
   }
 
   @override
-  Future<void> cacheSettings(UserModel settingsToCache) async {
+  Future<void> cacheUser(UserModel settingsToCache) async {
     try {
       await settingsBox.putAll(settingsToCache.toMap());
     } catch (e) {
       Logger().e(e);
       throw CacheException();
     }
+  }
+
+  @override
+  Future clearUser() {
+    // TODO: implement clearUser
+    throw UnimplementedError();
   }
 }
