@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
+import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/features/user/data/data_sources/user_local_data_source.dart';
 import 'package:easy_language/features/user/data/data_sources/user_remote_data_source.dart';
 import 'package:easy_language/features/user/data/models/user_model.dart';
 import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/user/domain/repositories/user_repository.dart';
+import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 
 class UserRepositoryImpl implements UserRepository {
   bool _initial = true;
@@ -89,22 +94,65 @@ class UserRepositoryImpl implements UserRepository {
 
     try {
       localDataSource.cacheUser(_user!);
-      await remoteDataSource.saveUser(_user!);
       return Right(_user!);
     } catch (_) {
-      return Right(_user!);
+      return Left(UserCacheFailure());
     }
   }
 
   @override
-  Future<Either<Failure, User>> login({required Map loginMap}) {
-    // TODO: implement login
-    throw UnimplementedError();
+  Future<Either<Failure, User>> login({required Map formMap}) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$api/login'),
+        body: formMap,
+        headers: {'Accept': 'application/json'},
+      );
+
+      final Map bodyMap = cast(jsonDecode(response.body));
+
+      if (!response.ok) {
+        Logger().e(response.statusCode);
+        return Left(
+          UserUnauthenticatedFailure(
+            "Couldn't log in: ${bodyMap['message']}",
+          ),
+        );
+      }
+
+      _user = UserModel.fromMap(bodyMap);
+      return Right(_user!);
+    } catch (e) {
+      Logger().e(e);
+      return Left(UserUnauthenticatedFailure("Couldn't log in"));
+    }
   }
 
   @override
-  Future<Either<Failure, User>> register({required Map registerMap}) {
-    // TODO: implement register
-    throw UnimplementedError();
+  Future<Either<Failure, User>> register({required Map formMap}) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$api/register'),
+        body: formMap,
+        headers: {'Accept': 'application/json'},
+      );
+
+      final Map bodyMap = cast(jsonDecode(response.body));
+
+      if (!response.ok) {
+        Logger().e(response.statusCode);
+        return Left(
+          UserUnauthenticatedFailure(
+            "Couldn't register: ${bodyMap['message']}",
+          ),
+        );
+      }
+
+      _user = UserModel.fromMap(bodyMap);
+      return Right(_user!);
+    } catch (e) {
+      Logger().e(e);
+      return Left(UserUnauthenticatedFailure("Couldn't register"));
+    }
   }
 }

@@ -6,23 +6,23 @@ import 'package:logger/logger.dart';
 abstract class SettingsLocalDataSource {
   Future<UserModel> getCachedUser();
 
-  Future cacheUser(UserModel settingsToCache);
+  Future cacheUser(UserModel userToCache);
 
   Future clearUser();
 }
 
-class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
-  final Box settingsBox;
+class UserLocalDataSourceImpl implements SettingsLocalDataSource {
+  final Box userBox;
 
-  SettingsLocalDataSourceImpl({required this.settingsBox});
+  UserLocalDataSourceImpl({required this.userBox});
 
   @override
   Future<UserModel> getCachedUser() {
     try {
-      if (settingsBox.isEmpty) {
+      if (userBox.isEmpty) {
         throw CacheException();
       } else {
-        final dbMap = settingsBox.toMap();
+        final dbMap = userBox.toMap();
         return Future.value(UserModel.fromMap(dbMap));
       }
     } catch (e) {
@@ -34,7 +34,7 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
   @override
   Future<void> cacheUser(UserModel settingsToCache) async {
     try {
-      await settingsBox.putAll(settingsToCache.toMap());
+      await userBox.putAll(settingsToCache.toMap());
     } catch (e) {
       Logger().e(e);
       throw CacheException();

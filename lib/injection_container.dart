@@ -39,9 +39,9 @@ Future registerSettings() async {
   );
 
   // Data sources
-  final settingsBox = await Hive.openBox(cachedSettingsId);
+  final settingsBox = await Hive.openBox(cachedUserId);
   sl.registerLazySingleton<SettingsLocalDataSource>(
-    () => SettingsLocalDataSourceImpl(settingsBox: settingsBox),
+    () => UserLocalDataSourceImpl(userBox: settingsBox),
   );
 
   sl.registerLazySingleton<SettingsRemoteDataSource>(
@@ -102,7 +102,7 @@ Future registerFlashcard() async {
 }
 
 Future clearAllBoxes() async {
-  await (await Hive.openBox(cachedSettingsId)).clear();
+  await (await Hive.openBox(cachedUserId)).clear();
   await (await Hive.openBox(cachedCurrentFlashcardId)).clear();
   await (await Hive.openBox(cachedWordBankId)).clear();
 }

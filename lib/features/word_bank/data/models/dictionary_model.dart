@@ -47,6 +47,14 @@ class DictionaryModel extends Dictionary {
     }
   }
 
+  Map wordsToMap() {
+    final Map map = {
+      "words": words.map((e) => e.toMap()).toList(),
+    };
+
+    return map;
+  }
+
   Map toMap() {
     final Map map = {
       idId: this.id,

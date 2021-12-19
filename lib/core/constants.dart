@@ -1,7 +1,14 @@
 import 'package:easy_language/features/word_bank/data/models/dictionary_model.dart';
 import 'package:easy_language/features/word_bank/domain/entities/dictionary.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:language_picker/languages.dart';
+
+extension IsOk on http.Response {
+  bool get ok {
+    return (statusCode ~/ 100) == 2;
+  }
+}
 
 const Size screenSize = Size(393, 781);
 
@@ -12,7 +19,7 @@ const wordBankPageId = '/dictionary';
 const introductionPageId = '/introduction';
 const flashcardsPageId = '/flashcards';
 const settingsPageId = '/settings';
-const cachedSettingsId = 'settings';
+const cachedUserId = 'settings';
 const cachedWordBankId = 'dictionary';
 const cachedCurrentLanguageId = 'current_language';
 const cachedCurrentFlashcardId = 'current_flashcard';

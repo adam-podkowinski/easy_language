@@ -9,9 +9,9 @@ abstract class UserRepository {
 
   Future<Either<Failure, User>> fetchUser();
 
-  Future<Either<Failure, User>> login({required Map loginMap});
+  Future<Either<Failure, User>> login({required Map formMap});
 
-  Future<Either<Failure, User>> register({required Map registerMap});
+  Future<Either<Failure, User>> register({required Map formMap});
 
   Future cacheUser();
 }
