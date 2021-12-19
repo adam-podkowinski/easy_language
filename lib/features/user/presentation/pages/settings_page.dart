@@ -61,7 +61,7 @@ class SettingsPage extends StatelessWidget {
                   onPressed: () => showLanguagePickerDialog(
                     context,
                     (Language languagePicked) {
-                      context.read<UserProvider>().changeSettings(
+                      context.read<UserProvider>().editUser(
                         {
                           User.nativeLanguageId: languagePicked.isoCode,
                         },
@@ -71,7 +71,7 @@ class SettingsPage extends StatelessWidget {
                   ),
                   child: Text(
                     context.watch<UserProvider>().user?.nativeLanguage.name ??
-                        '',
+                        'no user',
                   ),
                 ),
                 leading: const Icon(Icons.translate),

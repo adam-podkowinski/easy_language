@@ -52,7 +52,7 @@ class MainApp extends StatelessWidget {
         theme: buildLight(context),
         darkTheme: buildDark(context),
         debugShowCheckedModeBanner: false,
-        initialRoute: showIntroduction ? introductionPageId : wordBankPageId,
+        initialRoute: wordBankPageId,
         routes: {
           wordBankPageId: (context) => const WordBankPage(),
           introductionPageId: (context) => const IntroductionPage(),

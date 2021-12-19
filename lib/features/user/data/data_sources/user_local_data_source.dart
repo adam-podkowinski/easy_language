@@ -32,7 +32,7 @@ class UserLocalDataSourceImpl implements SettingsLocalDataSource {
   }
 
   @override
-  Future<void> cacheUser(UserModel settingsToCache) async {
+  Future cacheUser(UserModel settingsToCache) async {
     try {
       await userBox.putAll(settingsToCache.toMap());
     } catch (e) {

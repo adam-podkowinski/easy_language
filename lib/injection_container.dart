@@ -26,7 +26,7 @@ Future registerSettings() async {
   // Provider
   sl.registerLazySingleton(
     () => UserProvider(
-      settingsRepository: sl(),
+      userRepository: sl(),
     ),
   );
 

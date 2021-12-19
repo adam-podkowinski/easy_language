@@ -7,8 +7,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> main() async {
+import 'features/user/presentation/pages/welcome_app.dart';
+
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
   runApp(EasyLanguage());
@@ -17,28 +20,36 @@ Future<void> main() async {
 class EasyLanguage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    //Debug
+    SharedPreferences.setMockInitialValues({});
     return ScreenUtilInit(
       designSize: screenSize,
       builder: () => MultiProvider(
         providers: [
           ChangeNotifierProvider<UserProvider>(
             create: (context) {
-              final settings = di.sl<UserProvider>();
-              settings.initSettings();
-              return settings;
+              final user = di.sl<UserProvider>();
+              user.initUser();
+              return user;
             },
           ),
         ],
-        child: Builder(
-          builder: (context) {
+        child: FutureBuilder<SharedPreferences>(
+          future: SharedPreferences.getInstance(),
+          builder: (context, snapshot) {
             final state = context.watch<UserProvider>();
-            if (state.loading) {
+            if (!snapshot.hasData) {
               return const LoadingApp();
+            } else if (!state.loggedIn) {
+              final SharedPreferences? prefs = snapshot.data;
+              return WelcomeApp(
+                showIntroduction: prefs?.getBool(isStartupId) ?? true,
+              );
             } else {
               return MainApp(
                 state.user?.themeMode,
-                showIntroduction: state.user?.isStartup ?? true,
-                failure: state.settingsFailure,
+                showIntroduction: false,
+                failure: state.userFailure,
               );
             }
           },

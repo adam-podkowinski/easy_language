@@ -1,33 +1,31 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/constants.dart';
-import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
-import 'package:easy_language/features/user/presentation/widgets/sign_in_button.dart';
-import 'package:easy_language/features/user/domain/entities/user.dart';
-import 'package:easy_language/features/user/presentation/manager/user_provider.dart';
-import 'package:easy_language/features/user/presentation/widgets/theme_picker.dart';
+import 'package:easy_language/features/user/presentation/pages/authenticate_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:language_picker/languages.dart';
-import 'package:provider/provider.dart';
 
 class IntroductionPage extends StatelessWidget {
   const IntroductionPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<UserProvider>();
     return SafeArea(
       child: Scaffold(
         body: IntroductionScreen(
           pages: _buildPages(context),
-          onDone: () {
-            state.changeSettings({
-              User.isStartupId: false,
-            });
-            Navigator.of(context).pushReplacementNamed(wordBankPageId);
-          },
+          // onDone: () {
+          //   SharedPreferences.getInstance().then(
+          //     (prefs) => prefs.setBool(isStartupId, false),
+          //   );
+          //   Navigator.of(context).push(
+          //     MaterialPageRoute(
+          //       builder: (_) => const LoginPage(),
+          //     ),
+          //   );
+          // },
+          showDoneButton: false,
           showSkipButton: true,
           skip: const Text('Skip'),
           next: const Text('Next'),
@@ -55,42 +53,66 @@ class IntroductionPage extends StatelessWidget {
         '$svgPrefix/learning_primary_clean.svg',
         'Translate new words and store them fast',
       ),
+      // _buildPage(
+      //   context,
+      //   'Light or dark?',
+      //   '$svgPrefix/dark_mode.svg',
+      //   'Choose your preferable theme for this application',
+      //   footer: const ThemePicker(),
+      // ),
+      // _buildPage(
+      //   context,
+      //   'Native language',
+      //   '$svgPrefix/languages.svg',
+      //   "What language do you translate to most often?",
+      //   footer: ElevatedButton(
+      //     onPressed: () => showLanguagePickerDialog(
+      //       context,
+      //       (Language language) {
+      //         context.read<UserProvider>().editUser(
+      //           {
+      //             User.nativeLanguageId: language.isoCode,
+      //           },
+      //         );
+      //       },
+      //       Languages.defaultLanguages,
+      //     ),
+      //     child: Text(
+      //       context.watch<UserProvider>().user?.nativeLanguage.name ??
+      //           'no user',
+      //     ),
+      //   ),
+      // ),
       _buildPage(
         context,
-        'Light or dark?',
-        '$svgPrefix/dark_mode.svg',
-        'Choose your preferable theme for this application',
-        footer: const ThemePicker(),
-      ),
-      _buildPage(
-        context,
-        'Native language',
-        '$svgPrefix/languages.svg',
-        "What language do you translate to most often?",
-        footer: ElevatedButton(
-          onPressed: () => showLanguagePickerDialog(
-            context,
-            (Language language) {
-              context.read<UserProvider>().changeSettings(
-                {
-                  User.nativeLanguageId: language.isoCode,
-                },
-              );
-            },
-            Languages.defaultLanguages,
-          ),
-          child: Text(
-            context.watch<UserProvider>().user?.nativeLanguage.name ?? '',
-          ),
-        ),
-      ),
-      _buildPage(
-        context,
-        'Save your progress',
+        'Log in or sign up',
         '$svgPrefix/learning_primary_save.svg',
-        'Log in using Google Play to save your progress',
-        footer: const SizedBox(
-          child: SignInButton(),
+        "It's entirely free to sign up!",
+        footer: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const AuthenticatePage(),
+                  ),
+                );
+              },
+              child: const Text('Log in'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const AuthenticatePage(
+                      signUp: true,
+                    ),
+                  ),
+                );
+              },
+              child: const Text('Sign up'),
+            ),
+          ],
         ),
       ),
     ];

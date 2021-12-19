@@ -27,6 +27,7 @@ const emptyString = 'Empty';
 const addNewWordTitle = 'Add a new word';
 const editWordTitle = 'Edit a word';
 const svgPrefix = 'assets/svgs';
+const isStartupId = 'is_startup';
 
 const idId = 'id';
 const userIdId = 'user_id';

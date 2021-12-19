@@ -26,13 +26,13 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
     required this.remoteDataSource,
   });
 
-  Future<void> _ensureWordBankInitialized() async {
+  Future _ensureWordBankInitialized() async {
     if (_initialDictionaries) {
       await getDictionaries();
     }
   }
 
-  Future<void> _ensureCurrentLanguageInitialized() async {
+  Future _ensureCurrentLanguageInitialized() async {
     if (_initialCurrentLanguage) {
       await getCurrentDictionary();
     }

@@ -7,14 +7,16 @@ import 'package:flutter/material.dart';
 class UserProvider extends ChangeNotifier {
   bool loading = true;
 
-  final UserRepository settingsRepository;
+  bool get loggedIn => user != null;
+
+  final UserRepository userRepository;
 
   User? user;
 
-  UserFailure? settingsFailure;
+  UserFailure? userFailure;
 
   UserProvider({
-    required this.settingsRepository,
+    required this.userRepository,
   });
 
   String get themeModeString =>
@@ -22,7 +24,7 @@ class UserProvider extends ChangeNotifier {
 
   void _prepareMethod() {
     loading = true;
-    settingsFailure = null;
+    userFailure = null;
   }
 
   void _finishMethod() {
@@ -30,14 +32,14 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future initSettings() async {
+  Future initUser() async {
     _prepareMethod();
 
-    final settingsEither = await settingsRepository.getUser();
-    settingsEither.fold(
+    final userEither = await userRepository.getUser();
+    userEither.fold(
       (l) {
         if (l is UserFailure) {
-          settingsFailure = l;
+          userFailure = l;
         }
       },
       (r) => user = r,
@@ -46,16 +48,16 @@ class UserProvider extends ChangeNotifier {
     _finishMethod();
   }
 
-  Future changeSettings(Map<String, dynamic> changedSettings) async {
+  Future editUser(Map<String, dynamic> changedSettings) async {
     _prepareMethod();
 
-    final settingsEither = await settingsRepository.editUser(
+    final userEither = await userRepository.editUser(
       userMap: changedSettings,
     );
-    settingsEither.fold(
+    userEither.fold(
       (l) {
         if (l is UserFailure) {
-          settingsFailure = l;
+          userFailure = l;
         }
       },
       (r) => user = r,
@@ -64,23 +66,53 @@ class UserProvider extends ChangeNotifier {
     _finishMethod();
   }
 
-  Future fetchSettings() async {
+  Future login(Map<String, dynamic> loginForm) async {
     _prepareMethod();
 
-    final settingsEither = await settingsRepository.fetchUser();
-    settingsEither.fold(
+    final userEither = await userRepository.login(formMap: loginForm);
+
+    userEither.fold(
       (l) {
         if (l is UserFailure) {
-          settingsFailure = l;
+          userFailure = l;
         }
       },
       (r) => user = r,
     );
-
-    _finishMethod();
   }
 
-  Future saveSettings() async {
-    await settingsRepository.cacheUser();
+  Future register(Map<String, String> registerForm) async {
+    _prepareMethod();
+
+    final userEither = await userRepository.login(formMap: registerForm);
+
+    userEither.fold(
+      (l) {
+        if (l is UserFailure) {
+          userFailure = l;
+        }
+      },
+      (r) => user = r,
+    );
   }
+
+// Future fetchUser() async {
+//   _prepareMethod();
+//
+//   final settingsEither = await userRepository.fetchUser();
+//   settingsEither.fold(
+//     (l) {
+//       if (l is UserFailure) {
+//         settingsFailure = l;
+//       }
+//     },
+//     (r) => user = r,
+//   );
+//
+//   _finishMethod();
+// }
+
+// Future saveSettings() async {
+//   await userRepository.cacheUser();
+// }
 }

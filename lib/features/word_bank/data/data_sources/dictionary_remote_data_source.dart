@@ -9,9 +9,9 @@ abstract class DictionaryRemoteDataSource {
 
   Future<DictionaryModel> addDictionary();
 
-  Future<void> saveDictionaries(DictionariesModel wordBankToCache);
+  Future saveDictionaries(DictionariesModel wordBankToCache);
 
-  Future<void> saveCurrentDictionary(DictionaryModel dictionaryToCache);
+  Future saveCurrentDictionary(DictionaryModel dictionaryToCache);
 }
 
 class DictionaryRemoteDataSourceImpl implements DictionaryRemoteDataSource {
@@ -28,13 +28,13 @@ class DictionaryRemoteDataSourceImpl implements DictionaryRemoteDataSource {
   }
 
   @override
-  Future<void> saveCurrentDictionary(DictionaryModel dictionary) {
+  Future saveCurrentDictionary(DictionaryModel dictionary) {
     // TODO: implement saveCurrentLanguage
     throw UnimplementedError();
   }
 
   @override
-  Future<void> saveDictionaries(DictionariesModel wordBankToCache) {
+  Future saveDictionaries(DictionariesModel wordBankToCache) {
     // TODO: implement saveWordBank
     throw UnimplementedError();
   }
@@ -103,7 +103,7 @@ class DictionaryRemoteDataSourceImpl implements DictionaryRemoteDataSource {
   // }
 
   // @override
-  // Future<void> saveWordBank(WordBankModel wordBankToCache) async {
+  // Future saveWordBank(WordBankModel wordBankToCache) async {
   //   throw UnimplementedError();
   //   // try {
   //   //   final result = await PlayGames.getLastSignedInAccount();
@@ -136,7 +136,7 @@ class DictionaryRemoteDataSourceImpl implements DictionaryRemoteDataSource {
   // }
 
   // @override
-  // Future<void> saveCurrentLanguage(Language languageToCache) async {
+  // Future saveCurrentLanguage(Language languageToCache) async {
   //   throw UnimplementedError();
   //   // try {
   //   //   final result = await PlayGames.getLastSignedInAccount();

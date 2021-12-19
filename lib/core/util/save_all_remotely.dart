@@ -10,5 +10,4 @@ Future saveAllRemotely(
   await dictionaryProvider.saveCurrentDictionary();
   await dictionaryProvider.saveWordBank();
   await flashcardProvider.saveFlashcard();
-  await settingsProvider.saveSettings();
 }

@@ -3,7 +3,7 @@ import 'package:easy_language/features/flashcard/data/models/flashcard_model.dar
 abstract class FlashcardRemoteDataSource {
   Future<FlashcardModel> fetchFlashcard();
 
-  Future<void> saveFlashcard(FlashcardModel flashcardToCache);
+  Future saveFlashcard(FlashcardModel flashcardToCache);
 }
 
 class FlashcardRemoteDataSourceImpl implements FlashcardRemoteDataSource {
@@ -14,7 +14,7 @@ class FlashcardRemoteDataSourceImpl implements FlashcardRemoteDataSource {
   }
 
   @override
-  Future<void> saveFlashcard(FlashcardModel flashcardToCache) {
+  Future saveFlashcard(FlashcardModel flashcardToCache) {
     // TODO: implement saveFlashcard
     throw UnimplementedError();
   }

@@ -8,7 +8,7 @@ import 'package:logger/logger.dart';
 abstract class FlashcardLocalDataSource {
   Future<FlashcardModel> getLocalFlashcard();
 
-  Future<void> cacheCurrentFlashcard(FlashcardModel flashcardModel);
+  Future cacheCurrentFlashcard(FlashcardModel flashcardModel);
 }
 
 class FlashcardLocalDataSourceImpl implements FlashcardLocalDataSource {
@@ -17,7 +17,7 @@ class FlashcardLocalDataSourceImpl implements FlashcardLocalDataSource {
   FlashcardLocalDataSourceImpl({required this.flashcardBox});
 
   @override
-  Future<void> cacheCurrentFlashcard(FlashcardModel flashcardModel) async {
+  Future cacheCurrentFlashcard(FlashcardModel flashcardModel) async {
     try {
       await flashcardBox.put(cachedCurrentFlashcardId, flashcardModel.toMap());
     } catch (e) {

@@ -13,12 +13,10 @@ class UserModel extends User {
     required String token,
     required DateTime updatedAt,
     int currentDictionaryId = 0,
-    bool isStartup = true,
     ThemeMode themeMode = ThemeMode.system,
   }) : super(
           id: id,
           themeMode: themeMode,
-          isStartup: isStartup,
           nativeLanguage: nativeLanguage,
           email: email,
           currentDictionaryId: currentDictionaryId,
@@ -32,7 +30,6 @@ class UserModel extends User {
       final Map data = cast(map['data']['user']);
       return UserModel(
         id: cast(data[idId]) ?? 0,
-        isStartup: cast(data[User.isStartupId]) ?? true,
         themeMode: mapStringToThemeMode(cast(data[User.themeModeId])),
         email: cast(data[User.emailId]) ?? '',
         currentDictionaryId: cast(data[User.currentDictionaryIdId]) ?? 0,
@@ -56,7 +53,6 @@ class UserModel extends User {
         idId: id,
         updatedAt: updatedAt,
         User.tokenId: token,
-        User.isStartupId: isStartup,
         User.themeModeId: mapThemeModeToString(themeMode),
         User.nativeLanguageId: nativeLanguage.isoCode,
         User.emailId: email,

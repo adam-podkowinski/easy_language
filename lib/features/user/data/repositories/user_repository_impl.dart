@@ -26,7 +26,7 @@ class UserRepositoryImpl implements UserRepository {
     required this.remoteDataSource,
   });
 
-  Future<void> _ensureInitialized() async {
+  Future _ensureInitialized() async {
     if (_initial) {
       await getUser();
     }
@@ -43,10 +43,12 @@ class UserRepositoryImpl implements UserRepository {
         return Left(UserUnauthenticatedFailure('user not logged in'));
       }
 
-      _user = _user!.copyWithMap(userMap);
+      final newUser = _user!.copyWithMap(userMap);
+
+      _user = await remoteDataSource.editUser(newUser);
 
       localDataSource.cacheUser(_user!);
-      remoteDataSource.saveUser(_user!);
+
       return Right(_user!);
     } catch (_) {
       return Left(UserCacheFailure());
@@ -58,6 +60,7 @@ class UserRepositoryImpl implements UserRepository {
     try {
       if (_initial) {
         _user = await localDataSource.getCachedUser();
+        await fetchUser();
         _initial = false;
       }
       return loggedIn
@@ -71,18 +74,21 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<Either<Failure, User>> fetchUser() async {
+    await _ensureInitialized();
+
     if (!loggedIn) {
       return Left(UserUnauthenticatedFailure("user not logged in"));
     }
 
     try {
-      _user = await remoteDataSource.fetchUser();
-      localDataSource.cacheUser(_user!);
-      _initial = false;
+      final newUser = await remoteDataSource.fetchUser();
+      if (newUser.updatedAt.isAfter(_user!.updatedAt)) {
+        _user = newUser;
+        localDataSource.cacheUser(_user!);
+      }
       return Right(_user!);
     } catch (_) {
-      _initial = false;
-      return Left(UserUnauthenticatedFailure("couldn't fetch user"));
+      return Left(UserGetFailure());
     }
   }
 

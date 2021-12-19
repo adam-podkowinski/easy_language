@@ -9,5 +9,4 @@ Future fetchAllRemotely(
 ) async {
   await dictionaryProvider.fetchDictionaries();
   await flashcardProvider.fetchFlashcard();
-  await settingsProvider.fetchSettings();
 }

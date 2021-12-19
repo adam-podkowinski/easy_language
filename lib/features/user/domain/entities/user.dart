@@ -4,7 +4,6 @@ import 'package:language_picker/languages.dart';
 
 class User extends Equatable {
   final int id;
-  final bool isStartup;
   final ThemeMode themeMode;
   final Language nativeLanguage;
   final String email;
@@ -14,7 +13,6 @@ class User extends Equatable {
 
   const User({
     required this.id,
-    required this.isStartup,
     required this.themeMode,
     required this.nativeLanguage,
     required this.email,
@@ -23,7 +21,6 @@ class User extends Equatable {
     this.currentDictionaryId = 0,
   });
 
-  static const isStartupId = 'isStartup';
   static const nativeLanguageId = 'nativeLanguage';
   static const emailId = 'email';
   static const currentDictionaryIdId = 'current_dictionary_id';
@@ -38,7 +35,6 @@ class User extends Equatable {
   @override
   List<Object?> get props => [
         id,
-        isStartup,
         themeMode,
         nativeLanguage,
         token,

@@ -8,20 +8,20 @@ abstract class DictionaryLocalDataSource {
 
   Future<Language> getLocalCurrentLanguage();
 
-  Future<void> cacheDictionaries(DictionariesModel wordBankModel);
+  Future cacheDictionaries(DictionariesModel wordBankModel);
 
-  Future<void> cacheCurrentDictionary(DictionaryModel? wordBankModel);
+  Future cacheCurrentDictionary(DictionaryModel? wordBankModel);
 }
 
 class DictionaryLocalDataSourceImpl implements DictionaryLocalDataSource {
   @override
-  Future<void> cacheCurrentDictionary(DictionaryModel? wordBankModel) {
+  Future cacheCurrentDictionary(DictionaryModel? wordBankModel) {
     // TODO: implement cacheCurrentDictionary
     throw UnimplementedError();
   }
 
   @override
-  Future<void> cacheDictionaries(DictionariesModel wordBankModel) {
+  Future cacheDictionaries(DictionariesModel wordBankModel) {
     // TODO: implement cacheDictionaries
     throw UnimplementedError();
   }
@@ -43,7 +43,7 @@ class DictionaryLocalDataSourceImpl implements DictionaryLocalDataSource {
  DictionaryLocalDataSourceImpl({required this.wordBankBox});
 //
 //  @override
-//  Future<void> cacheDictionaries(WordBankModel wordBankModel) async {
+//  Future cacheDictionaries(WordBankModel wordBankModel) async {
 //    try {
 //      await wordBankBox.put(cachedWordBankId, wordBankModel.toMap());
 //    } catch (e) {
