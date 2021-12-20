@@ -6,8 +6,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthenticatePage extends StatelessWidget {
   final bool signUp;
+  final bool shouldAnimate;
 
-  const AuthenticatePage({Key? key, this.signUp = false}) : super(key: key);
+  Widget _buildAnimation({required Widget child, String? tag}) {
+    if (shouldAnimate) {
+      return Hero(
+        tag: tag ?? '',
+        child: child,
+      );
+    } else {
+      return child;
+    }
+  }
+
+  const AuthenticatePage({
+    Key? key,
+    this.signUp = false,
+    this.shouldAnimate = true,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +44,13 @@ class AuthenticatePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                signUp ? 'Sign Up' : 'Login',
-                style: const TextStyle(
-                  fontSize: 35,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
-                  fontFamily: 'Mulish',
-                ),
+                signUp ? 'Sign up' : 'Login',
+                style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                      fontSize: 35,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                      fontFamily: 'Mulish',
+                    ),
               ),
               Column(
                 children: [
@@ -101,26 +117,44 @@ class AuthenticatePage extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ElevatedButton(
-                    child: Text(signUp ? 'Sign up' : 'Sign in'),
-                    onPressed: () {},
-                  ),
-                  OutlinedButton(
-                    child: Text(
-                      signUp ? 'Log in instead' : 'Sign up instead',
-                      style: const TextStyle(
-                        color: Colors.white,
+                  _buildAnimation(
+                    tag: 'login',
+                    child: SizedBox(
+                      height: 40.h,
+                      child: ElevatedButton(
+                        child: Text(
+                          signUp ? 'Sign up' : 'Login',
+                        ),
+                        onPressed: () {},
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (_) => AuthenticatePage(
-                            signUp: !signUp,
+                  ),
+                  SizedBox(
+                    height: 12.h,
+                  ),
+                  _buildAnimation(
+                    tag: 'signup',
+                    child: SizedBox(
+                      height: 40.h,
+                      child: OutlinedButton(
+                        child: Text(
+                          signUp ? 'Log in instead' : 'Sign up instead',
+                          style: const TextStyle(
+                            color: Colors.white,
                           ),
                         ),
-                      );
-                    },
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (_) => AuthenticatePage(
+                                signUp: !signUp,
+                                shouldAnimate: false,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ],
               ),

@@ -48,7 +48,6 @@ class EasyLanguage extends StatelessWidget {
             } else {
               return MainApp(
                 state.user?.themeMode,
-                showIntroduction: false,
                 failure: state.userFailure,
               );
             }

@@ -3,7 +3,6 @@ import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/presentation/styles.dart';
 import 'package:easy_language/features/flashcard/presentation/manager/flashcard_provider.dart';
 import 'package:easy_language/features/flashcard/presentation/pages/flashcard_page.dart';
-import 'package:easy_language/features/user/presentation/pages/introduction_page.dart';
 import 'package:easy_language/features/user/presentation/pages/settings_page.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
 import 'package:easy_language/features/word_bank/presentation/pages/word_bank_page.dart';
@@ -13,14 +12,12 @@ import 'package:provider/provider.dart';
 
 class MainApp extends StatelessWidget {
   final ThemeMode? themeMode;
-  final bool showIntroduction;
   final Failure? failure;
 
   const MainApp(
     this.themeMode, {
     Key? key,
     this.failure,
-    required this.showIntroduction,
   }) : super(key: key);
 
   @override
@@ -55,7 +52,6 @@ class MainApp extends StatelessWidget {
         initialRoute: wordBankPageId,
         routes: {
           wordBankPageId: (context) => const WordBankPage(),
-          introductionPageId: (context) => const IntroductionPage(),
           settingsPageId: (context) => const SettingsPage(),
           flashcardsPageId: (context) => const FlashcardPage(),
         },

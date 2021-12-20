@@ -11,29 +11,17 @@ class IntroductionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: IntroductionScreen(
-          pages: _buildPages(context),
-          // onDone: () {
-          //   SharedPreferences.getInstance().then(
-          //     (prefs) => prefs.setBool(isStartupId, false),
-          //   );
-          //   Navigator.of(context).push(
-          //     MaterialPageRoute(
-          //       builder: (_) => const LoginPage(),
-          //     ),
-          //   );
-          // },
-          showDoneButton: false,
-          showSkipButton: true,
-          skip: const Text('Skip'),
-          next: const Text('Next'),
-          done: const Text('Done'),
-          color: Theme.of(context).colorScheme.secondary,
-          dotsDecorator: DotsDecorator(
-            activeColor: Theme.of(context).colorScheme.secondary,
-          ),
+    return Scaffold(
+      body: IntroductionScreen(
+        pages: _buildPages(context),
+        showDoneButton: false,
+        showSkipButton: true,
+        skip: const Text('Skip'),
+        next: const Text('Next'),
+        done: const Text('Done'),
+        color: Theme.of(context).colorScheme.secondary,
+        dotsDecorator: DotsDecorator(
+          activeColor: Theme.of(context).colorScheme.secondary,
         ),
       ),
     );
@@ -90,27 +78,49 @@ class IntroductionPage extends StatelessWidget {
         "It's entirely free to sign up!",
         footer: Column(
           children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const AuthenticatePage(),
-                  ),
-                );
-              },
-              child: const Text('Log in'),
+            SizedBox(
+              height: 0.05.sh,
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const AuthenticatePage(
-                      signUp: true,
-                    ),
+            SizedBox(
+              width: double.infinity,
+              height: 40.h,
+              child: Hero(
+                tag: 'login',
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const AuthenticatePage(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Login',
                   ),
-                );
-              },
-              child: const Text('Sign up'),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 12.h,
+            ),
+            SizedBox(
+              width: double.infinity,
+              height: 40.h,
+              child: Hero(
+                tag: 'signup',
+                child: OutlinedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const AuthenticatePage(
+                          signUp: true,
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text('Sign up'),
+                ),
+              ),
             ),
           ],
         ),
