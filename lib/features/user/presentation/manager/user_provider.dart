@@ -32,6 +32,10 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clearError() {
+    userFailure = null;
+  }
+
   Future initUser() async {
     _prepareMethod();
 
@@ -79,12 +83,14 @@ class UserProvider extends ChangeNotifier {
       },
       (r) => user = r,
     );
+
+    _finishMethod();
   }
 
   Future register(Map<String, String> registerForm) async {
     _prepareMethod();
 
-    final userEither = await userRepository.login(formMap: registerForm);
+    final userEither = await userRepository.register(formMap: registerForm);
 
     userEither.fold(
       (l) {
@@ -94,25 +100,20 @@ class UserProvider extends ChangeNotifier {
       },
       (r) => user = r,
     );
+
+    _finishMethod();
   }
 
-// Future fetchUser() async {
-//   _prepareMethod();
-//
-//   final settingsEither = await userRepository.fetchUser();
-//   settingsEither.fold(
-//     (l) {
-//       if (l is UserFailure) {
-//         settingsFailure = l;
-//       }
-//     },
-//     (r) => user = r,
-//   );
-//
-//   _finishMethod();
-// }
+  Future logout() async {
+    _prepareMethod();
 
-// Future saveSettings() async {
-//   await userRepository.cacheUser();
-// }
+    final Failure? failure = await userRepository.logout();
+    user = null;
+
+    if (failure is UserFailure) {
+      userFailure = failure;
+    }
+
+    _finishMethod();
+  }
 }

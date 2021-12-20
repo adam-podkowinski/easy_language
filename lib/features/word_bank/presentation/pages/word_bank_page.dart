@@ -132,11 +132,13 @@ class _WordBankPageState extends State<WordBankPage> {
     if (state.currentDictionaryFailure is DictionaryCacheFailure) {
       SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
         showError(context, state.currentDictionaryFailure.toString());
+        state.clearError();
       });
     }
     if (state.dictionariesFailure is DictionariesCacheFailure) {
       SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
         showError(context, state.dictionariesFailure.toString());
+        state.clearError();
       });
     }
     return IconButton(

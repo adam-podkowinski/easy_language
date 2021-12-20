@@ -49,14 +49,18 @@ class UserModel extends User {
     return UserModel.fromMap({...toMap(), ...map});
   }
 
-  Map toMap() => {
-        idId: id,
-        updatedAt: updatedAt,
+  Map<String, dynamic> toMap() => {
         User.tokenId: token,
-        User.themeModeId: mapThemeModeToString(themeMode),
-        User.nativeLanguageId: nativeLanguage.isoCode,
-        User.emailId: email,
-        User.currentDictionaryIdId: currentDictionaryId,
+        'data': {
+          'user': {
+            idId: this.id,
+            updatedAtId: updatedAt.toIso8601String(),
+            User.themeModeId: mapThemeModeToString(themeMode),
+            User.nativeLanguageId: nativeLanguage.isoCode,
+            User.emailId: email,
+            User.currentDictionaryIdId: currentDictionaryId,
+          }
+        }
       };
 
   static ThemeMode mapStringToThemeMode(String? theme) {

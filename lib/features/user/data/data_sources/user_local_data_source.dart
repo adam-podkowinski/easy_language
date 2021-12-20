@@ -32,9 +32,9 @@ class UserLocalDataSourceImpl implements SettingsLocalDataSource {
   }
 
   @override
-  Future cacheUser(UserModel settingsToCache) async {
+  Future cacheUser(UserModel userToCache) async {
     try {
-      await userBox.putAll(settingsToCache.toMap());
+      await userBox.putAll(userToCache.toMap());
     } catch (e) {
       Logger().e(e);
       throw CacheException();
@@ -42,8 +42,12 @@ class UserLocalDataSourceImpl implements SettingsLocalDataSource {
   }
 
   @override
-  Future clearUser() {
-    // TODO: implement clearUser
-    throw UnimplementedError();
+  Future clearUser() async {
+    try {
+      await userBox.clear();
+    } catch (e) {
+      Logger().e(e);
+      throw CacheException();
+    }
   }
 }

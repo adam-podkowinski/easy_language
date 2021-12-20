@@ -3,6 +3,7 @@ import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
 import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/user/presentation/manager/user_provider.dart';
+import 'package:easy_language/features/user/presentation/widgets/logout_button.dart';
 import 'package:easy_language/features/user/presentation/widgets/theme_picker.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
 import 'package:flutter/material.dart';
@@ -179,26 +180,10 @@ class SettingsPage extends StatelessWidget {
               SizedBox(
                 height: 10.h,
               ),
-              ListTile(
-                trailing: ElevatedButton(
-                  onPressed: null,
-                  // onPressed: login.isSignedIn
-                  //     ? login.signOut
-                  //     : () => loginBranch(
-                  //           context,
-                  //           login,
-                  //         ),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                      // login.isSignedIn ? Colors.red : Colors.green,
-                      Colors.red,
-                    ),
-                  ),
-                  // child: Text(login.isSignedIn ? 'Sign out' : 'Sign in'),
-                  child: const Text('Log In'),
-                ),
-                leading: const Icon(Icons.login),
-                title: const Text(
+              const ListTile(
+                trailing: LogoutButton(),
+                leading: Icon(Icons.login),
+                title: Text(
                   'Account',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),

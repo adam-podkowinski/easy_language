@@ -27,6 +27,11 @@ class DictionaryProvider extends ChangeNotifier {
 
   String searchPhrase = '';
 
+  void clearError() {
+    currentDictionaryFailure = null;
+    dictionariesFailure = null;
+  }
+
   int getLearningLength(Language language) {
     if (dictionaries.containsKey(language)) {
       return dictionaries[language]!

@@ -20,8 +20,6 @@ Future main() async {
 class EasyLanguage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    //Debug
-    SharedPreferences.setMockInitialValues({});
     return ScreenUtilInit(
       designSize: screenSize,
       builder: () => MultiProvider(

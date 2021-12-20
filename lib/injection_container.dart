@@ -39,9 +39,9 @@ Future registerSettings() async {
   );
 
   // Data sources
-  final settingsBox = await Hive.openBox(cachedUserId);
+  final userBox = await Hive.openBox(cachedUserId);
   sl.registerLazySingleton<SettingsLocalDataSource>(
-    () => UserLocalDataSourceImpl(userBox: settingsBox),
+    () => UserLocalDataSourceImpl(userBox: userBox),
   );
 
   sl.registerLazySingleton<SettingsRemoteDataSource>(

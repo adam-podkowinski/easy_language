@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/features/user/presentation/pages/authenticate_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -89,7 +90,7 @@ class IntroductionPage extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(
-                      MaterialPageRoute(
+                      CupertinoPageRoute(
                         builder: (_) => const AuthenticatePage(),
                       ),
                     );
@@ -111,7 +112,7 @@ class IntroductionPage extends StatelessWidget {
                 child: OutlinedButton(
                   onPressed: () {
                     Navigator.of(context).push(
-                      MaterialPageRoute(
+                      CupertinoPageRoute(
                         builder: (_) => const AuthenticatePage(
                           signUp: true,
                         ),

@@ -58,11 +58,10 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<Either<Failure, User>> getUser() async {
     try {
-      if (_initial) {
-        _user = await localDataSource.getCachedUser();
-        await fetchUser();
-        _initial = false;
-      }
+      _initial = false;
+      _user = await localDataSource.getCachedUser();
+      Logger().i(_user);
+      await fetchUser();
       return loggedIn
           ? Right(_user!)
           : Left(UserUnauthenticatedFailure("couldn't get a user"));
@@ -82,12 +81,15 @@ class UserRepositoryImpl implements UserRepository {
 
     try {
       final newUser = await remoteDataSource.fetchUser();
+      Logger().i(newUser);
+      Logger().i(_user);
       if (newUser.updatedAt.isAfter(_user!.updatedAt)) {
         _user = newUser;
         localDataSource.cacheUser(_user!);
       }
       return Right(_user!);
-    } catch (_) {
+    } catch (e) {
+      Logger().e(e);
       return Left(UserGetFailure());
     }
   }
@@ -118,6 +120,7 @@ class UserRepositoryImpl implements UserRepository {
       final Map bodyMap = cast(jsonDecode(response.body));
 
       if (!response.ok) {
+        Logger().e(response.body);
         Logger().e(response.statusCode);
         return Left(
           UserUnauthenticatedFailure(
@@ -127,6 +130,8 @@ class UserRepositoryImpl implements UserRepository {
       }
 
       _user = UserModel.fromMap(bodyMap);
+      localDataSource.cacheUser(_user!);
+
       return Right(_user!);
     } catch (e) {
       Logger().e(e);
@@ -146,6 +151,7 @@ class UserRepositoryImpl implements UserRepository {
       final Map bodyMap = cast(jsonDecode(response.body));
 
       if (!response.ok) {
+        Logger().e(response.body);
         Logger().e(response.statusCode);
         return Left(
           UserUnauthenticatedFailure(
@@ -155,10 +161,50 @@ class UserRepositoryImpl implements UserRepository {
       }
 
       _user = UserModel.fromMap(bodyMap);
+      localDataSource.cacheUser(_user!);
+
       return Right(_user!);
     } catch (e) {
       Logger().e(e);
       return Left(UserUnauthenticatedFailure("Couldn't register"));
+    }
+  }
+
+  @override
+  Future<Failure?> logout() async {
+    if (!loggedIn) {
+      return UserUnauthenticatedFailure('user not logged in');
+    }
+
+    try {
+      final String? token = _user?.token;
+
+      _user = null;
+
+      localDataSource.clearUser();
+
+      final response = await http.post(
+        Uri.parse('$api/logout'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${token}'
+        },
+      );
+
+      final Map bodyMap = cast(jsonDecode(response.body));
+
+      if (!response.ok) {
+        Logger().e(response.body);
+        Logger().e(response.statusCode);
+        return UserUnauthenticatedFailure(
+          "Couldn't logout: ${bodyMap['message']}",
+        );
+      }
+
+      return null;
+    } catch (e) {
+      Logger().e(e);
+      return UserUnauthenticatedFailure("Couldn't register");
     }
   }
 }
