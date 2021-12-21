@@ -36,7 +36,8 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
     }
 
     try {
-      final Language flashcardLang = _flashcard?.wordLanguage ?? dictionary.language;
+      final Language flashcardLang =
+          _flashcard?.wordLanguage ?? dictionary.language;
       int flashcardIndex = 0;
       bool isTurned = _flashcard?.isTurned ?? false;
 
@@ -64,8 +65,7 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
       }
 
       // If we go to the end of a word list we want to start over
-      if ((dictionary.words.length) <=
-          flashcardIndex) {
+      if ((dictionary.words.length) <= flashcardIndex) {
         flashcardIndex = 0;
       }
 

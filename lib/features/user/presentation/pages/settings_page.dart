@@ -16,7 +16,6 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final login = context.watch<LoginProvider>();
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -26,6 +25,8 @@ class SettingsPage extends StatelessWidget {
         body: Container(
           padding: EdgeInsets.symmetric(horizontal: 10.r),
           margin: EdgeInsets.symmetric(horizontal: 20.r),
+          clipBehavior: Clip.antiAlias,
+          height: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.vertical(
               top: Radius.circular(30.r),
@@ -34,168 +35,170 @@ class SettingsPage extends StatelessWidget {
                   0.1,
                 ),
           ),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 10.h,
-              ),
-              const ListTile(
-                trailing: ThemePicker(),
-                leading: Icon(Icons.dark_mode),
-                title: Text(
-                  'Theme',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 10.h,
                 ),
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-              Divider(
-                color: Theme.of(context).primaryColor,
-                height: 1,
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-              ListTile(
-                trailing: ElevatedButton(
-                  onPressed: () => showLanguagePickerDialog(
-                    context,
-                    (Language languagePicked) {
-                      context.read<UserProvider>().editUser(
-                        {
-                          User.nativeLanguageId: languagePicked.isoCode,
-                        },
-                      );
-                    },
-                    Languages.defaultLanguages,
-                  ),
-                  child: Text(
-                    context.watch<UserProvider>().user?.nativeLanguage.name ??
-                        'no user',
+                const ListTile(
+                  trailing: ThemePicker(),
+                  leading: Icon(Icons.dark_mode),
+                  title: Text(
+                    'Theme',
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
-                leading: const Icon(Icons.translate),
-                title: const AutoSizeText(
-                  'Native Language',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                  maxLines: 2,
+                SizedBox(
+                  height: 10.h,
                 ),
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-              Divider(
-                color: Theme.of(context).primaryColor,
-                height: 1,
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-              ListTile(
-                trailing: ElevatedButton(
-                  onPressed:
-                      context.read<DictionaryProvider>().currentDictionary ==
-                              null
-                          ? null
-                          : () => showLanguagePickerDialog(
-                                context,
-                                (Language languagePicked) {
-                                  context
-                                      .read<DictionaryProvider>()
-                                      .changeCurrentDictionary(
-                                        context,
-                                        languagePicked,
-                                      );
-                                },
-                                context
-                                    .read<DictionaryProvider>()
-                                    .dictionaries
-                                    .keys
-                                    .toList(),
-                              ),
-                  child: Text(
-                    context
-                            .watch<DictionaryProvider>()
-                            .currentDictionary
-                            ?.language
-                            .name ??
-                        'None',
-                    style: TextStyle(
-                      color: context
-                                  .watch<DictionaryProvider>()
-                                  .currentDictionary ==
-                              null
-                          ? Theme.of(context)
-                              .colorScheme
-                              .onBackground
-                              .withOpacity(0.5)
-                          : null,
+                Divider(
+                  color: Theme.of(context).primaryColor,
+                  height: 1,
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                ListTile(
+                  trailing: ElevatedButton(
+                    onPressed: () => showLanguagePickerDialog(
+                      context,
+                      (Language languagePicked) {
+                        context.read<UserProvider>().editUser(
+                          {
+                            User.nativeLanguageId: languagePicked.isoCode,
+                          },
+                        );
+                      },
+                      Languages.defaultLanguages,
+                    ),
+                    child: Text(
+                      context.watch<UserProvider>().user?.nativeLanguage.name ??
+                          'no user',
                     ),
                   ),
-                ),
-                leading: const Icon(Icons.translate),
-                title: const AutoSizeText(
-                  'Learning',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                  maxLines: 2,
-                ),
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-              Divider(
-                color: Theme.of(context).primaryColor,
-                height: 1,
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-              ListTile(
-                trailing: ElevatedButton(
-                  onPressed: () => showAboutDialog(
-                    context: context,
-                    applicationName: 'Easy Language',
-                    applicationVersion: '1',
-                    applicationIcon: const Icon(Icons.info),
-                    applicationLegalese: '| Made by Adam Podkowinski |\n'
-                        '| Open source | \n'
-                        '| Source Code |\ngithub.com/adam-podkowinski/easy_language',
+                  leading: const Icon(Icons.translate),
+                  title: const AutoSizeText(
+                    'Native Language',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                    maxLines: 2,
                   ),
-                  child: const Text('About'),
                 ),
-                leading: const Icon(Icons.info),
-                title: const Text(
-                  'About app',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                SizedBox(
+                  height: 10.h,
                 ),
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-              Divider(
-                color: Theme.of(context).primaryColor,
-                height: 1,
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-              const ListTile(
-                trailing: LogoutButton(),
-                leading: Icon(Icons.login),
-                title: Text(
-                  'Account',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Divider(
+                  color: Theme.of(context).primaryColor,
+                  height: 1,
                 ),
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-              Divider(
-                color: Theme.of(context).primaryColor,
-                height: 1,
-              ),
-            ],
+                SizedBox(
+                  height: 10.h,
+                ),
+                ListTile(
+                  trailing: ElevatedButton(
+                    onPressed:
+                        context.read<DictionaryProvider>().currentDictionary ==
+                                null
+                            ? null
+                            : () => showLanguagePickerDialog(
+                                  context,
+                                  (Language languagePicked) {
+                                    context
+                                        .read<DictionaryProvider>()
+                                        .changeCurrentDictionary(
+                                          context,
+                                          languagePicked,
+                                        );
+                                  },
+                                  context
+                                      .read<DictionaryProvider>()
+                                      .dictionaries
+                                      .keys
+                                      .toList(),
+                                ),
+                    child: Text(
+                      context
+                              .watch<DictionaryProvider>()
+                              .currentDictionary
+                              ?.language
+                              .name ??
+                          'None',
+                      style: TextStyle(
+                        color: context
+                                    .watch<DictionaryProvider>()
+                                    .currentDictionary ==
+                                null
+                            ? Theme.of(context)
+                                .colorScheme
+                                .onBackground
+                                .withOpacity(0.5)
+                            : null,
+                      ),
+                    ),
+                  ),
+                  leading: const Icon(Icons.translate),
+                  title: const AutoSizeText(
+                    'Learning',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                    maxLines: 2,
+                  ),
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                Divider(
+                  color: Theme.of(context).primaryColor,
+                  height: 1,
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                ListTile(
+                  trailing: ElevatedButton(
+                    onPressed: () => showAboutDialog(
+                      context: context,
+                      applicationName: 'Easy Language',
+                      applicationVersion: '1',
+                      applicationIcon: const Icon(Icons.info),
+                      applicationLegalese: '| Made by Adam Podkowinski |\n'
+                          '| Open source | \n'
+                          '| Source Code |\ngithub.com/adam-podkowinski/easy_language',
+                    ),
+                    child: const Text('About'),
+                  ),
+                  leading: const Icon(Icons.info),
+                  title: const Text(
+                    'About app',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                Divider(
+                  color: Theme.of(context).primaryColor,
+                  height: 1,
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                const ListTile(
+                  trailing: LogoutButton(),
+                  leading: Icon(Icons.login),
+                  title: Text(
+                    'Account',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                Divider(
+                  color: Theme.of(context).primaryColor,
+                  height: 1,
+                ),
+              ],
+            ),
           ),
         ),
       ),

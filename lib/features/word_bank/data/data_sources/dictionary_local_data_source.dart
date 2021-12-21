@@ -38,9 +38,9 @@ class DictionaryLocalDataSourceImpl implements DictionaryLocalDataSource {
     throw UnimplementedError();
   }
 
- final Box wordBankBox;
+  final Box wordBankBox;
 
- DictionaryLocalDataSourceImpl({required this.wordBankBox});
+  DictionaryLocalDataSourceImpl({required this.wordBankBox});
 //
 //  @override
 //  Future cacheDictionaries(WordBankModel wordBankModel) async {

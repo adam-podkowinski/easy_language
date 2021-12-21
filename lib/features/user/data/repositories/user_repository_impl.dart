@@ -19,7 +19,7 @@ class UserRepositoryImpl implements UserRepository {
   bool get loggedIn => _user != null;
 
   final SettingsLocalDataSource localDataSource;
-  final SettingsRemoteDataSource remoteDataSource;
+  final UserRemoteDataSource remoteDataSource;
 
   UserRepositoryImpl({
     required this.localDataSource,
@@ -43,12 +43,12 @@ class UserRepositoryImpl implements UserRepository {
         return Left(UserUnauthenticatedFailure('user not logged in'));
       }
 
-      final newUser = _user!.copyWithMap(userMap);
-
-      _user = await remoteDataSource.editUser(newUser);
+      _user = await remoteDataSource.editUser(
+        userToEdit: _user!,
+        editMap: userMap,
+      );
 
       localDataSource.cacheUser(_user!);
-
       return Right(_user!);
     } catch (_) {
       return Left(UserCacheFailure());
@@ -187,7 +187,7 @@ class UserRepositoryImpl implements UserRepository {
         Uri.parse('$api/logout'),
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer ${token}'
+          'Authorization': 'Bearer $token'
         },
       );
 

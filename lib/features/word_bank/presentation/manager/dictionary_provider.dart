@@ -319,45 +319,6 @@ class DictionaryProvider extends ChangeNotifier {
     _finishMethod();
   }
 
-  //Future reorderWordList(
-  //  List<Word> newWordList, {
-  //  Language? language,
-  //}) async {
-  //  _prepareMethod();
-
-  //  final changeOnLang = language ?? currentDictionary;
-
-  //  if (changeOnLang == null) {
-  //    _finishMethod();
-  //    throw UnexpectedException();
-  //  }
-
-  //  dictionaries.dictionaries[changeOnLang] = newWordList;
-  //  final wordList = dictionaries.dictionaries[changeOnLang];
-
-  //  if (wordList == null) {
-  //    _finishMethod();
-  //    throw UnexpectedException();
-  //  }
-
-  //  final wordBankEither = await wordBankRepository.editWordsList(
-  //    languageFrom: changeOnLang,
-  //    newWordList: wordList,
-  //  );
-
-  //  wordBankEither.fold(
-  //    (l) {
-  //      if (l is WordBankFailure) {
-  //        wordBankFailure = l;
-  //        dictionaries = l.wordBank;
-  //      }
-  //    },
-  //    (r) => dictionaries = r,
-  //  );
-
-  //  _finishMethod();
-  //}
-
   Future fetchDictionaries() async {
     _prepareMethod();
 

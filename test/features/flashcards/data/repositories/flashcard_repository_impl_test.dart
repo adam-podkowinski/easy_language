@@ -30,7 +30,10 @@ void main() {
     );
     registerFallbackValue(
       FlashcardModel(
-          isTurned: false, wordIndex: 0, wordLanguage: Languages.polish,),
+        isTurned: false,
+        wordIndex: 0,
+        wordLanguage: Languages.polish,
+      ),
     );
   });
 
@@ -59,11 +62,13 @@ void main() {
   );
 
   group('getNextFlashcard', () {
-    final WordBankModel tWordBank = WordBankModel.fromMap(cast(
-      jsonDecode(
-        fixture('dictionary.json'),
+    final WordBankModel tWordBank = WordBankModel.fromMap(
+      cast(
+        jsonDecode(
+          fixture('dictionary.json'),
+        ),
       ),
-    ),);
+    );
 
     test(
       'should return a valid flashcard when there is one cached',
@@ -122,8 +127,10 @@ void main() {
           (_) => Future.value(),
         );
 
-        final result = await repository.getNextFlashcard(tWordBank,
-            language: Languages.polish,);
+        final result = await repository.getNextFlashcard(
+          tWordBank,
+          language: Languages.polish,
+        );
         expect(result, Right(tFlashcard));
 
         final secondResult = await repository.getNextFlashcard(tWordBank);

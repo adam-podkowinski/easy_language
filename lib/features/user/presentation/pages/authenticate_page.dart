@@ -38,12 +38,14 @@ class AuthenticatePage extends StatelessWidget {
       (value) => value.setBool(isStartupId, false),
     );
 
-    if (context.watch<UserProvider>().userFailure!= null) {
-      SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
-        showError(context, context.read<UserProvider>().userFailure.toString());
+    final failure = context.watch<UserProvider>().userFailure;
+
+    SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+      if (failure != null) {
+        showError(context, failure.toString());
         context.read<UserProvider>().clearError();
-      });
-    }
+      }
+    });
 
     return Scaffold(
       backgroundColor: primaryVariant,

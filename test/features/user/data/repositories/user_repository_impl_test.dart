@@ -40,7 +40,7 @@ void main() {
     userRepositoryImpl = UserRepositoryImpl(
       localDataSource:
           UserLocalDataSourceImpl(userBox: await Hive.openBox(cachedUserId)),
-      remoteDataSource: SettingsRemoteDataSourceImpl(),
+      remoteDataSource: UserRemoteDataSourceImpl(),
     );
   });
 

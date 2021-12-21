@@ -58,6 +58,7 @@ class UserProvider extends ChangeNotifier {
     final userEither = await userRepository.editUser(
       userMap: changedSettings,
     );
+
     userEither.fold(
       (l) {
         if (l is UserFailure) {

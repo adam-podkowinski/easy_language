@@ -150,8 +150,7 @@ class _WordBankPageState extends State<WordBankPage> {
             (lang) async => state.addLanguage(lang),
             Languages.defaultLanguages
                 .where(
-                  (element) =>
-                      !state.dictionaries.keys.contains(element),
+                  (element) => !state.dictionaries.keys.contains(element),
                 )
                 .toList(),
           );

@@ -44,8 +44,8 @@ Future registerSettings() async {
     () => UserLocalDataSourceImpl(userBox: userBox),
   );
 
-  sl.registerLazySingleton<SettingsRemoteDataSource>(
-    () => SettingsRemoteDataSourceImpl(),
+  sl.registerLazySingleton<UserRemoteDataSource>(
+    () => UserRemoteDataSourceImpl(),
   );
 }
 
