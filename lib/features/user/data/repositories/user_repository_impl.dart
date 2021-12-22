@@ -80,13 +80,13 @@ class UserRepositoryImpl implements UserRepository {
     }
 
     try {
-      final newUser = await remoteDataSource.fetchUser();
-      Logger().i(newUser);
-      Logger().i(_user);
+      final newUser = await remoteDataSource.fetchUser(userToFetch: _user!);
+
       if (newUser.updatedAt.isAfter(_user!.updatedAt)) {
         _user = newUser;
         localDataSource.cacheUser(_user!);
       }
+
       return Right(_user!);
     } catch (e) {
       Logger().e(e);

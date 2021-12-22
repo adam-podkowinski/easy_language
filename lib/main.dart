@@ -39,6 +39,9 @@ class EasyLanguage extends StatelessWidget {
             if (!snapshot.hasData) {
               return const LoadingApp();
             } else if (!state.loggedIn) {
+              if (state.loading) {
+                return const LoadingApp();
+              }
               final SharedPreferences? prefs = snapshot.data;
               return WelcomeApp(
                 showIntroduction: prefs?.getBool(isStartupId) ?? true,
