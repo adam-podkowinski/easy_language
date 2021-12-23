@@ -23,7 +23,7 @@ class DictionaryModel extends Dictionary {
       final Map data = cast(jsonMap['data']);
       final Map dictMap = cast(data[Dictionary.dictionaryIdId]);
       final Language lang = Language.fromIsoCode(cast(dictMap[languageId]));
-      final List wordsList = cast(data[Dictionary.wordsId]);
+      final List wordsList = cast(data[Dictionary.wordsId]) ?? [];
       final List<Word> words = wordsList
           .map(
             (e) => Word.fromMap(cast(e)),

@@ -2,40 +2,38 @@ import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/word.dart';
+import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/word_bank/domain/entities/dictionary.dart';
 import 'package:language_picker/languages.dart';
 
 abstract class DictionaryRepository {
-  Future<Either<Failure, Dictionaries>> addDictionary(Language language);
+  Future<Either<Failure, Dictionaries>> addDictionary(
+      User user, Language language);
 
-  Future<Either<Failure, Dictionaries>> addWord(Map wordMap);
+  Future<Either<Failure, Dictionaries>> addWord(User user, Map wordMap);
 
-  Future<Either<Failure, Dictionaries>> removeWord(Word wordToRemove);
+  Future<Either<Failure, Dictionaries>> removeWord(
+      User user, Word wordToRemove);
 
   Future<Either<Failure, Dictionaries>> editWord(
+    User user,
     int id,
-    Map newWordMap,
+    Map changedProperties,
   );
 
   Future<Either<Failure, Dictionaries>> removeDictionary(
+    User user,
     Language language,
   );
 
-  Future<Either<Failure, Dictionaries>> getDictionaries();
+  Future<Either<Failure, Dictionaries>> getDictionaries(User user);
 
-  Future<Either<Failure, Dictionaries>> fetchDictionariesRemotely();
+  Future<Either<Failure, Dictionary?>> getCurrentDictionary(User user);
 
-  Future<Either<Failure, Dictionary?>> getCurrentDictionary();
-
-  Future<Either<Failure, Dictionary?>> fetchCurrentDictionaryRemotely();
-
-  Future<List<Word>> fetchCurrentDictionaryWords();
+  Future<List<Word>> fetchCurrentDictionaryWords(User user);
 
   Future<Either<Failure, Dictionary>> changeCurrentDictionary(
+    User user,
     Language language,
   );
-
-  Future saveDictionaries();
-
-  Future saveCurrentDictionary();
 }

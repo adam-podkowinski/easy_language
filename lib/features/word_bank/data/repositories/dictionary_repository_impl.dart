@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/word.dart';
+import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/word_bank/data/data_sources/dictionary_local_data_source.dart';
 import 'package:easy_language/features/word_bank/data/data_sources/dictionary_remote_data_source.dart';
 import 'package:easy_language/features/word_bank/data/models/dictionary_model.dart';
@@ -11,11 +12,10 @@ import 'package:easy_language/features/word_bank/domain/entities/dictionary.dart
 import 'package:easy_language/features/word_bank/domain/repositories/dictionary_repository.dart';
 import 'package:http/http.dart' as http;
 import 'package:language_picker/languages.dart';
+import 'package:logger/logger.dart';
 
 class DictionaryRepositoryImpl implements DictionaryRepository {
-  bool _initialDictionaries = true;
-  bool _initialCurrentLanguage = true;
-  DictionariesModel _dictionaries = {};
+  final DictionariesModel _dictionaries = {};
   DictionaryModel? _currentDictionary;
 
   final DictionaryLocalDataSource localDataSource;
@@ -26,52 +26,51 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
     required this.remoteDataSource,
   });
 
-  Future _ensureWordBankInitialized() async {
-    if (_initialDictionaries) {
-      await getDictionaries();
-    }
-  }
-
-  Future _ensureCurrentLanguageInitialized() async {
-    if (_initialCurrentLanguage) {
-      await getCurrentDictionary();
-    }
-  }
-
   @override
-  Future<List<Word>> fetchCurrentDictionaryWords() {
-    return Future.value([]);
-  }
-
-  Future<DictionaryModel> addDictionaryRemote(Language language) async {
-    final response = await http.post(
-      Uri.parse('$api/dictionaries'),
-      body: {'language': language.isoCode},
-      headers: {
-        'Authorization': 'Bearer fxdChHFr3whvY4LwHTZHQ8GFslhBP3OcZlqH8cdV',
-        'Accept': 'application/json'
-      },
-    );
-
-    final Map dictJSON = cast(jsonDecode(response.body));
-
-    return DictionaryModel.fromMap(dictJSON);
-  }
-
-  @override
-  Future<Either<Failure, Dictionaries>> addDictionary(Language language) async {
+  Future<List<Word>> fetchCurrentDictionaryWords(User user) async {
     try {
-      await _ensureWordBankInitialized();
+      if (_currentDictionary == null) {
+        throw 'currentDictionary is null';
+      }
+      final response = await http.get(
+        Uri.parse('$api/dictionaries/${_currentDictionary!.id}/words'),
+        headers: {
+          'Authorization': 'Bearer ${user.token}',
+          'Accept': 'application/json',
+        },
+      );
 
-      if (_dictionaries.containsKey(language)) {
-        await changeCurrentDictionary(language);
-      } else {
-        _dictionaries[language] = await addDictionaryRemote(language);
-        await changeCurrentDictionary(language);
+      if (!response.ok) {
+        Logger().e(response.body);
+        throw response;
       }
 
-      localDataSource.cacheDictionaries(_dictionaries);
-      remoteDataSource.saveDictionaries(_dictionaries);
+      final Map dictMap = cast(jsonDecode(response.body));
+
+      final List wordListJSON = cast(dictMap['data']['words']);
+
+      final List<Word> wordList =
+          wordListJSON.map((e) => Word.fromMap(cast(e))).toList();
+
+      return wordList;
+    } catch (e) {
+      Logger().e(e);
+      return [];
+    }
+  }
+
+  @override
+  Future<Either<Failure, Dictionaries>> addDictionary(
+    User user,
+    Language language,
+  ) async {
+    try {
+      if (_dictionaries.containsKey(language)) {
+        await changeCurrentDictionary(user, language);
+      } else {
+        _dictionaries[language] = await _addDictionaryRemote(user, language);
+        await changeCurrentDictionary(user, language);
+      }
 
       return Right(_dictionaries);
     } catch (_) {
@@ -81,111 +80,84 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
   @override
   Future<Either<Failure, Dictionaries>> removeDictionary(
+    User user,
     Language language,
   ) async {
     try {
-      await _ensureWordBankInitialized();
-      if (_dictionaries[language] != null) {
+      final toRemove = _dictionaries[language];
+      if (toRemove != null) {
         _dictionaries.removeWhere((key, value) => key == language);
+        await http.delete(
+          Uri.parse('$api/dictionaries/${toRemove.id}'),
+          headers: {'Authorization': 'Bearer ${user.token}'},
+        );
       }
 
-      localDataSource.cacheDictionaries(_dictionaries);
-      remoteDataSource.saveDictionaries(_dictionaries);
-
       if (_dictionaries.isNotEmpty) {
-        await changeCurrentDictionary(_dictionaries.keys.first);
+        await changeCurrentDictionary(user, _dictionaries.keys.first);
       } else {
         _currentDictionary = null;
       }
 
       return Right(_dictionaries);
-    } catch (_) {
+    } catch (e) {
+      Logger().e(e);
       return Left(DictionariesCacheFailure(_dictionaries));
     }
   }
 
   @override
   Future<Either<Failure, Dictionary>> changeCurrentDictionary(
+    User user,
     Language language,
   ) async {
     try {
-      await _ensureCurrentLanguageInitialized();
-
       _currentDictionary = _dictionaries[language];
 
-      if (_currentDictionary?.words == null) {
-        _currentDictionary?.words.addAll(await fetchCurrentDictionaryWords());
+      if (_currentDictionary!.words.isEmpty) {
+        final words = await fetchCurrentDictionaryWords(user);
+
+        if (words.isNotEmpty) {
+          _currentDictionary?.words.clear();
+          _currentDictionary?.words.addAll(words);
+        }
       }
 
-      localDataSource.cacheCurrentDictionary(_currentDictionary);
-      remoteDataSource.saveCurrentDictionary(_currentDictionary!);
-    } catch (_) {
-      // we are sure current language is not null because we assign it previously
-      // with a non-nullable function argument
-      // and _ensureCurrentLanguageInitialized can't throw an error
+      await http.put(
+        Uri.parse('$api/user'),
+        headers: {'Authorization': 'Bearer ${user.token}'},
+        body: {User.currentDictionaryIdId: _currentDictionary!.id.toString()},
+      );
+    } catch (e) {
+      Logger().e(e);
       return Left(DictionaryCacheFailure(_currentDictionary));
     }
     return Right(_currentDictionary!);
   }
 
-  /// Edit word list of a word bank
-  /// You can change a language and a word list content
-  //@override
-  //Future<Either<Failure, Dictionaries>> editWordsList({
-  //  required Language languageFrom,
-  //  Language? languageTo,
-  //  List<Word>? newWordList,
-  //}) async {
-  //  try {
-  //    await _ensureWordBankInitialized();
-
-  //    // Make sure a word list that we want to change exists
-  //    if (_dictionaries.dictionaries[languageFrom] == null) {
-  //      return Left(WordBankCacheFailure(_dictionaries));
-  //    }
-
-  //    // Change words list content
-  //    if (newWordList != null) {
-  //      _dictionaries.dictionaries[languageFrom] = newWordList;
-  //    }
-
-  //    // Change language of a word list
-  //    if (languageTo != null) {
-  //      // If new language place in dictionary is null we have to create it
-  //      if (_dictionaries.dictionaries[languageTo] == null) {
-  //        _dictionaries.dictionaries[languageTo] =
-  //            _dictionaries.dictionaries[languageFrom]!;
-  //      }
-
-  //      // Otherwise we just append it (so old data from langaugeTo word list
-  //      // will not be erased
-  //      else {
-  //        _dictionaries.dictionaries[languageTo]!.addAll(
-  //          _dictionaries.dictionaries[languageFrom]!,
-  //        );
-  //      }
-  //      _dictionaries.dictionaries[languageFrom]!.clear();
-  //    }
-
-  //    localDataSource.cacheWordBank(_dictionaries);
-  //    remoteDataSource.saveWordBank(_dictionaries);
-  //  } catch (_) {
-  //    return Left(WordBankCacheFailure(_dictionaries));
-  //  }
-
-  //  return Right(_dictionaries);
-  //}
-
   @override
-  Future<Either<Failure, Dictionary?>> getCurrentDictionary() async {
+  Future<Either<Failure, Dictionary?>> getCurrentDictionary(User user) async {
     try {
-      if (_initialCurrentLanguage) {
-        final dbLang = await localDataSource.getLocalCurrentLanguage();
-        _currentDictionary = _dictionaries[dbLang];
-        _initialCurrentLanguage = false;
+      if (_dictionaries.isEmpty) {
+        throw DictionaryGetFailure(null);
       }
+      _currentDictionary = _dictionaries.values.firstWhere(
+        (dict) => dict.id == user.currentDictionaryId,
+        orElse: () {
+          _currentDictionary = _dictionaries.values.first;
+          http.put(
+            Uri.parse('$api/user'),
+            headers: {'Authorization': 'Bearer ${user.token}'},
+            body: {
+              User.currentDictionaryIdId: _currentDictionary!.id.toString()
+            },
+          );
+          return _currentDictionary!;
+        },
+      );
+
+      await changeCurrentDictionary(user, _currentDictionary!.language);
     } catch (_) {
-      _initialCurrentLanguage = false;
       return Left(DictionaryGetFailure(_currentDictionary));
     }
 
@@ -193,14 +165,29 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   }
 
   @override
-  Future<Either<Failure, Dictionaries>> getDictionaries() async {
+  Future<Either<Failure, Dictionaries>> getDictionaries(User user) async {
     try {
-      if (_initialDictionaries) {
-        _dictionaries = await localDataSource.getLocalWordBank();
-        _initialDictionaries = false;
+      final response = await http.get(
+        Uri.parse('$api/dictionaries'),
+        headers: {'Authorization': 'Bearer ${user.token}'},
+      );
+
+      if (!response.ok) {
+        return Left(DictionariesGetFailure(_dictionaries));
       }
+
+      final List dicts = cast(jsonDecode(response.body));
+
+      for (final dict in dicts) {
+        final dictionary = DictionaryModel.fromMap({
+          'data': {'dictionary': dict}
+        });
+
+        _dictionaries[dictionary.language] = dictionary;
+      }
+
+      localDataSource.cacheDictionaries(_dictionaries);
     } catch (_) {
-      _initialDictionaries = false;
       return Left(DictionariesGetFailure(_dictionaries));
     }
 
@@ -208,75 +195,83 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   }
 
   @override
-  Future<Either<Failure, Dictionaries>> fetchDictionariesRemotely() async {
+  Future<Either<Failure, Dictionaries>> addWord(User user, Map wordMap) async {
     try {
-      _dictionaries = await remoteDataSource.fetchDictionaries();
-      localDataSource.cacheDictionaries(_dictionaries);
-      _initialDictionaries = false;
-      return Right(_dictionaries);
-    } catch (_) {
-      _initialDictionaries = false;
-      _dictionaries = {};
-      localDataSource.cacheDictionaries(_dictionaries);
-      return Left(DictionariesGetFailure(_dictionaries));
-    }
-  }
-
-  @override
-  Future<Either<Failure, Dictionary?>> fetchCurrentDictionaryRemotely() async {
-    try {
-      _currentDictionary = await remoteDataSource.fetchCurrentDictionary();
-      localDataSource.cacheCurrentDictionary(_currentDictionary);
-      _initialCurrentLanguage = false;
-      return Right(_currentDictionary);
-    } catch (_) {
-      _initialCurrentLanguage = false;
-      _currentDictionary = null;
-      localDataSource.cacheCurrentDictionary(_currentDictionary);
-      return Left(DictionaryGetFailure(_currentDictionary));
-    }
-  }
-
-  @override
-  Future saveCurrentDictionary() async {
-    try {
-      if (_currentDictionary != null) {
-        localDataSource.cacheCurrentDictionary(_currentDictionary);
-        await remoteDataSource.saveCurrentDictionary(_currentDictionary!);
+      if (_currentDictionary == null) {
+        throw 'no current dictionary';
       }
-    } catch (_) {
-      return;
-    }
-  }
+      if (_dictionaries[_currentDictionary!.language] == null) {
+        throw 'no dictionary';
+      }
 
-  @override
-  Future saveDictionaries() async {
-    try {
-      localDataSource.cacheDictionaries(_dictionaries);
-      await remoteDataSource.saveDictionaries(_dictionaries);
-    } catch (_) {
-      return;
-    }
-  }
+      final postMap = {
+        ...wordMap.map((key, value) => MapEntry(key, value.toString())),
+        'language': _currentDictionary!.language.isoCode,
+        'dictionary_id': _currentDictionary!.id.toString(),
+      };
 
-  @override
-  Future<Either<Failure, Dictionaries>> addWord(Map wordMap) {
-    // TODO: implement addWord
-    throw UnimplementedError();
+      final response = await http.post(
+        Uri.parse('$api/words'),
+        headers: {
+          'Authorization': 'Bearer ${user.token}',
+          'Accept': 'application/json',
+        },
+        body: postMap,
+      );
+
+      if (!response.ok) {
+        Logger().e(response.body);
+        throw response;
+      }
+
+      final Map newWordMap = cast(jsonDecode(response.body));
+
+      final newWord = Word.fromMap(newWordMap);
+
+      _dictionaries[_currentDictionary!.language]!.words.add(newWord);
+
+      return Right(_dictionaries);
+    } catch (e) {
+      Logger().e(e);
+      return Left(DictionariesCacheFailure(_dictionaries));
+    }
   }
 
   @override
   Future<Either<Failure, Dictionaries>> editWord(
+    User user,
     int id,
     Map newWordMap,
-  ) {
+  ) async {
     // TODO: implement editWord
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, Dictionaries>> removeWord(Word wordToRemove) {
+  Future<Either<Failure, Dictionaries>> removeWord(
+    User user,
+    Word wordToRemove,
+  ) async {
     // TODO: implement removeWord
     throw UnimplementedError();
+  }
+
+  // Helpers
+  Future<DictionaryModel> _addDictionaryRemote(
+    User user,
+    Language language,
+  ) async {
+    final response = await http.post(
+      Uri.parse('$api/dictionaries'),
+      body: {'language': language.isoCode},
+      headers: {
+        'Authorization': 'Bearer ${user.token}',
+        'Accept': 'application/json'
+      },
+    );
+
+    final Map dictJSON = cast(jsonDecode(response.body));
+
+    return DictionaryModel.fromMap(dictJSON);
   }
 }

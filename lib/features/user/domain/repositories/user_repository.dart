@@ -14,6 +14,4 @@ abstract class UserRepository {
   Future<Either<Failure, User>> register({required Map formMap});
 
   Future<Failure?> logout();
-
-  Future cacheUser();
 }

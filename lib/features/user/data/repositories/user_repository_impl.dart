@@ -60,7 +60,6 @@ class UserRepositoryImpl implements UserRepository {
     try {
       _initial = false;
       _user = await localDataSource.getCachedUser();
-      Logger().i(_user);
       await fetchUser();
       return loggedIn
           ? Right(_user!)
@@ -91,20 +90,6 @@ class UserRepositoryImpl implements UserRepository {
     } catch (e) {
       Logger().e(e);
       return Left(UserGetFailure());
-    }
-  }
-
-  @override
-  Future<Either<Failure, User>> cacheUser() async {
-    if (!loggedIn) {
-      return Left(UserUnauthenticatedFailure("user not logged in"));
-    }
-
-    try {
-      localDataSource.cacheUser(_user!);
-      return Right(_user!);
-    } catch (_) {
-      return Left(UserCacheFailure());
     }
   }
 

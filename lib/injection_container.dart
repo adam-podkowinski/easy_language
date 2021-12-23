@@ -9,6 +9,7 @@ import 'package:easy_language/features/flashcard/presentation/manager/flashcard_
 import 'package:easy_language/features/user/data/data_sources/user_local_data_source.dart';
 import 'package:easy_language/features/user/data/data_sources/user_remote_data_source.dart';
 import 'package:easy_language/features/user/data/repositories/user_repository_impl.dart';
+import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/user/domain/repositories/user_repository.dart';
 import 'package:easy_language/features/user/presentation/manager/user_provider.dart';
 import 'package:easy_language/features/word_bank/data/data_sources/dictionary_local_data_source.dart';
@@ -22,7 +23,7 @@ import 'package:path_provider/path_provider.dart';
 
 final sl = GetIt.instance;
 
-Future registerSettings() async {
+Future registerUser() async {
   // Provider
   sl.registerLazySingleton(
     () => UserProvider(
@@ -113,7 +114,7 @@ Future init() async {
   Hive.init(dir.path);
 
   // Features
-  await registerSettings();
+  await registerUser();
   await registerWordBank();
   await registerFlashcard();
 }

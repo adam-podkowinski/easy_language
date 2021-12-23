@@ -3,6 +3,7 @@ import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/presentation/styles.dart';
 import 'package:easy_language/features/flashcard/presentation/manager/flashcard_provider.dart';
 import 'package:easy_language/features/flashcard/presentation/pages/flashcard_page.dart';
+import 'package:easy_language/features/user/presentation/manager/user_provider.dart';
 import 'package:easy_language/features/user/presentation/pages/settings_page.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
 import 'package:easy_language/features/word_bank/presentation/pages/word_bank_page.dart';
@@ -27,7 +28,7 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider<DictionaryProvider>(
           create: (context) {
             final provider = sl<DictionaryProvider>();
-            provider.initDictionaryProvider();
+            provider.initDictionaryProvider(context.read<UserProvider>().user!);
             return provider;
           },
         ),

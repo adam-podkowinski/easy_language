@@ -59,11 +59,6 @@ class WordsInDictionaryWidget extends StatelessWidget {
               items: items,
               areItemsTheSame: (a, b) => a == b,
               onReorderFinished: (_, __, ___, ____) {},
-              // onReorderFinished: !searching
-              //     ? (item, from, to, newItems) async {
-              //         await state.reorderWordList(newItems);
-              //       }
-              //     : (_, __, ___, ____) {},
               itemBuilder: (context, itemAnimation, item, index) {
                 return Reorderable(
                   key: ValueKey(item),
