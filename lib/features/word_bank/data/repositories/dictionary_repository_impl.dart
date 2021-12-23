@@ -228,7 +228,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
       final newWord = Word.fromMap(newWordMap);
 
-      _dictionaries[_currentDictionary!.language]!.words.add(newWord);
+      _dictionaries[_currentDictionary!.language]!.words.insert(0, newWord);
 
       return Right(_dictionaries);
     } catch (e) {

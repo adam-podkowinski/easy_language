@@ -55,19 +55,14 @@ class WordsInDictionaryWidget extends StatelessWidget {
                 maxLines: 1,
               ),
             )
-          : ImplicitlyAnimatedReorderableList<Word>(
+          : ImplicitlyAnimatedList<Word>(
               items: items,
               areItemsTheSame: (a, b) => a == b,
-              onReorderFinished: (_, __, ___, ____) {},
               itemBuilder: (context, itemAnimation, item, index) {
-                return Reorderable(
-                  key: ValueKey(item),
-                  builder: (context, dragAnimation, inDrag) => WordListItem(
-                    word: item,
-                    index: index,
-                    itemAnimation: itemAnimation,
-                    searching: searching,
-                  ),
+                return WordListItem(
+                  word: item,
+                  itemAnimation: itemAnimation,
+                  searching: searching,
                 );
               },
             ),
@@ -79,13 +74,11 @@ class WordListItem extends StatelessWidget {
   const WordListItem({
     Key? key,
     required this.word,
-    required this.index,
     required this.itemAnimation,
     required this.searching,
   }) : super(key: key);
 
   final Word word;
-  final int index;
   final Animation<double> itemAnimation;
   final bool searching;
 
@@ -96,63 +89,59 @@ class WordListItem extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Handle(
-          delay: const Duration(milliseconds: 150),
-          child: SizeFadeTransition(
-            curve: Curves.easeInOut,
-            sizeFraction: 0.7,
-            animation: itemAnimation,
-            child: Slidable(
-              endActionPane: ActionPane(
-                motion: const ScrollMotion(),
-                extentRatio: 0.3,
-                children: [
-                  SlidableAction(
-                    label: 'Delete',
-                    backgroundColor: Theme.of(context).errorColor,
-                    icon: Icons.delete,
-                    onPressed: (context) => _state.removeWord(
-                      word,
-                      searching: searching,
-                    ),
+        SizeFadeTransition(
+          curve: Curves.easeInOut,
+          sizeFraction: 0.7,
+          animation: itemAnimation,
+          child: Slidable(
+            endActionPane: ActionPane(
+              motion: const ScrollMotion(),
+              extentRatio: 0.3,
+              children: [
+                SlidableAction(
+                  label: 'Delete',
+                  backgroundColor: Theme.of(context).errorColor,
+                  icon: Icons.delete,
+                  onPressed: (context) => _state.removeWord(
+                    word,
+                    searching: searching,
                   ),
-                ],
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(8.w),
-                child: ListTile(
-                  title: Text(
-                    word.wordForeign,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(8.w),
+              child: ListTile(
+                title: Text(
+                  word.wordForeign,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary,
                   ),
-                  subtitle: Text(
-                    word.wordTranslation,
-                    style: TextStyle(
-                      color:
-                          Theme.of(context).colorScheme.onPrimary.withOpacity(
-                                0.8,
-                              ),
-                    ),
-                  ),
-                  trailing: InkWell(
-                    onTap: () {
-                      showWordDialog(
-                        context,
-                        editWordTitle,
-                        (newWord) => _state.editWord(
-                          word,
-                          newWord,
-                          searching: searching,
+                ),
+                subtitle: Text(
+                  word.wordTranslation,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary.withOpacity(
+                          0.8,
                         ),
-                        wordToEdit: word,
-                      );
-                    },
-                    child: Icon(
-                      Icons.edit,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
+                  ),
+                ),
+                trailing: InkWell(
+                  onTap: () {
+                    showWordDialog(
+                      context,
+                      editWordTitle,
+                      (newWord) => _state.editWord(
+                        word,
+                        newWord,
+                        searching: searching,
+                      ),
+                      wordToEdit: word,
+                    );
+                  },
+                  child: Icon(
+                    Icons.edit,
+                    color: Theme.of(context).colorScheme.onPrimary,
                   ),
                 ),
               ),

@@ -8,12 +8,16 @@ import 'package:language_picker/languages.dart';
 
 abstract class DictionaryRepository {
   Future<Either<Failure, Dictionaries>> addDictionary(
-      User user, Language language);
+    User user,
+    Language language,
+  );
 
   Future<Either<Failure, Dictionaries>> addWord(User user, Map wordMap);
 
   Future<Either<Failure, Dictionaries>> removeWord(
-      User user, Word wordToRemove);
+    User user,
+    Word wordToRemove,
+  );
 
   Future<Either<Failure, Dictionaries>> editWord(
     User user,

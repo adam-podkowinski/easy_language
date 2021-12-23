@@ -1,16 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:easy_language/core/error/exceptions.dart';
-import 'package:easy_language/features/user/data/data_sources/user_local_data_source.dart';
-import 'package:easy_language/features/user/data/models/user_model.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:language_picker/languages.dart';
 import 'package:mocktail/mocktail.dart';
-
-import '../../../../fixtures/fixture_reader.dart';
 
 class MockBox extends Mock implements Box {}
 
