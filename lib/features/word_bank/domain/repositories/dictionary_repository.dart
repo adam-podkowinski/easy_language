@@ -7,6 +7,8 @@ import 'package:easy_language/features/word_bank/domain/entities/dictionary.dart
 import 'package:language_picker/languages.dart';
 
 abstract class DictionaryRepository {
+  void logout();
+
   Future<Either<Failure, Dictionaries>> addDictionary(
     User user,
     Language language,

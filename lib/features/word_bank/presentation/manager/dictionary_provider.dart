@@ -78,6 +78,7 @@ class DictionaryProvider extends ChangeNotifier {
     loading = true;
     dictionariesFailure = null;
     currentDictionaryFailure = null;
+    notifyListeners();
   }
 
   void _finishMethod() {

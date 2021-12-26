@@ -61,12 +61,10 @@ class UserRepositoryImpl implements UserRepository {
       _initial = false;
       _user = await localDataSource.getCachedUser();
       await fetchUser();
-      return loggedIn
-          ? Right(_user!)
-          : Left(UserUnauthenticatedFailure("couldn't get a user"));
+      return loggedIn ? Right(_user!) : Left(UserGetFailure());
     } catch (_) {
       _initial = false;
-      return Left(UserUnauthenticatedFailure("couldn't get a user"));
+      return Left(UserGetFailure());
     }
   }
 

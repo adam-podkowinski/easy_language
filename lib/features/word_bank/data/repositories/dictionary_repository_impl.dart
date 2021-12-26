@@ -27,6 +27,12 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   });
 
   @override
+  void logout() {
+    _dictionaries.clear();
+    _currentDictionary = null;
+  }
+
+  @override
   Future<List<Word>> fetchCurrentDictionaryWords(User user) async {
     try {
       if (_currentDictionary == null) {

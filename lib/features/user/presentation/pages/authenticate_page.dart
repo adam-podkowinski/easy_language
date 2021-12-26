@@ -1,4 +1,5 @@
 import 'package:easy_language/core/constants.dart';
+import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/presentation/show_error.dart';
 import 'package:easy_language/core/presentation/styles.dart';
 import 'package:easy_language/features/user/presentation/manager/user_provider.dart';
@@ -41,7 +42,7 @@ class AuthenticatePage extends StatelessWidget {
     final failure = context.watch<UserProvider>().userFailure;
 
     SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
-      if (failure != null) {
+      if (failure != null && failure is UserUnauthenticatedFailure) {
         showError(context, failure.toString());
         context.read<UserProvider>().clearError();
       }

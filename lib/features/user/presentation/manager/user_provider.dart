@@ -2,6 +2,8 @@ import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/features/user/data/models/user_model.dart';
 import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/user/domain/repositories/user_repository.dart';
+import 'package:easy_language/features/word_bank/domain/repositories/dictionary_repository.dart';
+import 'package:easy_language/injection_container.dart';
 import 'package:flutter/material.dart';
 
 class UserProvider extends ChangeNotifier {
@@ -25,6 +27,7 @@ class UserProvider extends ChangeNotifier {
   void _prepareMethod() {
     loading = true;
     userFailure = null;
+    notifyListeners();
   }
 
   void _finishMethod() {
@@ -111,6 +114,8 @@ class UserProvider extends ChangeNotifier {
 
     final Failure? failure = await userRepository.logout();
     user = null;
+
+    sl<DictionaryRepository>().logout();
 
     if (failure is UserFailure) {
       userFailure = failure;
