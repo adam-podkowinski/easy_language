@@ -6,16 +6,25 @@ import 'package:easy_language/features/user/presentation/manager/user_provider.d
 import 'package:easy_language/features/user/presentation/widgets/logout_button.dart';
 import 'package:easy_language/features/user/presentation/widgets/theme_picker.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:language_picker/languages.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController apiController = TextEditingController(
+      text: baseURL,
+    );
+
+    final DictionaryProvider dictionaryState =
+        context.watch<DictionaryProvider>();
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -96,38 +105,23 @@ class SettingsPage extends StatelessWidget {
                 ),
                 ListTile(
                   trailing: ElevatedButton(
-                    onPressed:
-                        context.read<DictionaryProvider>().currentDictionary ==
-                                null
-                            ? null
-                            : () => showLanguagePickerDialog(
+                    onPressed: dictionaryState.currentDictionary == null
+                        ? null
+                        : () => showLanguagePickerDialog(
+                              context,
+                              (Language languagePicked) {
+                                dictionaryState.changeCurrentDictionary(
                                   context,
-                                  (Language languagePicked) {
-                                    context
-                                        .read<DictionaryProvider>()
-                                        .changeCurrentDictionary(
-                                          context,
-                                          languagePicked,
-                                        );
-                                  },
-                                  context
-                                      .read<DictionaryProvider>()
-                                      .dictionaries
-                                      .keys
-                                      .toList(),
-                                ),
+                                  languagePicked,
+                                );
+                              },
+                              dictionaryState.dictionaries.keys.toList(),
+                            ),
                     child: Text(
-                      context
-                              .watch<DictionaryProvider>()
-                              .currentDictionary
-                              ?.language
-                              .name ??
+                      dictionaryState.currentDictionary?.language.name ??
                           'None',
                       style: TextStyle(
-                        color: context
-                                    .watch<DictionaryProvider>()
-                                    .currentDictionary ==
-                                null
+                        color: dictionaryState.currentDictionary == null
                             ? Theme.of(context)
                                 .colorScheme
                                 .onBackground
@@ -197,6 +191,50 @@ class SettingsPage extends StatelessWidget {
                   color: Theme.of(context).primaryColor,
                   height: 1,
                 ),
+                if (kDebugMode)
+                  ListTile(
+                    trailing: IntrinsicWidth(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.done),
+                            onPressed: () async {
+                              if (apiController.value.text.isEmpty) {
+                                baseURL = defaultURL;
+                              } else {
+                                baseURL = apiController.value.text;
+                              }
+
+                              final prefs =
+                                  await SharedPreferences.getInstance();
+                              prefs.setString('baseURL', baseURL);
+                            },
+                          ),
+                          SizedBox(
+                            width: 0.25.sw,
+                            child: TextFormField(
+                              controller: apiController,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    leading: const Icon(Icons.api),
+                    title: const Text(
+                      'API address',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                if (kDebugMode)
+                  Divider(
+                    color: Theme.of(context).primaryColor,
+                    height: 1,
+                  ),
+                if (kDebugMode)
+                  SizedBox(
+                    height: 10.h,
+                  ),
               ],
             ),
           ),

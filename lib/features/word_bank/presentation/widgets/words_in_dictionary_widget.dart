@@ -96,7 +96,7 @@ class WordListItem extends StatelessWidget {
           child: Slidable(
             endActionPane: ActionPane(
               motion: const ScrollMotion(),
-              extentRatio: 0.3,
+              extentRatio: 0.25,
               children: [
                 SlidableAction(
                   label: 'Delete',
@@ -110,7 +110,7 @@ class WordListItem extends StatelessWidget {
               ],
             ),
             child: Padding(
-              padding: EdgeInsets.all(8.w),
+              padding: EdgeInsets.all(8.sp),
               child: ListTile(
                 title: Text(
                   word.wordForeign,
@@ -151,7 +151,7 @@ class WordListItem extends StatelessWidget {
         Divider(
           color: getSecondSheetColor(context),
           height: 1.h,
-          thickness: 1.w,
+          thickness: 1.sp,
         ),
       ],
     );

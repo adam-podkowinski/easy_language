@@ -46,9 +46,11 @@ class WordDialog extends StatefulWidget {
 }
 
 class _WordDialogState extends State<WordDialog> {
-  final _padding = 15.w;
+  final _padding = 20.sp;
 
-  final _space = 20.w;
+  final _space = 15.sp;
+
+  final _radius = 20.r;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -85,7 +87,7 @@ class _WordDialogState extends State<WordDialog> {
         title: Text(widget.title),
         contentPadding: EdgeInsets.all(_padding),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(_space),
+          borderRadius: BorderRadius.circular(_radius),
         ),
         children: [
           SizedBox(

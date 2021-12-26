@@ -13,55 +13,58 @@ class EasyLanguageDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double listSpacing = 12.h;
-    return Drawer(
-      elevation: 0,
-      child: ListView(
-        padding: EdgeInsets.all(40.w),
-        children: [
-          Text(
-            pageTitlesFromIds[pageId] ?? 'Word Bank',
-            style: Theme.of(context).textTheme.headline6,
-          ),
-          Divider(
-            height: 70.h,
-            thickness: 1,
-            color: Theme.of(context).primaryColor,
-          ),
-          DrawerListTile(
-            name: 'Word list',
-            isFocused: pageId == wordBankPageId,
-            leadingIconData: Icons.list,
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pushNamed(wordBankPageId);
-            },
-          ),
-          SizedBox(
-            height: listSpacing,
-          ),
-          DrawerListTile(
-            name: 'Flashcards',
-            isFocused: pageId == flashcardsPageId,
-            leadingIconData: Icons.dynamic_feed,
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pushNamed(flashcardsPageId);
-            },
-          ),
-          SizedBox(
-            height: listSpacing,
-          ),
-          DrawerListTile(
-            name: 'Settings',
-            isFocused: pageId == settingsPageId,
-            leadingIconData: Icons.settings,
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pushNamed(settingsPageId);
-            },
-          ),
-        ],
+    final double listSpacing = 14.w;
+    return ConstrainedBox(
+      constraints: BoxConstraints(minWidth: 0.5.sw),
+      child: Drawer(
+        elevation: 0,
+        child: ListView(
+          padding: EdgeInsets.all(40.sp),
+          children: [
+            Text(
+              pageTitlesFromIds[pageId] ?? 'Word Bank',
+              style: Theme.of(context).textTheme.headline6,
+            ),
+            Divider(
+              height: 70.h,
+              thickness: 1,
+              color: Theme.of(context).primaryColor,
+            ),
+            DrawerListTile(
+              name: 'Word list',
+              isFocused: pageId == wordBankPageId,
+              leadingIconData: Icons.list,
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(wordBankPageId);
+              },
+            ),
+            SizedBox(
+              height: listSpacing,
+            ),
+            DrawerListTile(
+              name: 'Flashcards',
+              isFocused: pageId == flashcardsPageId,
+              leadingIconData: Icons.dynamic_feed,
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(flashcardsPageId);
+              },
+            ),
+            SizedBox(
+              height: listSpacing,
+            ),
+            DrawerListTile(
+              name: 'Settings',
+              isFocused: pageId == settingsPageId,
+              leadingIconData: Icons.settings,
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(settingsPageId);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -91,12 +94,17 @@ class DrawerListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: AutoSizeText(
-        name,
-        maxLines: 1,
-        style: TextStyle(
-          color: isFocused ? Theme.of(context).colorScheme.onPrimary : null,
-          fontSize: 17,
+      title: FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: Alignment.centerLeft,
+        child: AutoSizeText(
+          name,
+          maxLines: 1,
+          style: Theme.of(context).textTheme.headline6!.copyWith(
+                fontWeight: FontWeight.w700,
+                color:
+                    isFocused ? Theme.of(context).colorScheme.onPrimary : null,
+              ),
         ),
       ),
       leading: Icon(
@@ -108,7 +116,7 @@ class DrawerListTile extends StatelessWidget {
       tileColor:
           isFocused ? Theme.of(context).primaryColor : Colors.transparent,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.w),
+        borderRadius: BorderRadius.circular(20.sp),
       ),
       onTap: isFocused ? null : onTap,
     );

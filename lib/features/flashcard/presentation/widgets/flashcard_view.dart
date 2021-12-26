@@ -69,7 +69,7 @@ class FlashcardView extends StatelessWidget {
           color: isTurned
               ? Colors.lightGreen
               : Theme.of(context).colorScheme.secondary,
-          elevation: 15.r,
+          elevation: 15.sp,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25.r),
           ),
@@ -79,7 +79,7 @@ class FlashcardView extends StatelessWidget {
               await flashcardProvider.turnCurrentFlashcard();
             },
             child: Padding(
-              padding: EdgeInsets.all(20.r),
+              padding: EdgeInsets.all(20.sp),
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 500),
                 child: Icon(
@@ -95,7 +95,7 @@ class FlashcardView extends StatelessWidget {
         ),
         Card(
           color: Theme.of(context).colorScheme.secondary,
-          elevation: 15.r,
+          elevation: 15.sp,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25.r),
           ),
@@ -103,7 +103,7 @@ class FlashcardView extends StatelessWidget {
           child: InkWell(
             onTap: nextFlashcard,
             child: Padding(
-              padding: EdgeInsets.all(20.r),
+              padding: EdgeInsets.all(20.sp),
               child: Icon(
                 Icons.arrow_forward,
                 color: Theme.of(context).colorScheme.onSecondary,
@@ -131,11 +131,11 @@ class FlashcardView extends StatelessWidget {
       },
       child: AnimatedContainer(
         height: 0.35.sh,
-        margin: EdgeInsets.symmetric(horizontal: 50.w),
+        margin: EdgeInsets.symmetric(horizontal: 50.sp),
         clipBehavior: Clip.hardEdge,
         curve: Curves.easeInOut,
         key: ValueKey(word),
-        padding: EdgeInsets.all(12.r),
+        padding: EdgeInsets.all(12.sp),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30.r),
           gradient: LinearGradient(
@@ -188,8 +188,8 @@ class FlashcardView extends StatelessWidget {
                 key: ValueKey<String>(value),
                 style: Theme.of(context).textTheme.headline6!.copyWith(
                       color: Theme.of(context).colorScheme.onPrimary,
-                      fontSize: 30,
-                      letterSpacing: 1,
+                      fontSize: 32.sp,
+                      letterSpacing: 1.sp,
                     ),
                 textAlign: TextAlign.center,
               ),

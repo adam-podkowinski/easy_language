@@ -18,7 +18,7 @@ class NoWordsInDictionaryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(10.w),
+      padding: EdgeInsets.all(10.sp),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

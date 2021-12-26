@@ -105,6 +105,7 @@ class UserProvider extends ChangeNotifier {
     _finishMethod();
   }
 
+  // TODO: logout should clear dictionaries and all other features
   Future logout() async {
     _prepareMethod();
 

@@ -18,8 +18,8 @@ class StatusWidget extends StatelessWidget {
     return Column(
       children: [
         Container(
-          width: 13.r,
-          height: 13.r,
+          width: 13.w,
+          height: 13.h,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: color,

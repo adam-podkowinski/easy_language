@@ -36,13 +36,14 @@ class EasyLanguage extends StatelessWidget {
           future: SharedPreferences.getInstance(),
           builder: (context, snapshot) {
             final state = context.watch<UserProvider>();
+            final SharedPreferences? prefs = snapshot.data;
+            baseURL = prefs?.getString('baseURL') ?? defaultURL;
             if (!snapshot.hasData) {
               return const LoadingApp();
             } else if (!state.loggedIn) {
               if (state.loading) {
                 return const LoadingApp();
               }
-              final SharedPreferences? prefs = snapshot.data;
               return WelcomeApp(
                 showIntroduction: prefs?.getBool(isStartupId) ?? true,
               );

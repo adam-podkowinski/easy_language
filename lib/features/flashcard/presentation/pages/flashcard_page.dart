@@ -66,7 +66,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          toolbarHeight: 75.r,
+          toolbarHeight: 75.h,
           title: Text(pageTitlesFromIds[flashcardsPageId] ?? 'Flashcards'),
         ),
         body: AnimatedSwitcher(

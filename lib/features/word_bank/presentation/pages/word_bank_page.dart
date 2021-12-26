@@ -114,7 +114,7 @@ class _WordBankPageState extends State<WordBankPage> {
         ),
         drawer: const EasyLanguageDrawer(pageId: wordBankPageId),
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 11.w),
+          padding: EdgeInsets.symmetric(horizontal: 11.sp),
           child: Column(
             children: [
               Center(child: WordBankControls(radius: radius)),

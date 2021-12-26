@@ -1,5 +1,6 @@
 import 'package:easy_language/features/word_bank/data/models/dictionary_model.dart';
 import 'package:easy_language/features/word_bank/domain/entities/dictionary.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:language_picker/languages.dart';
@@ -12,8 +13,12 @@ extension IsOk on http.Response {
 
 const Size screenSize = Size(393, 781);
 
-const baseURL = 'http://localhost:8000';
-const api = 'http://localhost:8000/api/v1';
+String defaultURL = kDebugMode
+    ? 'http://localhost:8000'
+    : 'https://easy-language.herokuapp.com';
+String baseURL = defaultURL;
+
+String get api => '$baseURL/api/v1';
 
 const wordBankPageId = '/dictionary';
 const introductionPageId = '/introduction';
