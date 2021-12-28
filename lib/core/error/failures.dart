@@ -24,7 +24,7 @@ class UserUnauthenticatedFailure extends UserFailure {
   List<Object?> get props => [errorMessage];
 }
 
-abstract class DictionariesFailure extends Failure {
+class DictionariesFailure extends Failure {
   final Dictionaries dictionaries;
 
   DictionariesFailure(this.dictionaries);

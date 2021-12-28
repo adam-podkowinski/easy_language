@@ -1,4 +1,3 @@
-import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -133,12 +132,6 @@ class _WordDialogState extends State<WordDialog> {
                     Word.wordForeignId: foreignWordController.text.trim(),
                     Word.wordTranslationId:
                         wordTranslationController.text.trim(),
-                    updatedAtId: DateTime.now().toIso8601String(),
-                    idId: widget.wordToEdit?.id ?? '',
-                    Word.learningStatusId: widget.wordToEdit?.learningStatus ??
-                        LearningStatus.reviewing.statusToString,
-                    Word.dictionaryIdId: widget.wordToEdit?.dictionaryId ?? 0,
-                    Word.timesReviewedId: widget.wordToEdit?.timesReviewed ?? 0,
                   },
                 );
                 Navigator.of(context).pop();

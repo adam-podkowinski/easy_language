@@ -20,7 +20,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   @override
   Future<UserModel> fetchUser({required UserModel userToFetch}) async {
     try {
-      final response = await http.put(
+      final response = await http.get(
         Uri.parse('$api/user'),
         headers: {
           'Accept': 'application/json',

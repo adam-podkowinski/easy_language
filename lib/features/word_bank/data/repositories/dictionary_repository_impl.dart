@@ -211,7 +211,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
       }
 
       final postMap = {
-        ...wordMap.map((key, value) => MapEntry(key, value.toString())),
+        ...wordMap,
         'language': _currentDictionary!.language.isoCode,
         'dictionary_id': _currentDictionary!.id.toString(),
       };
@@ -221,8 +221,9 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
         headers: {
           'Authorization': 'Bearer ${user.token}',
           'Accept': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: postMap,
+        body: jsonEncode(postMap),
       );
 
       if (!response.ok) {
@@ -247,10 +248,43 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   Future<Either<Failure, Dictionaries>> editWord(
     User user,
     int id,
-    Map newWordMap,
+    Map editMap,
   ) async {
-    // TODO: implement editWord
-    throw UnimplementedError();
+    try {
+      if (_currentDictionary == null) {
+        throw Error();
+      }
+
+      final response = await http.put(
+        Uri.parse('$api/words/$id'),
+        headers: {
+          'Authorization': 'Bearer ${user.token}',
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode(editMap),
+      );
+
+      if (!response.ok) {
+        Logger().e(response.body);
+        throw response;
+      }
+
+      final Map newWordMap = cast(jsonDecode(response.body));
+
+      final Word newWord = Word.fromMap(newWordMap);
+
+      final index = _currentDictionary!.words.indexWhere(
+        (element) => element.id == newWord.id,
+      );
+
+      _currentDictionary!.words[index] = newWord;
+
+      return Right(_dictionaries);
+    } catch (e) {
+      Logger().e(e);
+      return Left(DictionariesFailure(_dictionaries));
+    }
   }
 
   @override
@@ -258,8 +292,33 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
     User user,
     Word wordToRemove,
   ) async {
-    // TODO: implement removeWord
-    throw UnimplementedError();
+    try {
+      if (_currentDictionary == null) {
+        throw Error();
+      }
+
+      final idToRemove = wordToRemove.id;
+
+      _currentDictionary!.words.remove(wordToRemove);
+
+      final response = await http.delete(
+        Uri.parse('$api/words/$idToRemove'),
+        headers: {
+          'Authorization': 'Bearer ${user.token}',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (!response.ok) {
+        Logger().e(response.body);
+        throw response;
+      }
+
+      return Right(_dictionaries);
+    } catch (e) {
+      Logger().e(e);
+      return Left(DictionariesFailure(_dictionaries));
+    }
   }
 
   // Helpers
