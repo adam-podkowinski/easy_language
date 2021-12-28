@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/presentation/drawer.dart';
@@ -49,79 +51,77 @@ class _WordBankPageState extends State<WordBankPage> {
   @override
   Widget build(BuildContext context) {
     final radius = 30.r;
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 75.r,
-          title: AnimatedSwitcher(
-            switchInCurve: Curves.easeInOut,
-            switchOutCurve: Curves.easeInOut,
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 75.r,
+        title: AnimatedSwitcher(
+          switchInCurve: Curves.easeInOut,
+          switchOutCurve: Curves.easeInOut,
+          duration: const Duration(milliseconds: 300),
+          child: _searching
+              ? TextFormField(
+                  controller: _controller,
+                  focusNode: _focus,
+                  decoration: InputDecoration(
+                    hintText: 'Search...',
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                    fillColor: Theme.of(context).colorScheme.secondary,
+                    focusColor: Theme.of(context).colorScheme.secondary,
+                    hoverColor: Theme.of(context).colorScheme.secondary,
+                    border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                  ),
+                )
+              : Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    pageTitlesFromIds[wordBankPageId] ?? 'Word Bank',
+                  ),
+                ),
+        ),
+        actions: [
+          Builder(
+            builder: (context) {
+              return _addWordWidget(context);
+            },
+          ),
+          AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             child: _searching
-                ? TextFormField(
-                    controller: _controller,
-                    focusNode: _focus,
-                    decoration: InputDecoration(
-                      hintText: 'Search...',
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                      fillColor: Theme.of(context).colorScheme.secondary,
-                      focusColor: Theme.of(context).colorScheme.secondary,
-                      hoverColor: Theme.of(context).colorScheme.secondary,
-                      border: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                    ),
+                ? IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      setState(() {
+                        _controller.clear();
+                        _focus.unfocus();
+                        _searching = false;
+                      });
+                    },
                   )
-                : Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      pageTitlesFromIds[wordBankPageId] ?? 'Word Bank',
-                    ),
+                : IconButton(
+                    icon: const Icon(Icons.search),
+                    onPressed: () {
+                      setState(() {
+                        _searching = true;
+                        _focus.requestFocus();
+                      });
+                    },
                   ),
           ),
-          actions: [
-            Builder(
-              builder: (context) {
-                return _addWordWidget(context);
-              },
-            ),
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              child: _searching
-                  ? IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        setState(() {
-                          _controller.clear();
-                          _focus.unfocus();
-                          _searching = false;
-                        });
-                      },
-                    )
-                  : IconButton(
-                      icon: const Icon(Icons.search),
-                      onPressed: () {
-                        setState(() {
-                          _searching = true;
-                          _focus.requestFocus();
-                        });
-                      },
-                    ),
-            ),
+        ],
+      ),
+      drawer: const EasyLanguageDrawer(pageId: wordBankPageId),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 11.sp),
+        child: Column(
+          children: [
+            Center(child: WordBankControls(radius: radius)),
+            SizedBox(height: 10.h),
+            WordBankSheet(radius: radius, controller: _controller),
           ],
-        ),
-        drawer: const EasyLanguageDrawer(pageId: wordBankPageId),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 11.sp),
-          child: Column(
-            children: [
-              Center(child: WordBankControls(radius: radius)),
-              SizedBox(height: 10.h),
-              WordBankSheet(radius: radius, controller: _controller),
-            ],
-          ),
         ),
       ),
     );

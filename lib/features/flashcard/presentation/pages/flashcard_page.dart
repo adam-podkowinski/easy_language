@@ -63,28 +63,26 @@ class _FlashcardPageState extends State<FlashcardPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 75.h,
-          title: Text(pageTitlesFromIds[flashcardsPageId] ?? 'Flashcards'),
-        ),
-        body: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 500),
-          child: !flashcardProvider.loading
-              ? wordToShow != null && flashcard != null
-                  ? FlashcardView(
-                      isTurned: isTurned,
-                      word: wordToShow!,
-                      flashcard: flashcard!,
-                      flashcardProvider: flashcardProvider,
-                      dictionaryProvider: wordBankProvider,
-                    )
-                  : const NoFlashcards()
-              : const Center(
-                  child: CustomCircularProgressIndicator(),
-                ),
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 75.h,
+        title: Text(pageTitlesFromIds[flashcardsPageId] ?? 'Flashcards'),
+      ),
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 500),
+        child: !flashcardProvider.loading
+            ? wordToShow != null && flashcard != null
+                ? FlashcardView(
+                    isTurned: isTurned,
+                    word: wordToShow!,
+                    flashcard: flashcard!,
+                    flashcardProvider: flashcardProvider,
+                    dictionaryProvider: wordBankProvider,
+                  )
+                : const NoFlashcards()
+            : const Center(
+                child: CustomCircularProgressIndicator(),
+              ),
       ),
     );
   }

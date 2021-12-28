@@ -14,56 +14,58 @@ class EasyLanguageDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double listSpacing = 14.w;
-    return ConstrainedBox(
-      constraints: BoxConstraints(minWidth: 0.5.sw),
-      child: Drawer(
-        elevation: 0,
-        child: ListView(
-          padding: EdgeInsets.all(40.sp),
-          children: [
-            Text(
-              pageTitlesFromIds[pageId] ?? 'Word Bank',
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            Divider(
-              height: 70.h,
-              thickness: 1,
-              color: Theme.of(context).primaryColor,
-            ),
-            DrawerListTile(
-              name: 'Word list',
-              isFocused: pageId == wordBankPageId,
-              leadingIconData: Icons.list,
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pushNamed(wordBankPageId);
-              },
-            ),
-            SizedBox(
-              height: listSpacing,
-            ),
-            DrawerListTile(
-              name: 'Flashcards',
-              isFocused: pageId == flashcardsPageId,
-              leadingIconData: Icons.dynamic_feed,
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pushNamed(flashcardsPageId);
-              },
-            ),
-            SizedBox(
-              height: listSpacing,
-            ),
-            DrawerListTile(
-              name: 'Settings',
-              isFocused: pageId == settingsPageId,
-              leadingIconData: Icons.settings,
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pushNamed(settingsPageId);
-              },
-            ),
-          ],
+    return SafeArea(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minWidth: 0.5.sw),
+        child: Drawer(
+          elevation: 0,
+          child: ListView(
+            padding: EdgeInsets.all(40.sp),
+            children: [
+              Text(
+                pageTitlesFromIds[pageId] ?? 'Word Bank',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              Divider(
+                height: 70.h,
+                thickness: 1,
+                color: Theme.of(context).primaryColor,
+              ),
+              DrawerListTile(
+                name: 'Word list',
+                isFocused: pageId == wordBankPageId,
+                leadingIconData: Icons.list,
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pushNamed(wordBankPageId);
+                },
+              ),
+              SizedBox(
+                height: listSpacing,
+              ),
+              DrawerListTile(
+                name: 'Flashcards',
+                isFocused: pageId == flashcardsPageId,
+                leadingIconData: Icons.dynamic_feed,
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pushNamed(flashcardsPageId);
+                },
+              ),
+              SizedBox(
+                height: listSpacing,
+              ),
+              DrawerListTile(
+                name: 'Settings',
+                isFocused: pageId == settingsPageId,
+                leadingIconData: Icons.settings,
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pushNamed(settingsPageId);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

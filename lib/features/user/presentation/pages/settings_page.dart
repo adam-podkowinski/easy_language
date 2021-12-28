@@ -25,218 +25,214 @@ class SettingsPage extends StatelessWidget {
     final DictionaryProvider dictionaryState =
         context.watch<DictionaryProvider>();
 
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 75.r,
-          title: Text(pageTitlesFromIds[settingsPageId] ?? 'Settings'),
-        ),
-        body: Container(
-          padding: EdgeInsets.symmetric(horizontal: 10.r),
-          margin: EdgeInsets.symmetric(horizontal: 20.r),
-          clipBehavior: Clip.antiAlias,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(30.r),
-            ),
-            color: Theme.of(context).colorScheme.onBackground.withOpacity(
-                  0.1,
-                ),
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 75.r,
+        title: Text(pageTitlesFromIds[settingsPageId] ?? 'Settings'),
+      ),
+      body: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.r),
+        margin: EdgeInsets.symmetric(horizontal: 20.r),
+        clipBehavior: Clip.antiAlias,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(30.r),
           ),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 10.h,
+          color: Theme.of(context).colorScheme.onBackground.withOpacity(
+                0.1,
+              ),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 10.h,
+              ),
+              const ListTile(
+                trailing: ThemePicker(),
+                leading: Icon(Icons.dark_mode),
+                title: Text(
+                  'Theme',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                const ListTile(
-                  trailing: ThemePicker(),
-                  leading: Icon(Icons.dark_mode),
-                  title: Text(
-                    'Theme',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              Divider(
+                color: Theme.of(context).primaryColor,
+                height: 1,
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              ListTile(
+                trailing: ElevatedButton(
+                  onPressed: () => showLanguagePickerDialog(
+                    context,
+                    (Language languagePicked) {
+                      context.read<UserProvider>().editUser(
+                        {
+                          User.nativeLanguageId: languagePicked.isoCode,
+                        },
+                      );
+                    },
+                    Languages.defaultLanguages,
+                  ),
+                  child: Text(
+                    context.watch<UserProvider>().user?.nativeLanguage.name ??
+                        'no user',
                   ),
                 ),
-                SizedBox(
-                  height: 10.h,
+                leading: const Icon(Icons.translate),
+                title: const AutoSizeText(
+                  'Native Language',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  maxLines: 2,
                 ),
-                Divider(
-                  color: Theme.of(context).primaryColor,
-                  height: 1,
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                ListTile(
-                  trailing: ElevatedButton(
-                    onPressed: () => showLanguagePickerDialog(
-                      context,
-                      (Language languagePicked) {
-                        context.read<UserProvider>().editUser(
-                          {
-                            User.nativeLanguageId: languagePicked.isoCode,
-                          },
-                        );
-                      },
-                      Languages.defaultLanguages,
-                    ),
-                    child: Text(
-                      context.watch<UserProvider>().user?.nativeLanguage.name ??
-                          'no user',
-                    ),
-                  ),
-                  leading: const Icon(Icons.translate),
-                  title: const AutoSizeText(
-                    'Native Language',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                    maxLines: 2,
-                  ),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Divider(
-                  color: Theme.of(context).primaryColor,
-                  height: 1,
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                ListTile(
-                  trailing: ElevatedButton(
-                    onPressed: dictionaryState.currentDictionary == null
-                        ? null
-                        : () => showLanguagePickerDialog(
-                              context,
-                              (Language languagePicked) {
-                                dictionaryState.changeCurrentDictionary(
-                                  context,
-                                  languagePicked,
-                                );
-                              },
-                              dictionaryState.dictionaries.keys.toList(),
-                            ),
-                    child: Text(
-                      dictionaryState.currentDictionary?.language.name ??
-                          'None',
-                      style: TextStyle(
-                        color: dictionaryState.currentDictionary == null
-                            ? Theme.of(context)
-                                .colorScheme
-                                .onBackground
-                                .withOpacity(0.5)
-                            : null,
-                      ),
-                    ),
-                  ),
-                  leading: const Icon(Icons.translate),
-                  title: const AutoSizeText(
-                    'Learning',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                    maxLines: 2,
-                  ),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Divider(
-                  color: Theme.of(context).primaryColor,
-                  height: 1,
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                ListTile(
-                  trailing: ElevatedButton(
-                    onPressed: () => showAboutDialog(
-                      context: context,
-                      applicationName: 'Easy Language',
-                      applicationVersion: '1',
-                      applicationIcon: const Icon(Icons.info),
-                      applicationLegalese: '| Made by Adam Podkowinski |\n'
-                          '| Open source | \n'
-                          '| Source Code |\ngithub.com/adam-podkowinski/easy_language',
-                    ),
-                    child: const Text('About'),
-                  ),
-                  leading: const Icon(Icons.info),
-                  title: const Text(
-                    'About app',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Divider(
-                  color: Theme.of(context).primaryColor,
-                  height: 1,
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                const ListTile(
-                  trailing: LogoutButton(),
-                  leading: Icon(Icons.login),
-                  title: Text(
-                    'Account',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Divider(
-                  color: Theme.of(context).primaryColor,
-                  height: 1,
-                ),
-                if (kDebugMode)
-                  ListTile(
-                    trailing: IntrinsicWidth(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.done),
-                            onPressed: () async {
-                              if (apiController.value.text.isEmpty) {
-                                baseURL = defaultURL;
-                              } else {
-                                baseURL = apiController.value.text;
-                              }
-
-                              final prefs =
-                                  await SharedPreferences.getInstance();
-                              prefs.setString('baseURL', baseURL);
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              Divider(
+                color: Theme.of(context).primaryColor,
+                height: 1,
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              ListTile(
+                trailing: ElevatedButton(
+                  onPressed: dictionaryState.currentDictionary == null
+                      ? null
+                      : () => showLanguagePickerDialog(
+                            context,
+                            (Language languagePicked) {
+                              dictionaryState.changeCurrentDictionary(
+                                context,
+                                languagePicked,
+                              );
                             },
+                            dictionaryState.dictionaries.keys.toList(),
                           ),
-                          SizedBox(
-                            width: 0.25.sw,
-                            child: TextFormField(
-                              controller: apiController,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    leading: const Icon(Icons.api),
-                    title: const Text(
-                      'API address',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                  child: Text(
+                    dictionaryState.currentDictionary?.language.name ?? 'None',
+                    style: TextStyle(
+                      color: dictionaryState.currentDictionary == null
+                          ? Theme.of(context)
+                              .colorScheme
+                              .onBackground
+                              .withOpacity(0.5)
+                          : null,
                     ),
                   ),
-                if (kDebugMode)
-                  Divider(
-                    color: Theme.of(context).primaryColor,
-                    height: 1,
+                ),
+                leading: const Icon(Icons.translate),
+                title: const AutoSizeText(
+                  'Learning',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  maxLines: 2,
+                ),
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              Divider(
+                color: Theme.of(context).primaryColor,
+                height: 1,
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              ListTile(
+                trailing: ElevatedButton(
+                  onPressed: () => showAboutDialog(
+                    context: context,
+                    applicationName: 'Easy Language',
+                    applicationVersion: '1',
+                    applicationIcon: const Icon(Icons.info),
+                    applicationLegalese: '| Made by Adam Podkowinski |\n'
+                        '| Open source | \n'
+                        '| Source Code |\ngithub.com/adam-podkowinski/easy_language',
                   ),
-                if (kDebugMode)
-                  SizedBox(
-                    height: 10.h,
+                  child: const Text('About'),
+                ),
+                leading: const Icon(Icons.info),
+                title: const Text(
+                  'About app',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              Divider(
+                color: Theme.of(context).primaryColor,
+                height: 1,
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              const ListTile(
+                trailing: LogoutButton(),
+                leading: Icon(Icons.login),
+                title: Text(
+                  'Account',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              Divider(
+                color: Theme.of(context).primaryColor,
+                height: 1,
+              ),
+              if (kDebugMode)
+                ListTile(
+                  trailing: IntrinsicWidth(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.done),
+                          onPressed: () async {
+                            if (apiController.value.text.isEmpty) {
+                              baseURL = defaultURL;
+                            } else {
+                              baseURL = apiController.value.text;
+                            }
+
+                            final prefs = await SharedPreferences.getInstance();
+                            prefs.setString('baseURL', baseURL);
+                          },
+                        ),
+                        SizedBox(
+                          width: 0.25.sw,
+                          child: TextFormField(
+                            controller: apiController,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-              ],
-            ),
+                  leading: const Icon(Icons.api),
+                  title: const Text(
+                    'API address',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              if (kDebugMode)
+                Divider(
+                  color: Theme.of(context).primaryColor,
+                  height: 1,
+                ),
+              if (kDebugMode)
+                SizedBox(
+                  height: 10.h,
+                ),
+            ],
           ),
         ),
       ),
