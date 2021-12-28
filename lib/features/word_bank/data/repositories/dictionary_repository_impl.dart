@@ -14,6 +14,7 @@ import 'package:http/http.dart' as http;
 import 'package:language_picker/languages.dart';
 import 'package:logger/logger.dart';
 
+// TODO: cache dictionaries
 class DictionaryRepositoryImpl implements DictionaryRepository {
   final DictionariesModel _dictionaries = {};
   DictionaryModel? _currentDictionary;
@@ -57,6 +58,8 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
       final List<Word> wordList =
           wordListJSON.map((e) => Word.fromMap(cast(e))).toList();
+
+      // TODO: set shouldFetchWords of a currentDictionary to false
 
       return wordList;
     } catch (e) {
@@ -120,6 +123,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
     try {
       _currentDictionary = _dictionaries[language];
 
+      // TODO: only fetch words when shouldFetchWords field is true
       if (_currentDictionary!.words.isEmpty) {
         final words = await fetchCurrentDictionaryWords(user);
 
@@ -185,6 +189,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
       final List dicts = cast(jsonDecode(response.body));
 
       for (final dict in dicts) {
+        // TODO: set shouldFetchWords field according to updated_at vs updated_at from cached dictionary
         final dictionary = DictionaryModel.fromMap({
           'data': {'dictionary': dict}
         });
@@ -331,7 +336,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
       body: {'language': language.isoCode},
       headers: {
         'Authorization': 'Bearer ${user.token}',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
       },
     );
 

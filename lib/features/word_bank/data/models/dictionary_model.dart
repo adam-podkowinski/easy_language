@@ -6,6 +6,7 @@ import 'package:language_picker/languages.dart';
 import 'package:logger/logger.dart';
 
 class DictionaryModel extends Dictionary {
+  // TODO: add a shouldFetchWords field
   const DictionaryModel({
     required int id,
     required List<Word> words,
@@ -64,4 +65,6 @@ class DictionaryModel extends Dictionary {
 
     return map;
   }
+
+  // TODO: implement copyWith method
 }
