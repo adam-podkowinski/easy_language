@@ -103,7 +103,6 @@ class DrawerListTile extends StatelessWidget {
           name,
           maxLines: 1,
           style: Theme.of(context).textTheme.headline6!.copyWith(
-                fontWeight: FontWeight.w700,
                 color:
                     isFocused ? Theme.of(context).colorScheme.onPrimary : null,
               ),

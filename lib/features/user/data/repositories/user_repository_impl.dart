@@ -28,7 +28,7 @@ class UserRepositoryImpl implements UserRepository {
 
   Future _ensureInitialized() async {
     if (_initial) {
-      await getUser();
+      await initUser();
     }
   }
 
@@ -56,7 +56,7 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, User>> getUser() async {
+  Future<Either<Failure, User>> initUser() async {
     try {
       _initial = false;
       _user = await localDataSource.getCachedUser();

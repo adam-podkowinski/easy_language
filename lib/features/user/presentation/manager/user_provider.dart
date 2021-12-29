@@ -42,7 +42,7 @@ class UserProvider extends ChangeNotifier {
   Future initUser() async {
     _prepareMethod();
 
-    final userEither = await userRepository.getUser();
+    final userEither = await userRepository.initUser();
     userEither.fold(
       (l) {
         if (l is UserFailure) {

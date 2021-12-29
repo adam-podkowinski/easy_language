@@ -5,7 +5,7 @@ import 'package:easy_language/features/user/domain/entities/user.dart';
 abstract class UserRepository {
   Future<Either<Failure, User>> editUser({required Map userMap});
 
-  Future<Either<Failure, User>> getUser();
+  Future<Either<Failure, User>> initUser();
 
   Future<Either<Failure, User>> fetchUser();
 
