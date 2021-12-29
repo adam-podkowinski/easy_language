@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/presentation/drawer.dart';

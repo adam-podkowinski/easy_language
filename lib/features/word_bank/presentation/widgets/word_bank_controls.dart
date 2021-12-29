@@ -25,8 +25,8 @@ class WordBankControls extends StatelessWidget {
       );
       final Widget continueButton = OutlinedButton(
         onPressed: () {
-          if (state.currentDictionary != null) {
-            state.removeLanguage(state.currentDictionary!.language);
+          if (state.currentLanguage != null) {
+            state.removeLanguage(state.currentLanguage!);
           }
           Navigator.of(context).pop();
         },
@@ -85,7 +85,7 @@ class WordBankControls extends StatelessWidget {
               ),
               hint: const Text(emptyString),
               elevation: 0,
-              value: state.currentDictionary?.language,
+              value: state.currentLanguage,
               onChanged: (value) =>
                   state.changeCurrentDictionary(context, value),
               iconEnabledColor: Theme.of(context).colorScheme.secondary,
@@ -104,7 +104,7 @@ class WordBankControls extends StatelessWidget {
                   .toList(),
             ),
             IconButton(
-              onPressed: state.currentDictionary != null
+              onPressed: state.currentLanguage != null
                   ? () => showRemoveLanguageConfirmationDialog(context)
                   : null,
               icon: Icon(

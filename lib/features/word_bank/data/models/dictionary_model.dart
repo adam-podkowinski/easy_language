@@ -6,12 +6,14 @@ import 'package:language_picker/languages.dart';
 import 'package:logger/logger.dart';
 
 class DictionaryModel extends Dictionary {
-  // TODO: add a shouldFetchWords field
+  final bool shouldFetchWords;
+
   const DictionaryModel({
     required int id,
     required List<Word> words,
     required Language language,
     required DateTime updatedAt,
+    required this.shouldFetchWords,
   }) : super(
           id: id,
           words: words,
@@ -19,7 +21,7 @@ class DictionaryModel extends Dictionary {
           updatedAt: updatedAt,
         );
 
-  factory DictionaryModel.fromMap(Map jsonMap) {
+  factory DictionaryModel.fromMap(Map jsonMap, {required bool shouldFetch}) {
     try {
       final Map data = cast(jsonMap['data']);
       final Map dictMap = cast(data[Dictionary.dictionaryIdId]);
@@ -41,6 +43,7 @@ class DictionaryModel extends Dictionary {
         id: id,
         language: lang,
         updatedAt: updatedAt,
+        shouldFetchWords: shouldFetch,
       );
     } catch (e) {
       Logger().e(e);
@@ -49,22 +52,28 @@ class DictionaryModel extends Dictionary {
   }
 
   Map wordsToMap() {
-    final Map map = {
+    return {
       "words": words.map((e) => e.toMap()).toList(),
     };
-
-    return map;
   }
 
   Map toMap() {
-    final Map map = {
-      idId: this.id,
-      languageId: language,
-      updatedAtId: updatedAt,
+    return {
+      'data': {
+        Dictionary.dictionaryIdId: {
+          idId: this.id,
+          languageId: language.isoCode,
+          updatedAtId: updatedAt.toIso8601String(),
+        },
+        ...wordsToMap(),
+      },
     };
-
-    return map;
   }
 
-  // TODO: implement copyWith method
+  DictionaryModel copyWith(Map map, {bool? shouldFetch}) {
+    return DictionaryModel.fromMap(
+      {...toMap(), ...map},
+      shouldFetch: shouldFetch ?? shouldFetchWords,
+    );
+  }
 }

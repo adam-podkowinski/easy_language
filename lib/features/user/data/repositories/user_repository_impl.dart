@@ -68,7 +68,6 @@ class UserRepositoryImpl implements UserRepository {
     }
   }
 
-  // TODO: FAILS on startup! 401 unauthenticated
   @override
   Future<Either<Failure, User>> fetchUser() async {
     await _ensureInitialized();

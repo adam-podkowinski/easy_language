@@ -17,7 +17,9 @@ import 'package:logger/logger.dart';
 // TODO: cache dictionaries
 class DictionaryRepositoryImpl implements DictionaryRepository {
   final DictionariesModel _dictionaries = {};
-  DictionaryModel? _currentDictionary;
+  Language? _currentLanguage;
+
+  DictionaryModel? get _currentDictionary => _dictionaries[_currentLanguage];
 
   final DictionaryLocalDataSource localDataSource;
   final DictionaryRemoteDataSource remoteDataSource;
@@ -30,7 +32,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   @override
   void logout() {
     _dictionaries.clear();
-    _currentDictionary = null;
+    _currentLanguage = null;
   }
 
   @override
@@ -39,6 +41,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
       if (_currentDictionary == null) {
         throw 'currentDictionary is null';
       }
+
       final response = await http.get(
         Uri.parse('$api/dictionaries/${_currentDictionary!.id}/words'),
         headers: {
@@ -59,7 +62,10 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
       final List<Word> wordList =
           wordListJSON.map((e) => Word.fromMap(cast(e))).toList();
 
-      // TODO: set shouldFetchWords of a currentDictionary to false
+      _dictionaries[_currentLanguage!] = _currentDictionary!.copyWith(
+        {},
+        shouldFetch: false,
+      );
 
       return wordList;
     } catch (e) {
@@ -105,7 +111,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
       if (_dictionaries.isNotEmpty) {
         await changeCurrentDictionary(user, _dictionaries.keys.first);
       } else {
-        _currentDictionary = null;
+        _currentLanguage = null;
       }
 
       return Right(_dictionaries);
@@ -121,16 +127,13 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
     Language language,
   ) async {
     try {
-      _currentDictionary = _dictionaries[language];
+      _currentLanguage = language;
 
-      // TODO: only fetch words when shouldFetchWords field is true
-      if (_currentDictionary!.words.isEmpty) {
+      if (_currentDictionary!.shouldFetchWords) {
         final words = await fetchCurrentDictionaryWords(user);
 
-        if (words.isNotEmpty) {
-          _currentDictionary?.words.clear();
-          _currentDictionary?.words.addAll(words);
-        }
+        _dictionaries[_currentLanguage]?.words.clear();
+        _dictionaries[_currentLanguage]?.words.addAll(words);
       }
 
       await http.put(
@@ -146,15 +149,16 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   }
 
   @override
-  Future<Either<Failure, Dictionary?>> getCurrentDictionary(User user) async {
+  Future<Either<Failure, Dictionary?>> initCurrentDictionary(User user) async {
     try {
       if (_dictionaries.isEmpty) {
         throw DictionaryGetFailure(null);
       }
-      _currentDictionary = _dictionaries.values.firstWhere(
+
+      _currentLanguage = _dictionaries.values.firstWhere(
         (dict) => dict.id == user.currentDictionaryId,
         orElse: () {
-          _currentDictionary = _dictionaries.values.first;
+          _currentLanguage = _dictionaries.values.first.language;
           http.put(
             Uri.parse('$api/user'),
             headers: {'Authorization': 'Bearer ${user.token}'},
@@ -164,9 +168,14 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
           );
           return _currentDictionary!;
         },
-      );
+      ).language;
 
-      await changeCurrentDictionary(user, _currentDictionary!.language);
+      if (_currentDictionary!.shouldFetchWords) {
+        final words = await fetchCurrentDictionaryWords(user);
+
+        _dictionaries[_currentLanguage]?.words.clear();
+        _dictionaries[_currentLanguage]?.words.addAll(words);
+      }
     } catch (_) {
       return Left(DictionaryGetFailure(_currentDictionary));
     }
@@ -175,7 +184,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   }
 
   @override
-  Future<Either<Failure, Dictionaries>> getDictionaries(User user) async {
+  Future<Either<Failure, Dictionaries>> initDictionaries(User user) async {
     try {
       final response = await http.get(
         Uri.parse('$api/dictionaries'),
@@ -188,17 +197,41 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
       final List dicts = cast(jsonDecode(response.body));
 
+      final DictionariesModel cachedDictionaries =
+          await localDataSource.getLocalDictionaries();
+
+      var shouldCache = false;
+
       for (final dict in dicts) {
-        // TODO: set shouldFetchWords field according to updated_at vs updated_at from cached dictionary
-        final dictionary = DictionaryModel.fromMap({
-          'data': {'dictionary': dict}
-        });
+        final Language dictLang = Language.fromIsoCode(cast(dict[languageId]));
+        final DateTime remoteUpdatedAt = DateTime.parse(
+          cast(dict[updatedAtId]),
+        );
+
+        final DictionaryModel? localDict = cachedDictionaries[dictLang];
+
+        final bool shouldFetch =
+            localDict?.updatedAt.isBefore(remoteUpdatedAt) ?? true;
+
+        if (shouldFetch) {
+          shouldCache = true;
+        }
+
+        final dictionary = DictionaryModel.fromMap(
+          {
+            'data': {'dictionary': dict},
+          },
+          shouldFetch: shouldFetch,
+        );
 
         _dictionaries[dictionary.language] = dictionary;
       }
 
-      localDataSource.cacheDictionaries(_dictionaries);
-    } catch (_) {
+      if (!shouldCache) {
+        localDataSource.cacheDictionaries(_dictionaries);
+      }
+    } catch (e) {
+      Logger().e(e);
       return Left(DictionariesGetFailure(_dictionaries));
     }
 
@@ -208,16 +241,16 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   @override
   Future<Either<Failure, Dictionaries>> addWord(User user, Map wordMap) async {
     try {
-      if (_currentDictionary == null) {
+      if (_currentLanguage == null) {
         throw 'no current dictionary';
       }
-      if (_dictionaries[_currentDictionary!.language] == null) {
+      if (_dictionaries[_currentLanguage!] == null) {
         throw 'no dictionary';
       }
 
       final postMap = {
         ...wordMap,
-        'language': _currentDictionary!.language.isoCode,
+        'language': _currentLanguage!.isoCode,
         'dictionary_id': _currentDictionary!.id.toString(),
       };
 
@@ -240,7 +273,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
       final newWord = Word.fromMap(newWordMap);
 
-      _dictionaries[_currentDictionary!.language]!.words.insert(0, newWord);
+      _dictionaries[_currentLanguage!]!.words.insert(0, newWord);
 
       return Right(_dictionaries);
     } catch (e) {
@@ -256,7 +289,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
     Map editMap,
   ) async {
     try {
-      if (_currentDictionary == null) {
+      if (_currentLanguage == null) {
         throw Error();
       }
 
@@ -298,7 +331,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
     Word wordToRemove,
   ) async {
     try {
-      if (_currentDictionary == null) {
+      if (_currentLanguage == null) {
         throw Error();
       }
 
@@ -342,6 +375,6 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
     final Map dictJSON = cast(jsonDecode(response.body));
 
-    return DictionaryModel.fromMap(dictJSON);
+    return DictionaryModel.fromMap(dictJSON, shouldFetch: false);
   }
 }

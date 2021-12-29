@@ -32,9 +32,9 @@ abstract class DictionaryRepository {
     Language language,
   );
 
-  Future<Either<Failure, Dictionaries>> getDictionaries(User user);
+  Future<Either<Failure, Dictionaries>> initDictionaries(User user);
 
-  Future<Either<Failure, Dictionary?>> getCurrentDictionary(User user);
+  Future<Either<Failure, Dictionary?>> initCurrentDictionary(User user);
 
   Future<List<Word>> fetchCurrentDictionaryWords(User user);
 

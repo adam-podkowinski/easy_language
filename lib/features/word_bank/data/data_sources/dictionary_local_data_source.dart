@@ -1,10 +1,13 @@
+import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/constants.dart';
+import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/features/word_bank/data/models/dictionary_model.dart';
 import 'package:hive/hive.dart';
 import 'package:language_picker/languages.dart';
+import 'package:logger/logger.dart';
 
 abstract class DictionaryLocalDataSource {
-  Future<DictionariesModel> getLocalWordBank();
+  Future<DictionariesModel> getLocalDictionaries();
 
   Future<Language> getLocalCurrentLanguage();
 
@@ -33,9 +36,26 @@ class DictionaryLocalDataSourceImpl implements DictionaryLocalDataSource {
   }
 
   @override
-  Future<DictionariesModel> getLocalWordBank() {
-    // TODO: implement getLocalWordBank
-    throw UnimplementedError();
+  Future<DictionariesModel> getLocalDictionaries() {
+    try {
+      if (wordBankBox.isEmpty) {
+        return Future.value({});
+      } else {
+        final dbMap = wordBankBox.toMap();
+        final DictionariesModel dictionaries = {};
+        for (final Map dictMap in dbMap['dictionaries']) {
+          final lang = Language.fromIsoCode(cast(dictMap[languageId]));
+          dictionaries[lang] = DictionaryModel.fromMap(
+            dictMap,
+            shouldFetch: false,
+          );
+        }
+        return Future.value(dictionaries);
+      }
+    } catch (e) {
+      Logger().e(e);
+      throw CacheException();
+    }
   }
 
   final Box wordBankBox;

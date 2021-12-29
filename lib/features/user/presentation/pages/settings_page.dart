@@ -104,7 +104,7 @@ class SettingsPage extends StatelessWidget {
               ),
               ListTile(
                 trailing: ElevatedButton(
-                  onPressed: dictionaryState.currentDictionary == null
+                  onPressed: dictionaryState.currentLanguage == null
                       ? null
                       : () => showLanguagePickerDialog(
                             context,
@@ -117,9 +117,9 @@ class SettingsPage extends StatelessWidget {
                             dictionaryState.dictionaries.keys.toList(),
                           ),
                   child: Text(
-                    dictionaryState.currentDictionary?.language.name ?? 'None',
+                    dictionaryState.currentLanguage?.name ?? 'None',
                     style: TextStyle(
-                      color: dictionaryState.currentDictionary == null
+                      color: dictionaryState.currentLanguage == null
                           ? Theme.of(context)
                               .colorScheme
                               .onBackground

@@ -33,7 +33,7 @@ void main() {
     ],
     language: Languages.english,
     updatedAt: tDateTime,
-    // createdAt: tDateTime,
+    shouldFetchWords: false,
   );
 
   group('fromMap', () {
@@ -42,7 +42,10 @@ void main() {
       () {
         final Map tMap = cast(jsonDecode(fixture('dictionary.json')));
 
-        final tNewDictionary = DictionaryModel.fromMap(tMap);
+        final tNewDictionary = DictionaryModel.fromMap(
+          tMap,
+          shouldFetch: false,
+        );
 
         expect(tNewDictionary, tDictionary);
       },
@@ -52,7 +55,7 @@ void main() {
       final Map tMap = {};
 
       expect(
-        () => DictionaryModel.fromMap(tMap),
+        () => DictionaryModel.fromMap(tMap, shouldFetch: false),
         throwsA(
           isInstanceOf<TypeError>(),
         ),
@@ -66,7 +69,10 @@ void main() {
       () {
         final Map tMap = cast(jsonDecode(fixture('dictionary.json')));
 
-        final tNewDictionary = DictionaryModel.fromMap(tMap);
+        final tNewDictionary = DictionaryModel.fromMap(
+          tMap,
+          shouldFetch: false,
+        );
 
         expect(tNewDictionary, tDictionary);
       },
