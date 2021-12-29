@@ -42,36 +42,6 @@ class IntroductionPage extends StatelessWidget {
         '$svgPrefix/learning_primary_clean.svg',
         'Translate new words and store them fast',
       ),
-      // _buildPage(
-      //   context,
-      //   'Light or dark?',
-      //   '$svgPrefix/dark_mode.svg',
-      //   'Choose your preferable theme for this application',
-      //   footer: const ThemePicker(),
-      // ),
-      // _buildPage(
-      //   context,
-      //   'Native language',
-      //   '$svgPrefix/languages.svg',
-      //   "What language do you translate to most often?",
-      //   footer: ElevatedButton(
-      //     onPressed: () => showLanguagePickerDialog(
-      //       context,
-      //       (Language language) {
-      //         context.read<UserProvider>().editUser(
-      //           {
-      //             User.nativeLanguageId: language.isoCode,
-      //           },
-      //         );
-      //       },
-      //       Languages.defaultLanguages,
-      //     ),
-      //     child: Text(
-      //       context.watch<UserProvider>().user?.nativeLanguage.name ??
-      //           'no user',
-      //     ),
-      //   ),
-      // ),
       _buildPage(
         context,
         'Log in or sign up',
