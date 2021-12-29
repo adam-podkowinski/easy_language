@@ -208,11 +208,13 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
         Logger().e(response.body);
       }
 
-      final List dicts = cast(jsonDecode(response.body));
+      final List remoteDicts = cast(jsonDecode(response.body));
 
       var shouldCache = false;
 
-      for (final dict in dicts) {
+      if (remoteDicts.isNotEmpty) _dictionaries = {};
+
+      for (final dict in remoteDicts) {
         final Language dictLang = Language.fromIsoCode(cast(dict[languageId]));
         final DateTime remoteUpdatedAt = DateTime.parse(
           cast(dict[updatedAtId]),
@@ -223,10 +225,6 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
         final bool shouldFetch =
             localDict?.updatedAt.isBefore(remoteUpdatedAt) ?? true;
 
-        if (shouldFetch) {
-          shouldCache = true;
-        }
-
         final editMap = {
           'data': {
             'dictionary': dict,
@@ -234,6 +232,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
         };
 
         if (shouldFetch) {
+          shouldCache = true;
           final dictionary = localDict == null
               ? DictionaryModel.fromMap(
                   editMap,
