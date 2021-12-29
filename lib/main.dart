@@ -27,7 +27,10 @@ class EasyLanguage extends StatelessWidget {
           ChangeNotifierProvider<UserProvider>(
             create: (context) {
               final user = di.sl<UserProvider>();
-              user.initUser();
+              SharedPreferences.getInstance().then((prefs) {
+                baseURL = prefs.getString('baseURL') ?? defaultURL;
+                user.initUser();
+              });
               return user;
             },
           ),
@@ -37,7 +40,6 @@ class EasyLanguage extends StatelessWidget {
           builder: (context, snapshot) {
             final state = context.watch<UserProvider>();
             final SharedPreferences? prefs = snapshot.data;
-            baseURL = prefs?.getString('baseURL') ?? defaultURL;
             if (!snapshot.hasData) {
               return const LoadingApp();
             } else if (!state.loggedIn) {
