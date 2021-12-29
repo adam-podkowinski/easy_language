@@ -38,6 +38,7 @@ const idId = 'id';
 const userIdId = 'user_id';
 const languageId = 'language';
 const updatedAtId = 'updated_at';
+const createdAtId = 'created_at';
 
 const Map<String, String> pageTitlesFromIds = {
   wordBankPageId: 'Word Bank',

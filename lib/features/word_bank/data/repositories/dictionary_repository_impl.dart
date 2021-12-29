@@ -14,9 +14,8 @@ import 'package:http/http.dart' as http;
 import 'package:language_picker/languages.dart';
 import 'package:logger/logger.dart';
 
-// TODO: cache dictionaries
 class DictionaryRepositoryImpl implements DictionaryRepository {
-  final DictionariesModel _dictionaries = {};
+  DictionariesModel _dictionaries = {};
   Language? _currentLanguage;
 
   DictionaryModel? get _currentDictionary => _dictionaries[_currentLanguage];
@@ -33,6 +32,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   void logout() {
     _dictionaries.clear();
     _currentLanguage = null;
+    localDataSource.logout();
   }
 
   @override
@@ -87,6 +87,8 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
         await changeCurrentDictionary(user, language);
       }
 
+      localDataSource.cacheDictionaries(_dictionaries);
+
       return Right(_dictionaries);
     } catch (_) {
       return Left(DictionariesCacheFailure(_dictionaries));
@@ -114,6 +116,8 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
         _currentLanguage = null;
       }
 
+      localDataSource.cacheDictionaries(_dictionaries);
+
       return Right(_dictionaries);
     } catch (e) {
       Logger().e(e);
@@ -134,9 +138,11 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
         _dictionaries[_currentLanguage]?.words.clear();
         _dictionaries[_currentLanguage]?.words.addAll(words);
+
+        localDataSource.cacheDictionaries(_dictionaries);
       }
 
-      await http.put(
+      http.put(
         Uri.parse('$api/user'),
         headers: {'Authorization': 'Bearer ${user.token}'},
         body: {User.currentDictionaryIdId: _currentDictionary!.id.toString()},
@@ -175,6 +181,8 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
         _dictionaries[_currentLanguage]?.words.clear();
         _dictionaries[_currentLanguage]?.words.addAll(words);
+
+        localDataSource.cacheDictionaries(_dictionaries);
       }
     } catch (_) {
       return Left(DictionaryGetFailure(_currentDictionary));
@@ -186,19 +194,21 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   @override
   Future<Either<Failure, Dictionaries>> initDictionaries(User user) async {
     try {
+      final DictionariesModel cachedDictionaries =
+          await localDataSource.getLocalDictionaries();
+
+      _dictionaries = cachedDictionaries;
+
       final response = await http.get(
         Uri.parse('$api/dictionaries'),
         headers: {'Authorization': 'Bearer ${user.token}'},
       );
 
       if (!response.ok) {
-        return Left(DictionariesGetFailure(_dictionaries));
+        Logger().e(response.body);
       }
 
       final List dicts = cast(jsonDecode(response.body));
-
-      final DictionariesModel cachedDictionaries =
-          await localDataSource.getLocalDictionaries();
 
       var shouldCache = false;
 
@@ -217,17 +227,26 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
           shouldCache = true;
         }
 
-        final dictionary = DictionaryModel.fromMap(
-          {
-            'data': {'dictionary': dict},
+        final editMap = {
+          'data': {
+            'dictionary': dict,
           },
-          shouldFetch: shouldFetch,
-        );
+        };
 
-        _dictionaries[dictionary.language] = dictionary;
+        if (shouldFetch) {
+          final dictionary = localDict == null
+              ? DictionaryModel.fromMap(
+                  editMap,
+                  shouldFetch: shouldFetch,
+                )
+              : localDict.copyWith(editMap, shouldFetch: shouldFetch);
+          _dictionaries[dictionary.language] = dictionary;
+        } else {
+          _dictionaries[localDict!.language] = localDict;
+        }
       }
 
-      if (!shouldCache) {
+      if (shouldCache) {
         localDataSource.cacheDictionaries(_dictionaries);
       }
     } catch (e) {
@@ -275,6 +294,8 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
       _dictionaries[_currentLanguage!]!.words.insert(0, newWord);
 
+      localDataSource.cacheDictionaries(_dictionaries);
+
       return Right(_dictionaries);
     } catch (e) {
       Logger().e(e);
@@ -318,6 +339,8 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
       _currentDictionary!.words[index] = newWord;
 
+      localDataSource.cacheDictionaries(_dictionaries);
+
       return Right(_dictionaries);
     } catch (e) {
       Logger().e(e);
@@ -351,6 +374,8 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
         Logger().e(response.body);
         throw response;
       }
+
+      localDataSource.cacheDictionaries(_dictionaries);
 
       return Right(_dictionaries);
     } catch (e) {

@@ -23,8 +23,8 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       final response = await http.get(
         Uri.parse('$api/user'),
         headers: {
+          'Authorization': 'Bearer ${userToFetch.token}',
           'Accept': 'application/json',
-          'Authorization': 'Bearer ${userToFetch.token}'
         },
       );
 

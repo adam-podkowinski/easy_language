@@ -209,6 +209,8 @@ class DictionaryProvider extends ChangeNotifier {
     BuildContext context,
     Map wordToAddMap,
   ) async {
+    _prepareMethod();
+
     if (currentLanguage != null) {
       if (currentDictionary != null) {
         final wordBankEither = await wordBankRepository.addWord(
@@ -267,6 +269,8 @@ class DictionaryProvider extends ChangeNotifier {
     Map newWordMap, {
     bool? searching,
   }) async {
+    _prepareMethod();
+
     final wordBankEither = await wordBankRepository.editWord(
       user,
       oldWord.id,
@@ -294,6 +298,8 @@ class DictionaryProvider extends ChangeNotifier {
     Word wordToRemove, {
     bool? searching,
   }) async {
+    _prepareMethod();
+
     final dictionariesEither = await wordBankRepository.removeWord(
       user,
       wordToRemove,

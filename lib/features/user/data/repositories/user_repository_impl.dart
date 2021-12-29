@@ -73,7 +73,7 @@ class UserRepositoryImpl implements UserRepository {
     await _ensureInitialized();
 
     if (!loggedIn) {
-      return Left(UserUnauthenticatedFailure("user not logged in"));
+      return Left(UserUnauthenticatedFailure('user not logged in'));
     }
 
     try {

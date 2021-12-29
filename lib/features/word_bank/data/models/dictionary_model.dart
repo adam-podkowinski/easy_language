@@ -51,9 +51,9 @@ class DictionaryModel extends Dictionary {
     }
   }
 
-  Map wordsToMap() {
+  Map _wordsToMap() {
     return {
-      "words": words.map((e) => e.toMap()).toList(),
+      'words': words.map((e) => e.toMap()).toList(),
     };
   }
 
@@ -65,7 +65,7 @@ class DictionaryModel extends Dictionary {
           languageId: language.isoCode,
           updatedAtId: updatedAt.toIso8601String(),
         },
-        ...wordsToMap(),
+        ..._wordsToMap(),
       },
     };
   }

@@ -7,6 +7,7 @@ import 'package:easy_language/features/word_bank/presentation/manager/dictionary
 import 'package:easy_language/features/word_bank/presentation/widgets/show_word_dialog.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_controls.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_sheet.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -129,13 +130,21 @@ class _WordBankPageState extends State<WordBankPage> {
     final state = context.watch<DictionaryProvider>();
     if (state.currentDictionaryFailure is DictionaryCacheFailure) {
       SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
-        showError(context, state.currentDictionaryFailure.toString());
+        if (kDebugMode) {
+          showError(context, state.currentDictionaryFailure.toString());
+        } else {
+          showError(context, 'Check internet connection');
+        }
         state.clearError();
       });
     }
     if (state.dictionariesFailure is DictionariesCacheFailure) {
       SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
-        showError(context, state.dictionariesFailure.toString());
+        if (kDebugMode) {
+          showError(context, state.dictionariesFailure.toString());
+        } else {
+          showError(context, 'Check internet connection');
+        }
         state.clearError();
       });
     }

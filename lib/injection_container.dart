@@ -68,7 +68,7 @@ Future registerWordBank() async {
   // Data sources
   final wordBankBox = await Hive.openBox(cachedWordBankId);
   sl.registerLazySingleton<DictionaryLocalDataSource>(
-    () => DictionaryLocalDataSourceImpl(wordBankBox: wordBankBox),
+    () => DictionaryLocalDataSourceImpl(dictionariesBox: wordBankBox),
   );
   sl.registerLazySingleton<DictionaryRemoteDataSource>(
     () => DictionaryRemoteDataSourceImpl(),
