@@ -13,10 +13,12 @@ void main() {
   final tWord = Word(
     wordForeign: 'gracias',
     wordTranslation: 'hello',
-    // createdAt: tDateTime,
     updatedAt: tDateTime,
     id: 1,
     dictionaryId: 1,
+    isTurned: false,
+    learningStatus: LearningStatus.reviewing,
+    timesReviewed: 0,
   );
 
   group('fromMap', () {
@@ -50,10 +52,12 @@ void main() {
           Word(
             wordForeign: 'szkola',
             wordTranslation: 'hello',
-            // createdAt: tDateTime,
             updatedAt: tDateTime,
             id: 1,
             dictionaryId: 1,
+            isTurned: false,
+            learningStatus: LearningStatus.reviewing,
+            timesReviewed: 0,
           ),
         );
 
@@ -68,10 +72,12 @@ void main() {
           Word(
             wordForeign: 'szkola',
             wordTranslation: 'school',
-            // createdAt: tDateTime,
             updatedAt: tDateTime,
             id: 1,
             dictionaryId: 1,
+            isTurned: false,
+            learningStatus: LearningStatus.reviewing,
+            timesReviewed: 0,
           ),
         );
       },

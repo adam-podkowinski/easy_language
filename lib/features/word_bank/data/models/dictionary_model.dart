@@ -55,30 +55,30 @@ class DictionaryModel extends Dictionary {
     }
   }
 
-  Map _wordsToMap() {
-    return {
-      'words': words.map((e) => e.toMap()).toList(),
-    };
-  }
-
-  Map toMap() {
-    return {
-      'data': {
-        Dictionary.dictionaryIdId: {
-          idId: this.id,
-          languageId: language.isoCode,
-          updatedAtId: updatedAt.toIso8601String(),
-          Dictionary.flashcardIdId: flashcardId,
+  Map toMap() => {
+        'data': {
+          Dictionary.dictionaryIdId: _dictMap(),
+          'words': _wordsList(),
         },
-        ..._wordsToMap(),
-      },
-    };
-  }
+      };
 
-  DictionaryModel copyWith(Map map, {bool? shouldFetch}) {
-    return DictionaryModel.fromMap(
-      {...toMap(), ...map},
-      shouldFetch: shouldFetch ?? shouldFetchWords,
-    );
-  }
+  DictionaryModel copyWith(Map dictMap, {bool? shouldFetch, Map? wordMap}) =>
+      DictionaryModel.fromMap(
+        {
+          'data': {
+            Dictionary.dictionaryIdId: {..._dictMap(), ...dictMap},
+            'words': wordMap ?? _wordsList(),
+          }
+        },
+        shouldFetch: shouldFetch ?? shouldFetchWords,
+      );
+
+  // Helper methods
+  List _wordsList() => words.map((e) => e.toMap()).toList();
+  Map _dictMap() => {
+        idId: this.id,
+        languageId: language.isoCode,
+        updatedAtId: updatedAt.toIso8601String(),
+        Dictionary.flashcardIdId: flashcardId,
+      };
 }

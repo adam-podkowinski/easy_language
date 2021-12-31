@@ -1,8 +1,8 @@
 {
-  "wordForeign": "gracias",
-  "wordTranslation": "hello",
-  "wordEditDate": "2021-07-25T19:59:50.709734",
-  "learningStatus": "reviewing",
-  "timesReviewed": 0,
+  "word_foreign": "gracias",
+  "word_translation": "hello",
+  "updated_at": "2021-07-25T19:59:50.709734",
+  "learning_status": "reviewing",
+  "times_reviewed": 0,
   "id": "id"
 }

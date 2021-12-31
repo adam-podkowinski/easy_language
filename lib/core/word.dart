@@ -74,8 +74,15 @@ class Word extends Equatable {
   static const isTurnedId = 'is_turned';
 
   factory Word.fromMap(Map map) {
-    final int isTurnedNum = cast(map[Word.isTurnedId]) ?? 0;
-    final isTurned = isTurnedNum == 1;
+    final isTurnedVar = map[Word.isTurnedId];
+    var isTurned = false;
+
+    if (isTurnedVar is num) {
+      isTurned = isTurnedVar == 1;
+    } else if (isTurnedVar is bool) {
+      isTurned = isTurnedVar;
+    }
+
     try {
       return Word(
         id: cast(map[idId]) ?? 0,

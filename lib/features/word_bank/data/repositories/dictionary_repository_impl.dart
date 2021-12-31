@@ -410,16 +410,46 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   }
 
   @override
-  Word? getCurrentFlashcard() {
-    final Word? word = _currentDictionary?.words.firstWhere(
-      (w) => w.id == _currentDictionary?.flashcardId,
+  Word? getCurrentFlashcard(User user) {
+    if (_currentDictionary == null ||
+        (_currentDictionary?.words.isEmpty ?? true)) {
+      return null;
+    }
+
+    final Word word = _currentDictionary!.words.firstWhere(
+      (w) => w.id == _currentDictionary!.flashcardId,
+      orElse: () {
+        final flashcard = _currentDictionary!.words.first;
+        _dictionaries[_currentLanguage!] = _currentDictionary!.copyWith({
+          Dictionary.flashcardIdId: flashcard.id,
+        });
+
+        // TODO: refactor to a helper method or remote data source
+        http
+            .put(
+          Uri.parse('$api/dictionaries/${_currentDictionary!.id}'),
+          headers: {
+            'Authorization': 'Bearer ${user.token}',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: jsonEncode({Dictionary.flashcardIdId: flashcard.id}),
+        )
+            .then(
+          (res) {
+            if (!res.ok) Logger().e(res.body);
+          },
+        );
+
+        return flashcard;
+      },
     );
 
     return word;
   }
 
   @override
-  Future<Word?> getNextFlashcard(User user) async {
+  Word? getNextFlashcard(User user) {
     if (_currentDictionary == null ||
         (_currentDictionary?.words.isEmpty ?? true)) {
       return null;
@@ -433,7 +463,19 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
       return null;
     }
 
-    if (currentFlashcardIndex >= _currentDictionary!.words.length) {
+    final Word oldFlashcard = _currentDictionary!.words[currentFlashcardIndex];
+
+    final newTimesReviewed = oldFlashcard.timesReviewed + 1;
+
+    editWord(user, oldFlashcard.id, {
+      Word.timesReviewedId: newTimesReviewed,
+      Word.learningStatusId: LearningStatusExtension.fromTimesReviewed(
+        newTimesReviewed,
+      ).statusToString,
+      Word.isTurnedId: false,
+    });
+
+    if (currentFlashcardIndex >= _currentDictionary!.words.length - 1) {
       currentFlashcardIndex = 0;
     } else {
       currentFlashcardIndex++;
@@ -442,11 +484,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
     final Word flashcard = _currentDictionary!.words[currentFlashcardIndex];
 
     _dictionaries[_currentDictionary!.language] = _currentDictionary!.copyWith({
-      'data': {
-        'dictionary': {
-          Dictionary.flashcardIdId: flashcard.id,
-        }
-      }
+      Dictionary.flashcardIdId: flashcard.id,
     });
 
     localDataSource.cacheDictionaries(_dictionaries);
@@ -478,7 +516,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
       return Left(FlashcardTurnFailure());
     }
 
-    final Word? currentFlashcard = getCurrentFlashcard();
+    final Word? currentFlashcard = getCurrentFlashcard(user);
 
     if (currentFlashcard == null) return Left(FlashcardTurnFailure());
 

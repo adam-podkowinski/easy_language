@@ -1,10 +1,13 @@
+import 'dart:async';
+
 import 'package:easy_language/core/word.dart';
+import 'package:easy_language/features/word_bank/domain/entities/dictionary.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/status_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class FlashcardView extends StatelessWidget {
+class FlashcardView extends StatefulWidget {
   const FlashcardView({
     Key? key,
     required this.isTurned,
@@ -16,34 +19,65 @@ class FlashcardView extends StatelessWidget {
   final Word flashcard;
   final DictionaryProvider state;
 
+  @override
+  State<FlashcardView> createState() => _FlashcardViewState();
+}
+
+class _FlashcardViewState extends State<FlashcardView> {
+  bool available = true;
+
+  String get value => widget.isTurned
+      ? widget.flashcard.wordTranslation
+      : widget.flashcard.wordForeign;
+
+  Dictionary get currentDictionary => widget.state.currentDictionary!;
+
   void nextFlashcard() {
-    state.getNextFlashcard();
+    widget.state.getNextFlashcard();
 
-    final newTimesReviewed = flashcard.timesReviewed + 1;
+    available = false;
 
-    state.editWord(
-      flashcard,
-      flashcard.copyWithMap({
-        Word.timesReviewedId: newTimesReviewed,
-        Word.learningStatusId: LearningStatusExtension.fromTimesReviewed(
-          newTimesReviewed,
-        ).statusToString,
-      }).toMap(),
+    Timer(
+      const Duration(seconds: 1),
+      () {
+        setState(() {
+          available = true;
+        });
+      },
     );
+
+    final newTimesReviewed = widget.flashcard.timesReviewed + 1;
+
+    widget.state.editWord(widget.flashcard, {
+      Word.timesReviewedId: newTimesReviewed,
+      Word.learningStatusId: LearningStatusExtension.fromTimesReviewed(
+        newTimesReviewed,
+      ).statusToString,
+      Word.isTurnedId: false,
+    });
+  }
+
+  Future turnFlashcard() async {
+    await widget.state.turnCurrentFlashcard();
+    setState(() {
+      available = false;
+    });
+    Timer(const Duration(milliseconds: 800), () {
+      setState(() {
+        available = true;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final value = isTurned ? flashcard.wordTranslation : flashcard.wordForeign;
-    final currentDictionary = state.currentDictionary!;
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         buildWordsLearningStatus(context),
         buildFlashcardBox(context, value),
         Text(
-          '${state.flashcardIndex ?? 0 + 1} '
+          '${(widget.state.flashcardIndex ?? 0) + 1} '
           '/ '
           '${currentDictionary.words.length}',
           style: Theme.of(context).textTheme.headline3,
@@ -58,24 +92,30 @@ class FlashcardView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Card(
-          color: isTurned
-              ? Colors.lightGreen
-              : Theme.of(context).colorScheme.secondary,
           elevation: 15.sp,
+          color: Colors.transparent,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25.r),
           ),
           clipBehavior: Clip.hardEdge,
-          child: InkWell(
-            onTap: () async {
-              await state.turnCurrentFlashcard();
-            },
-            child: Padding(
-              padding: EdgeInsets.all(20.sp),
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 500),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 250),
+            decoration: BoxDecoration(
+              color: available
+                  ? (widget.isTurned
+                      ? Colors.lightGreen
+                      : Theme.of(context).colorScheme.secondary)
+                  : Colors.grey,
+              borderRadius: BorderRadius.circular(
+                25.r,
+              ),
+            ),
+            child: InkWell(
+              onTap: available ? turnFlashcard : null,
+              child: Padding(
+                padding: EdgeInsets.all(20.sp),
                 child: Icon(
-                  isTurned ? Icons.visibility : Icons.visibility_off,
+                  widget.isTurned ? Icons.visibility : Icons.visibility_off,
                   color: Theme.of(context).colorScheme.onSecondary,
                 ),
               ),
@@ -86,19 +126,32 @@ class FlashcardView extends StatelessWidget {
           width: 20.w,
         ),
         Card(
-          color: Theme.of(context).colorScheme.secondary,
           elevation: 15.sp,
+          color: Colors.transparent,
+          clipBehavior: Clip.antiAlias,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25.r),
           ),
-          clipBehavior: Clip.hardEdge,
-          child: InkWell(
-            onTap: nextFlashcard,
-            child: Padding(
-              padding: EdgeInsets.all(20.sp),
-              child: Icon(
-                Icons.arrow_forward,
-                color: Theme.of(context).colorScheme.onSecondary,
+          child: AnimatedContainer(
+            decoration: BoxDecoration(
+              color: available
+                  ? Theme.of(context).colorScheme.secondary
+                  : Colors.grey,
+              borderRadius: BorderRadius.circular(
+                25.r,
+              ),
+            ),
+            clipBehavior: Clip.antiAlias,
+            duration: const Duration(milliseconds: 250),
+            child: InkWell(
+              onTap: available ? nextFlashcard : null,
+              enableFeedback: false,
+              child: Padding(
+                padding: EdgeInsets.all(20.sp),
+                child: Icon(
+                  Icons.arrow_forward,
+                  color: Theme.of(context).colorScheme.onSecondary,
+                ),
               ),
             ),
           ),
@@ -112,26 +165,24 @@ class FlashcardView extends StatelessWidget {
       duration: const Duration(milliseconds: 500),
       switchInCurve: Curves.easeInOut,
       switchOutCurve: Curves.easeInOut,
-      transitionBuilder: (ch, animation) {
-        return SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(-2.5, 0),
-            end: Offset.zero,
-          ).animate(animation),
-          child: ch,
-        );
-      },
+      transitionBuilder: (ch, animation) => SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(-2.5, 0),
+          end: Offset.zero,
+        ).animate(animation),
+        child: ch,
+      ),
       child: AnimatedContainer(
         height: 0.35.sh,
         margin: EdgeInsets.symmetric(horizontal: 50.sp),
         clipBehavior: Clip.hardEdge,
         curve: Curves.easeInOut,
-        key: ValueKey(flashcard),
+        key: ValueKey(widget.flashcard.id),
         padding: EdgeInsets.all(12.sp),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30.r),
           gradient: LinearGradient(
-            colors: isTurned
+            colors: widget.isTurned
                 ? [
                     Theme.of(context).primaryColor,
                     Theme.of(context).colorScheme.primaryVariant,
@@ -149,7 +200,7 @@ class FlashcardView extends StatelessWidget {
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           focusColor: Colors.transparent,
-          onTap: state.turnCurrentFlashcard,
+          onTap: available ? turnFlashcard : null,
           child: Center(
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 250),
@@ -196,20 +247,23 @@ class FlashcardView extends StatelessWidget {
       children: [
         StatusWidget(
           color: Theme.of(context).primaryColor,
-          numberString:
-              state.getLearningLength(state.currentLanguage!).toString(),
+          numberString: widget.state
+              .getLearningLength(widget.state.currentLanguage!)
+              .toString(),
           text: 'Learning',
         ),
         StatusWidget(
           color: Colors.grey,
-          numberString:
-              state.getReviewingLength(state.currentLanguage!).toString(),
+          numberString: widget.state
+              .getReviewingLength(widget.state.currentLanguage!)
+              .toString(),
           text: 'Reviewing',
         ),
         StatusWidget(
           color: Theme.of(context).colorScheme.secondary,
-          numberString:
-              state.getMasteredLength(state.currentLanguage!).toString(),
+          numberString: widget.state
+              .getMasteredLength(widget.state.currentLanguage!)
+              .toString(),
           text: 'Mastered',
         ),
       ],

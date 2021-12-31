@@ -13,22 +13,27 @@ void main() {
 
   final tDictionary = DictionaryModel(
     id: 1,
+    flashcardId: 1,
     words: [
       Word(
         wordForeign: 'gracias',
         wordTranslation: 'hello',
-        // createdAt: tDateTime,
         updatedAt: tDateTime,
         id: 1,
         dictionaryId: 1,
+        isTurned: false,
+        learningStatus: LearningStatus.reviewing,
+        timesReviewed: 0,
       ),
       Word(
         wordForeign: 'siema',
         wordTranslation: 'elo',
-        // createdAt: tDateTime,
         updatedAt: tDateTime,
         id: 2,
         dictionaryId: 1,
+        isTurned: false,
+        learningStatus: LearningStatus.reviewing,
+        timesReviewed: 0,
       ),
     ],
     language: Languages.english,

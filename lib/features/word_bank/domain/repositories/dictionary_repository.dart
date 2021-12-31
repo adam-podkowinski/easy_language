@@ -43,9 +43,9 @@ abstract class DictionaryRepository {
     Language language,
   );
 
-  Word? getCurrentFlashcard();
+  Word? getCurrentFlashcard(User user);
 
-  Future<Word?> getNextFlashcard(User user);
+  Word? getNextFlashcard(User user);
 
   Future<Either<Failure, Word>> turnCurrentFlashcard(User user);
 

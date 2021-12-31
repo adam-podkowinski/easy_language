@@ -271,7 +271,7 @@ class DictionaryProvider extends ChangeNotifier {
 
   Future editWord(
     Word oldWord,
-    Map newWordMap, {
+    Map changedMap, {
     bool? searching,
   }) async {
     _prepareMethod();
@@ -279,7 +279,7 @@ class DictionaryProvider extends ChangeNotifier {
     final wordBankEither = await dictionaryRepository.editWord(
       user,
       oldWord.id,
-      newWordMap,
+      changedMap,
     );
 
     wordBankEither.fold(
@@ -328,10 +328,8 @@ class DictionaryProvider extends ChangeNotifier {
   }
 
   void getCurrentFlashcard() {
-    // _prepareMethod();
-    currentFlashcard = dictionaryRepository.getCurrentFlashcard();
+    currentFlashcard = dictionaryRepository.getCurrentFlashcard(user);
     flashcardIndex = dictionaryRepository.getFlashcardIndex();
-    // _finishMethod();
   }
 
   Future getNextFlashcard() async {
