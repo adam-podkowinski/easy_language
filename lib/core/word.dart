@@ -53,15 +53,17 @@ class Word extends Equatable {
   final int timesReviewed;
   final int dictionaryId;
   final DateTime updatedAt;
+  final bool isTurned;
 
   const Word({
     required this.id,
     required this.wordForeign,
     required this.wordTranslation,
     required this.dictionaryId,
-    this.learningStatus = LearningStatus.reviewing,
-    this.timesReviewed = 0,
+    required this.learningStatus,
+    required this.timesReviewed,
     required this.updatedAt,
+    required this.isTurned,
   });
 
   static const dictionaryIdId = 'dictionary_id';
@@ -69,8 +71,11 @@ class Word extends Equatable {
   static const wordTranslationId = 'word_translation';
   static const learningStatusId = 'learning_status';
   static const timesReviewedId = 'times_reviewed';
+  static const isTurnedId = 'is_turned';
 
   factory Word.fromMap(Map map) {
+    final int isTurnedNum = cast(map[Word.isTurnedId]) ?? 0;
+    final isTurned = isTurnedNum == 1;
     try {
       return Word(
         id: cast(map[idId]) ?? 0,
@@ -81,6 +86,7 @@ class Word extends Equatable {
         ),
         timesReviewed: cast(map[Word.timesReviewedId]) ?? 0,
         dictionaryId: cast(map[Word.dictionaryIdId]) ?? 0,
+        isTurned: isTurned,
         updatedAt: DateTime.parse(
           cast(map[updatedAtId]),
         ),
@@ -103,6 +109,7 @@ class Word extends Equatable {
         Word.learningStatusId: learningStatus.statusToString,
         Word.timesReviewedId: timesReviewed,
         Word.dictionaryIdId: dictionaryId,
+        Word.isTurnedId: isTurned,
       };
 
   @override
@@ -114,5 +121,6 @@ class Word extends Equatable {
         timesReviewed,
         dictionaryId,
         updatedAt,
+        isTurned,
       ];
 }

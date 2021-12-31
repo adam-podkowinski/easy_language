@@ -1,8 +1,6 @@
 import 'package:easy_language/core/word.dart';
-import 'package:easy_language/features/flashcard/domain/entities/flashcard.dart';
-import 'package:easy_language/features/flashcard/presentation/manager/flashcard_provider.dart';
-import 'package:easy_language/features/flashcard/presentation/widgets/status_widget.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
+import 'package:easy_language/features/word_bank/presentation/widgets/status_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -10,28 +8,22 @@ class FlashcardView extends StatelessWidget {
   const FlashcardView({
     Key? key,
     required this.isTurned,
-    required this.word,
     required this.flashcard,
-    required this.flashcardProvider,
-    required this.dictionaryProvider,
+    required this.state,
   }) : super(key: key);
 
   final bool isTurned;
-  final Word word;
-  final Flashcard flashcard;
-  final FlashcardProvider flashcardProvider;
-  final DictionaryProvider dictionaryProvider;
+  final Word flashcard;
+  final DictionaryProvider state;
 
   void nextFlashcard() {
-    flashcardProvider.getNextFlashcard(
-      dictionaryProvider.currentDictionary,
-    );
+    state.getNextFlashcard();
 
-    final newTimesReviewed = word.timesReviewed + 1;
+    final newTimesReviewed = flashcard.timesReviewed + 1;
 
-    dictionaryProvider.editWord(
-      word,
-      word.copyWithMap({
+    state.editWord(
+      flashcard,
+      flashcard.copyWithMap({
         Word.timesReviewedId: newTimesReviewed,
         Word.learningStatusId: LearningStatusExtension.fromTimesReviewed(
           newTimesReviewed,
@@ -42,8 +34,8 @@ class FlashcardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final value = isTurned ? word.wordTranslation : word.wordForeign;
-    final currentDictionary = dictionaryProvider.currentDictionary!;
+    final value = isTurned ? flashcard.wordTranslation : flashcard.wordForeign;
+    final currentDictionary = state.currentDictionary!;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -51,7 +43,7 @@ class FlashcardView extends StatelessWidget {
         buildWordsLearningStatus(context),
         buildFlashcardBox(context, value),
         Text(
-          '${flashcard.wordIndex + 1} '
+          '${state.flashcardIndex ?? 0 + 1} '
           '/ '
           '${currentDictionary.words.length}',
           style: Theme.of(context).textTheme.headline3,
@@ -76,7 +68,7 @@ class FlashcardView extends StatelessWidget {
           clipBehavior: Clip.hardEdge,
           child: InkWell(
             onTap: () async {
-              await flashcardProvider.turnCurrentFlashcard();
+              await state.turnCurrentFlashcard();
             },
             child: Padding(
               padding: EdgeInsets.all(20.sp),
@@ -134,7 +126,7 @@ class FlashcardView extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 50.sp),
         clipBehavior: Clip.hardEdge,
         curve: Curves.easeInOut,
-        key: ValueKey(word),
+        key: ValueKey(flashcard),
         padding: EdgeInsets.all(12.sp),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30.r),
@@ -157,9 +149,7 @@ class FlashcardView extends StatelessWidget {
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           focusColor: Colors.transparent,
-          onTap: () async {
-            await flashcardProvider.turnCurrentFlashcard();
-          },
+          onTap: state.turnCurrentFlashcard,
           child: Center(
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 250),
@@ -206,23 +196,20 @@ class FlashcardView extends StatelessWidget {
       children: [
         StatusWidget(
           color: Theme.of(context).primaryColor,
-          numberString: dictionaryProvider
-              .getLearningLength(flashcard.wordLanguage)
-              .toString(),
+          numberString:
+              state.getLearningLength(state.currentLanguage!).toString(),
           text: 'Learning',
         ),
         StatusWidget(
           color: Colors.grey,
-          numberString: dictionaryProvider
-              .getReviewingLength(flashcard.wordLanguage)
-              .toString(),
+          numberString:
+              state.getReviewingLength(state.currentLanguage!).toString(),
           text: 'Reviewing',
         ),
         StatusWidget(
           color: Theme.of(context).colorScheme.secondary,
-          numberString: dictionaryProvider
-              .getMasteredLength(flashcard.wordLanguage)
-              .toString(),
+          numberString:
+              state.getMasteredLength(state.currentLanguage!).toString(),
           text: 'Mastered',
         ),
       ],

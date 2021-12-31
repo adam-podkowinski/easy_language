@@ -1,11 +1,6 @@
 import 'dart:io';
 
 import 'package:easy_language/core/constants.dart';
-import 'package:easy_language/features/flashcard/data/data_sources/flashcard_local_data_source.dart';
-import 'package:easy_language/features/flashcard/data/data_sources/flashcard_remote_data_source.dart';
-import 'package:easy_language/features/flashcard/data/repositories/flashcard_repository_impl.dart';
-import 'package:easy_language/features/flashcard/domain/repositories/flashcard_repository.dart';
-import 'package:easy_language/features/flashcard/presentation/manager/flashcard_provider.dart';
 import 'package:easy_language/features/user/data/data_sources/user_local_data_source.dart';
 import 'package:easy_language/features/user/data/data_sources/user_remote_data_source.dart';
 import 'package:easy_language/features/user/data/repositories/user_repository_impl.dart';
@@ -53,7 +48,7 @@ Future registerWordBank() async {
   // Provider
   sl.registerFactory(
     () => DictionaryProvider(
-      wordBankRepository: sl(),
+      dictionaryRepository: sl(),
     ),
   );
 
@@ -75,35 +70,8 @@ Future registerWordBank() async {
   );
 }
 
-Future registerFlashcard() async {
-  // Provider
-  sl.registerFactory(
-    () => FlashcardProvider(
-      flashcardRepository: sl(),
-    ),
-  );
-
-  // Repositories
-  sl.registerLazySingleton<FlashcardRepository>(
-    () => FlashcardRepositoryImpl(
-      localDataSource: sl(),
-      remoteDataSource: sl(),
-    ),
-  );
-
-  // Data sources
-  final flashcardBox = await Hive.openBox(cachedCurrentFlashcardId);
-  sl.registerLazySingleton<FlashcardLocalDataSource>(
-    () => FlashcardLocalDataSourceImpl(flashcardBox: flashcardBox),
-  );
-  sl.registerLazySingleton<FlashcardRemoteDataSource>(
-    () => FlashcardRemoteDataSourceImpl(),
-  );
-}
-
 Future clearAllBoxes() async {
   await (await Hive.openBox(cachedUserId)).clear();
-  await (await Hive.openBox(cachedCurrentFlashcardId)).clear();
   await (await Hive.openBox(cachedWordBankId)).clear();
 }
 
@@ -115,5 +83,4 @@ Future init() async {
   // Features
   await registerUser();
   await registerWordBank();
-  await registerFlashcard();
 }

@@ -13,12 +13,14 @@ class DictionaryModel extends Dictionary {
     required List<Word> words,
     required Language language,
     required DateTime updatedAt,
+    required int flashcardId,
     required this.shouldFetchWords,
   }) : super(
           id: id,
           words: words,
           language: language,
           updatedAt: updatedAt,
+          flashcardId: flashcardId,
         );
 
   factory DictionaryModel.fromMap(Map jsonMap, {required bool shouldFetch}) {
@@ -33,6 +35,7 @@ class DictionaryModel extends Dictionary {
           )
           .toList();
       final int id = cast(dictMap[idId]);
+      final int flashcardId = cast(dictMap[Dictionary.flashcardIdId] ?? 0) ?? 0;
       final DateTime updatedAt = DateTime.tryParse(
             cast(dictMap[updatedAtId]),
           ) ??
@@ -44,6 +47,7 @@ class DictionaryModel extends Dictionary {
         language: lang,
         updatedAt: updatedAt,
         shouldFetchWords: shouldFetch,
+        flashcardId: flashcardId,
       );
     } catch (e) {
       Logger().e(e);
@@ -64,6 +68,7 @@ class DictionaryModel extends Dictionary {
           idId: this.id,
           languageId: language.isoCode,
           updatedAtId: updatedAt.toIso8601String(),
+          Dictionary.flashcardIdId: flashcardId,
         },
         ..._wordsToMap(),
       },

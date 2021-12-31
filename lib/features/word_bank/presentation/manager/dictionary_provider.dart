@@ -12,7 +12,7 @@ import 'package:language_picker/languages.dart';
 class DictionaryProvider extends ChangeNotifier {
   bool loading = true;
 
-  final DictionaryRepository wordBankRepository;
+  final DictionaryRepository dictionaryRepository;
 
   Language? currentLanguage;
   Dictionaries dictionaries = {};
@@ -21,10 +21,14 @@ class DictionaryProvider extends ChangeNotifier {
   DictionariesFailure? dictionariesFailure;
   DictionaryFailure? currentDictionaryFailure;
 
+  Word? currentFlashcard;
+  FlashcardFailure? flashcardFailure;
+  int? flashcardIndex;
+
   late final User user;
 
   DictionaryProvider({
-    required this.wordBankRepository,
+    required this.dictionaryRepository,
   });
 
   List<Word>? searchedWords;
@@ -34,6 +38,7 @@ class DictionaryProvider extends ChangeNotifier {
   void clearError() {
     currentDictionaryFailure = null;
     dictionariesFailure = null;
+    flashcardFailure = null;
   }
 
   int getLearningLength(Language language) {
@@ -125,11 +130,11 @@ class DictionaryProvider extends ChangeNotifier {
 
     user = loggedInUser;
 
-    final wordBankEither = await wordBankRepository.initDictionaries(
+    final wordBankEither = await dictionaryRepository.initDictionaries(
       loggedInUser,
     );
     final currentDictionaryEither =
-        await wordBankRepository.initCurrentDictionary(user);
+        await dictionaryRepository.initCurrentDictionary(user);
 
     wordBankEither.fold(
       (l) {
@@ -156,7 +161,7 @@ class DictionaryProvider extends ChangeNotifier {
   Future addDictionary(Language lang) async {
     _prepareMethod();
 
-    final wordBankEither = await wordBankRepository.addDictionary(user, lang);
+    final wordBankEither = await dictionaryRepository.addDictionary(user, lang);
 
     wordBankEither.fold(
       (l) {
@@ -176,7 +181,7 @@ class DictionaryProvider extends ChangeNotifier {
   Future removeLanguage(Language lang) async {
     _prepareMethod();
 
-    final wordBankEither = await wordBankRepository.removeDictionary(
+    final wordBankEither = await dictionaryRepository.removeDictionary(
       user,
       lang,
     );
@@ -192,7 +197,7 @@ class DictionaryProvider extends ChangeNotifier {
     );
 
     final currentDictionaryEither =
-        await wordBankRepository.initCurrentDictionary(user);
+        await dictionaryRepository.initCurrentDictionary(user);
     currentDictionaryEither.fold(
       (l) {
         if (l is DictionaryFailure) {
@@ -213,7 +218,7 @@ class DictionaryProvider extends ChangeNotifier {
 
     if (currentLanguage != null) {
       if (currentDictionary != null) {
-        final wordBankEither = await wordBankRepository.addWord(
+        final wordBankEither = await dictionaryRepository.addWord(
           user,
           wordToAddMap,
         );
@@ -246,7 +251,7 @@ class DictionaryProvider extends ChangeNotifier {
 
     if (dictionaries[language] != null) {
       final currentDictionaryEither =
-          await wordBankRepository.changeCurrentDictionary(
+          await dictionaryRepository.changeCurrentDictionary(
         user,
         language,
       );
@@ -271,7 +276,7 @@ class DictionaryProvider extends ChangeNotifier {
   }) async {
     _prepareMethod();
 
-    final wordBankEither = await wordBankRepository.editWord(
+    final wordBankEither = await dictionaryRepository.editWord(
       user,
       oldWord.id,
       newWordMap,
@@ -300,7 +305,7 @@ class DictionaryProvider extends ChangeNotifier {
   }) async {
     _prepareMethod();
 
-    final dictionariesEither = await wordBankRepository.removeWord(
+    final dictionariesEither = await dictionaryRepository.removeWord(
       user,
       wordToRemove,
     );
@@ -318,6 +323,36 @@ class DictionaryProvider extends ChangeNotifier {
     if (searching ?? false) {
       searchWords(null);
     }
+
+    _finishMethod();
+  }
+
+  void getCurrentFlashcard() {
+    // _prepareMethod();
+    currentFlashcard = dictionaryRepository.getCurrentFlashcard();
+    flashcardIndex = dictionaryRepository.getFlashcardIndex();
+    // _finishMethod();
+  }
+
+  Future getNextFlashcard() async {
+    _prepareMethod();
+    currentFlashcard = await dictionaryRepository.getNextFlashcard(user);
+    flashcardIndex = dictionaryRepository.getFlashcardIndex();
+    _finishMethod();
+  }
+
+  Future turnCurrentFlashcard() async {
+    _prepareMethod();
+
+    final flashcardEither =
+        await dictionaryRepository.turnCurrentFlashcard(user);
+
+    flashcardEither.fold(
+      (l) {
+        if (l is FlashcardFailure) flashcardFailure = l;
+      },
+      (r) => currentFlashcard = r,
+    );
 
     _finishMethod();
   }

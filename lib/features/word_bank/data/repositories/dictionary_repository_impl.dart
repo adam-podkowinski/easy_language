@@ -401,4 +401,116 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
     return DictionaryModel.fromMap(dictJSON, shouldFetch: false);
   }
+
+  @override
+  int? getFlashcardIndex() {
+    return _currentDictionary?.words.indexWhere(
+      (w) => w.id == _currentDictionary!.flashcardId,
+    );
+  }
+
+  @override
+  Word? getCurrentFlashcard() {
+    final Word? word = _currentDictionary?.words.firstWhere(
+      (w) => w.id == _currentDictionary?.flashcardId,
+    );
+
+    return word;
+  }
+
+  @override
+  Future<Word?> getNextFlashcard(User user) async {
+    if (_currentDictionary == null ||
+        (_currentDictionary?.words.isEmpty ?? true)) {
+      return null;
+    }
+
+    int currentFlashcardIndex = _currentDictionary!.words.indexWhere(
+      (w) => w.id == _currentDictionary?.flashcardId,
+    );
+
+    if (currentFlashcardIndex < 0) {
+      return null;
+    }
+
+    if (currentFlashcardIndex >= _currentDictionary!.words.length) {
+      currentFlashcardIndex = 0;
+    } else {
+      currentFlashcardIndex++;
+    }
+
+    final Word flashcard = _currentDictionary!.words[currentFlashcardIndex];
+
+    _dictionaries[_currentDictionary!.language] = _currentDictionary!.copyWith({
+      'data': {
+        'dictionary': {
+          Dictionary.flashcardIdId: flashcard.id,
+        }
+      }
+    });
+
+    localDataSource.cacheDictionaries(_dictionaries);
+
+    // Save current flashcard id.
+    http
+        .put(
+      Uri.parse('$api/dictionaries/${_currentDictionary!.id}'),
+      headers: {
+        'Authorization': 'Bearer ${user.token}',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: jsonEncode({Dictionary.flashcardIdId: flashcard.id}),
+    )
+        .then(
+      (res) {
+        if (!res.ok) Logger().e(res.body);
+      },
+    );
+
+    return flashcard;
+  }
+
+  @override
+  Future<Either<Failure, Word>> turnCurrentFlashcard(User user) async {
+    if (_currentDictionary == null ||
+        (_currentDictionary?.words.isEmpty ?? true)) {
+      return Left(FlashcardTurnFailure());
+    }
+
+    final Word? currentFlashcard = getCurrentFlashcard();
+
+    if (currentFlashcard == null) return Left(FlashcardTurnFailure());
+
+    final int currentFlashcardIndex =
+        _currentDictionary!.words.indexOf(currentFlashcard);
+
+    _currentDictionary!.words[currentFlashcardIndex] =
+        currentFlashcard.copyWithMap(
+      {Word.isTurnedId: !currentFlashcard.isTurned},
+    );
+
+    final newFlashcard = _currentDictionary!.words[currentFlashcardIndex];
+
+    localDataSource.cacheDictionaries(_dictionaries);
+
+    // Save is_turned property of a word.
+    http
+        .put(
+      Uri.parse('$api/words/${newFlashcard.id}'),
+      headers: {
+        'Authorization': 'Bearer ${user.token}',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: jsonEncode({Word.isTurnedId: newFlashcard.isTurned}),
+    )
+        .then(
+      (res) {
+        if (!res.ok) Logger().e(res.body);
+      },
+    );
+
+    return Right(newFlashcard);
+  }
 }
