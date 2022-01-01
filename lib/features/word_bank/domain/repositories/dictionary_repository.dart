@@ -47,7 +47,5 @@ abstract class DictionaryRepository {
 
   Word? getNextFlashcard(User user);
 
-  Future<Either<Failure, Word>> turnCurrentFlashcard(User user);
-
   int? getFlashcardIndex();
 }

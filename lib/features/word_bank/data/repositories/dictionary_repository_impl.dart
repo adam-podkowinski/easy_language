@@ -383,25 +383,6 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
     }
   }
 
-  // Helpers
-  Future<DictionaryModel> _addDictionaryRemote(
-    User user,
-    Language language,
-  ) async {
-    final response = await http.post(
-      Uri.parse('$api/dictionaries'),
-      body: {'language': language.isoCode},
-      headers: {
-        'Authorization': 'Bearer ${user.token}',
-        'Accept': 'application/json',
-      },
-    );
-
-    final Map dictJSON = cast(jsonDecode(response.body));
-
-    return DictionaryModel.fromMap(dictJSON, shouldFetch: false);
-  }
-
   @override
   int? getFlashcardIndex() {
     return _currentDictionary?.words.indexWhere(
@@ -424,21 +405,10 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
           Dictionary.flashcardIdId: flashcard.id,
         });
 
-        // TODO: refactor to a helper method or remote data source
-        http
-            .put(
-          Uri.parse('$api/dictionaries/${_currentDictionary!.id}'),
-          headers: {
-            'Authorization': 'Bearer ${user.token}',
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: jsonEncode({Dictionary.flashcardIdId: flashcard.id}),
-        )
-            .then(
-          (res) {
-            if (!res.ok) Logger().e(res.body);
-          },
+        // Save current flashcard id.
+        _updateCurrentDictionaryRemotely(
+          user,
+          {Dictionary.flashcardIdId: flashcard.id},
         );
 
         return flashcard;
@@ -463,18 +433,6 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
       return null;
     }
 
-    final Word oldFlashcard = _currentDictionary!.words[currentFlashcardIndex];
-
-    final newTimesReviewed = oldFlashcard.timesReviewed + 1;
-
-    editWord(user, oldFlashcard.id, {
-      Word.timesReviewedId: newTimesReviewed,
-      Word.learningStatusId: LearningStatusExtension.fromTimesReviewed(
-        newTimesReviewed,
-      ).statusToString,
-      Word.isTurnedId: false,
-    });
-
     if (currentFlashcardIndex >= _currentDictionary!.words.length - 1) {
       currentFlashcardIndex = 0;
     } else {
@@ -490,65 +448,45 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
     localDataSource.cacheDictionaries(_dictionaries);
 
     // Save current flashcard id.
-    http
-        .put(
+    _updateCurrentDictionaryRemotely(
+      user,
+      {Dictionary.flashcardIdId: flashcard.id},
+    );
+
+    return flashcard;
+  }
+
+  // Helper methods
+  Future<String> _updateCurrentDictionaryRemotely(User user, Map body) async {
+    final res = await http.put(
       Uri.parse('$api/dictionaries/${_currentDictionary!.id}'),
       headers: {
         'Authorization': 'Bearer ${user.token}',
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: jsonEncode({Dictionary.flashcardIdId: flashcard.id}),
-    )
-        .then(
-      (res) {
-        if (!res.ok) Logger().e(res.body);
-      },
+      body: jsonEncode(body),
     );
+    if (!res.ok) Logger().e(res.body);
 
-    return flashcard;
+    return res.body;
   }
 
-  @override
-  Future<Either<Failure, Word>> turnCurrentFlashcard(User user) async {
-    if (_currentDictionary == null ||
-        (_currentDictionary?.words.isEmpty ?? true)) {
-      return Left(FlashcardTurnFailure());
-    }
-
-    final Word? currentFlashcard = getCurrentFlashcard(user);
-
-    if (currentFlashcard == null) return Left(FlashcardTurnFailure());
-
-    final int currentFlashcardIndex =
-        _currentDictionary!.words.indexOf(currentFlashcard);
-
-    _currentDictionary!.words[currentFlashcardIndex] =
-        currentFlashcard.copyWithMap(
-      {Word.isTurnedId: !currentFlashcard.isTurned},
-    );
-
-    final newFlashcard = _currentDictionary!.words[currentFlashcardIndex];
-
-    localDataSource.cacheDictionaries(_dictionaries);
-
-    // Save is_turned property of a word.
-    http
-        .put(
-      Uri.parse('$api/words/${newFlashcard.id}'),
+  Future<DictionaryModel> _addDictionaryRemote(
+    User user,
+    Language language,
+  ) async {
+    final response = await http.post(
+      Uri.parse('$api/dictionaries'),
+      body: {'language': language.isoCode},
       headers: {
         'Authorization': 'Bearer ${user.token}',
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: jsonEncode({Word.isTurnedId: newFlashcard.isTurned}),
-    )
-        .then(
-      (res) {
-        if (!res.ok) Logger().e(res.body);
       },
     );
 
-    return Right(newFlashcard);
+    final Map dictJSON = cast(jsonDecode(response.body));
+
+    return DictionaryModel.fromMap(dictJSON, shouldFetch: false);
   }
 }

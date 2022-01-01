@@ -10,12 +10,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class FlashcardView extends StatefulWidget {
   const FlashcardView({
     Key? key,
-    required this.isTurned,
     required this.flashcard,
     required this.state,
   }) : super(key: key);
 
-  final bool isTurned;
   final Word flashcard;
   final DictionaryProvider state;
 
@@ -25,9 +23,9 @@ class FlashcardView extends StatefulWidget {
 
 class _FlashcardViewState extends State<FlashcardView> {
   bool available = true;
-  bool canTurn = true;
+  bool isTurned = false;
 
-  String get value => widget.isTurned
+  String get value => isTurned
       ? widget.flashcard.wordTranslation
       : widget.flashcard.wordForeign;
 
@@ -37,6 +35,7 @@ class _FlashcardViewState extends State<FlashcardView> {
     widget.state.getNextFlashcard();
 
     available = false;
+    isTurned = false;
 
     Timer(
       const Duration(seconds: 1),
@@ -54,19 +53,12 @@ class _FlashcardViewState extends State<FlashcardView> {
       Word.learningStatusId: LearningStatusExtension.fromTimesReviewed(
         newTimesReviewed,
       ).statusToString,
-      Word.isTurnedId: false,
     });
   }
 
-  Future turnFlashcard() async {
-    await widget.state.turnCurrentFlashcard();
+  void turnFlashcard() {
     setState(() {
-      canTurn = false;
-    });
-    Timer(const Duration(milliseconds: 420), () {
-      setState(() {
-        canTurn = true;
-      });
+      isTurned = !isTurned;
     });
   }
 
@@ -102,7 +94,7 @@ class _FlashcardViewState extends State<FlashcardView> {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 250),
             decoration: BoxDecoration(
-              color: widget.isTurned
+              color: isTurned
                   ? Colors.lightGreen
                   : Theme.of(context).colorScheme.secondary,
               borderRadius: BorderRadius.circular(
@@ -110,11 +102,11 @@ class _FlashcardViewState extends State<FlashcardView> {
               ),
             ),
             child: InkWell(
-              onTap: canTurn ? turnFlashcard : null,
+              onTap: turnFlashcard,
               child: Padding(
                 padding: EdgeInsets.all(20.sp),
                 child: Icon(
-                  widget.isTurned ? Icons.visibility : Icons.visibility_off,
+                  isTurned ? Icons.visibility : Icons.visibility_off,
                   color: Theme.of(context).colorScheme.onSecondary,
                 ),
               ),
@@ -181,7 +173,7 @@ class _FlashcardViewState extends State<FlashcardView> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30.r),
           gradient: LinearGradient(
-            colors: widget.isTurned
+            colors: isTurned
                 ? [
                     Theme.of(context).primaryColor,
                     Theme.of(context).colorScheme.primaryVariant,
@@ -199,7 +191,7 @@ class _FlashcardViewState extends State<FlashcardView> {
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           focusColor: Colors.transparent,
-          onTap: canTurn ? turnFlashcard : null,
+          onTap: turnFlashcard,
           child: Center(
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 250),

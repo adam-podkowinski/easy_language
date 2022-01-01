@@ -1,5 +1,4 @@
 import 'package:easy_language/core/constants.dart';
-import 'package:easy_language/core/presentation/circular_progress_indicator.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/flashcard_view.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/no_flashcards.dart';
@@ -38,17 +37,12 @@ class _FlashcardPageState extends State<FlashcardPage> {
       ),
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 500),
-        child: !state.loading
-            ? state.currentFlashcard != null && state.currentLanguage != null
-                ? FlashcardView(
-                    isTurned: state.currentFlashcard?.isTurned ?? false,
-                    flashcard: state.currentFlashcard!,
-                    state: state,
-                  )
-                : const NoFlashcards()
-            : const Center(
-                child: CustomCircularProgressIndicator(),
-              ),
+        child: state.currentFlashcard != null && state.currentLanguage != null
+            ? FlashcardView(
+                flashcard: state.currentFlashcard!,
+                state: state,
+              )
+            : const NoFlashcards(),
       ),
     );
   }

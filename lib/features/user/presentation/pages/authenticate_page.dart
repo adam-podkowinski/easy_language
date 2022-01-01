@@ -3,6 +3,7 @@ import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/presentation/show_error.dart';
 import 'package:easy_language/core/presentation/styles.dart';
 import 'package:easy_language/features/user/presentation/manager/user_provider.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -84,6 +85,12 @@ class AuthenticatePage extends StatelessWidget {
                   TextFormField(
                     keyboardType: TextInputType.emailAddress,
                     controller: emailController,
+                    validator: (String? s) {
+                      if (s == null) return 'Please provide an e-mail address.';
+                      if (!EmailValidator.validate(s)) {
+                        return 'Please, provide a valid e-mail.';
+                      }
+                    },
                     decoration: InputDecoration(
                       hintText: 'E-mail',
                       border: OutlineInputBorder(

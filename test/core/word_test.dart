@@ -16,7 +16,6 @@ void main() {
     updatedAt: tDateTime,
     id: 1,
     dictionaryId: 1,
-    isTurned: false,
     learningStatus: LearningStatus.reviewing,
     timesReviewed: 0,
   );
@@ -55,7 +54,6 @@ void main() {
             updatedAt: tDateTime,
             id: 1,
             dictionaryId: 1,
-            isTurned: false,
             learningStatus: LearningStatus.reviewing,
             timesReviewed: 0,
           ),
@@ -75,7 +73,6 @@ void main() {
             updatedAt: tDateTime,
             id: 1,
             dictionaryId: 1,
-            isTurned: false,
             learningStatus: LearningStatus.reviewing,
             timesReviewed: 0,
           ),

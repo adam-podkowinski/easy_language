@@ -334,24 +334,8 @@ class DictionaryProvider extends ChangeNotifier {
 
   Future getNextFlashcard() async {
     _prepareMethod();
-    currentFlashcard = await dictionaryRepository.getNextFlashcard(user);
+    currentFlashcard = dictionaryRepository.getNextFlashcard(user);
     flashcardIndex = dictionaryRepository.getFlashcardIndex();
-    _finishMethod();
-  }
-
-  Future turnCurrentFlashcard() async {
-    _prepareMethod();
-
-    final flashcardEither =
-        await dictionaryRepository.turnCurrentFlashcard(user);
-
-    flashcardEither.fold(
-      (l) {
-        if (l is FlashcardFailure) flashcardFailure = l;
-      },
-      (r) => currentFlashcard = r,
-    );
-
     _finishMethod();
   }
 }

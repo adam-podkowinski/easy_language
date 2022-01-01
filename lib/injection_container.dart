@@ -80,8 +80,6 @@ Future init() async {
   final Directory dir = await getApplicationDocumentsDirectory();
   Hive.init(dir.path);
 
-  await (await Hive.openBox(cachedWordBankId)).clear();
-
   // Features
   await registerUser();
   await registerWordBank();
