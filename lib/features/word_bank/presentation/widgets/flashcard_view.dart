@@ -25,6 +25,7 @@ class FlashcardView extends StatefulWidget {
 
 class _FlashcardViewState extends State<FlashcardView> {
   bool available = true;
+  bool canTurn = true;
 
   String get value => widget.isTurned
       ? widget.flashcard.wordTranslation
@@ -60,11 +61,11 @@ class _FlashcardViewState extends State<FlashcardView> {
   Future turnFlashcard() async {
     await widget.state.turnCurrentFlashcard();
     setState(() {
-      available = false;
+      canTurn = false;
     });
-    Timer(const Duration(milliseconds: 800), () {
+    Timer(const Duration(milliseconds: 420), () {
       setState(() {
-        available = true;
+        canTurn = true;
       });
     });
   }
@@ -101,17 +102,15 @@ class _FlashcardViewState extends State<FlashcardView> {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 250),
             decoration: BoxDecoration(
-              color: available
-                  ? (widget.isTurned
-                      ? Colors.lightGreen
-                      : Theme.of(context).colorScheme.secondary)
-                  : Colors.grey,
+              color: widget.isTurned
+                  ? Colors.lightGreen
+                  : Theme.of(context).colorScheme.secondary,
               borderRadius: BorderRadius.circular(
                 25.r,
               ),
             ),
             child: InkWell(
-              onTap: available ? turnFlashcard : null,
+              onTap: canTurn ? turnFlashcard : null,
               child: Padding(
                 padding: EdgeInsets.all(20.sp),
                 child: Icon(
@@ -200,7 +199,7 @@ class _FlashcardViewState extends State<FlashcardView> {
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           focusColor: Colors.transparent,
-          onTap: available ? turnFlashcard : null,
+          onTap: canTurn ? turnFlashcard : null,
           child: Center(
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 250),
