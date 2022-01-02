@@ -31,6 +31,12 @@ class _FlashcardViewState extends State<FlashcardView> {
 
   Dictionary get currentDictionary => widget.state.currentDictionary!;
 
+  @override
+  void initState() {
+    super.initState();
+    available = currentDictionary.words.length > 1;
+  }
+
   void nextFlashcard() {
     widget.state.getNextFlashcard();
 
@@ -40,6 +46,7 @@ class _FlashcardViewState extends State<FlashcardView> {
     Timer(
       const Duration(seconds: 1),
       () {
+        if (currentDictionary.words.length <= 1) return;
         setState(() {
           available = true;
         });
