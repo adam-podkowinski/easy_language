@@ -35,6 +35,7 @@ class AuthenticatePage extends StatelessWidget {
     final TextEditingController passwordController = TextEditingController();
     final TextEditingController passwordConfirmationController =
         TextEditingController();
+    final formKey = GlobalKey<FormState>();
 
     SharedPreferences.getInstance().then(
       (value) => value.setBool(isStartupId, false),
@@ -80,64 +81,23 @@ class AuthenticatePage extends StatelessWidget {
                   ),
                 ],
               ),
-              Column(
-                children: [
-                  TextFormField(
-                    keyboardType: TextInputType.emailAddress,
-                    controller: emailController,
-                    validator: (String? s) {
-                      if (s == null) return 'Please provide an e-mail address.';
-                      if (!EmailValidator.validate(s)) {
-                        return 'Please, provide a valid e-mail.';
-                      }
-                    },
-                    decoration: InputDecoration(
-                      hintText: 'E-mail',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(1.sw),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(1.sw),
-                        borderSide: BorderSide(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onBackground
-                              .withOpacity(0.5),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 0.03.sh,
-                  ),
-                  TextFormField(
-                    obscureText: true,
-                    controller: passwordController,
-                    decoration: InputDecoration(
-                      hintText: 'Password',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(1.sw),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(1.sw),
-                        borderSide: BorderSide(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onBackground
-                              .withOpacity(0.5),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 0.03.sh,
-                  ),
-                  if (signUp)
+              Form(
+                key: formKey,
+                child: Column(
+                  children: [
                     TextFormField(
-                      controller: passwordConfirmationController,
-                      obscureText: true,
+                      keyboardType: TextInputType.emailAddress,
+                      controller: emailController,
+                      validator: (String? s) {
+                        if (s == null) {
+                          return 'Please, provide an e-mail address.';
+                        }
+                        if (!EmailValidator.validate(s) || s.length > 140) {
+                          return 'Please, provide a valid e-mail address.';
+                        }
+                      },
                       decoration: InputDecoration(
-                        hintText: 'Password confirmation',
+                        hintText: 'E-mail',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(1.sw),
                         ),
@@ -152,7 +112,65 @@ class AuthenticatePage extends StatelessWidget {
                         ),
                       ),
                     ),
-                ],
+                    SizedBox(
+                      height: 0.03.sh,
+                    ),
+                    TextFormField(
+                      obscureText: true,
+                      controller: passwordController,
+                      validator: (pass) {
+                        if (pass == null) {
+                          return 'Please, provide a password.';
+                        } else if (pass.length < 6 || pass.length > 140) {
+                          return 'Password length should be 6 - 140 characters.';
+                        }
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Password',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(1.sw),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(1.sw),
+                          borderSide: BorderSide(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onBackground
+                                .withOpacity(0.5),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 0.03.sh,
+                    ),
+                    if (signUp)
+                      TextFormField(
+                        controller: passwordConfirmationController,
+                        obscureText: true,
+                        validator: (confirmation) {
+                          if (confirmation != passwordController.value.text) {
+                            return "Passwords don't match.";
+                          }
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Password confirmation',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(1.sw),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(1.sw),
+                            borderSide: BorderSide(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onBackground
+                                  .withOpacity(0.5),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
               SizedBox(
                 width: double.infinity,
@@ -168,22 +186,32 @@ class AuthenticatePage extends StatelessWidget {
                             child: Text(
                               signUp ? 'Sign up' : 'Login',
                             ),
-                            onPressed: () => signUp
-                                ? context.read<UserProvider>().register(
-                                    {
-                                      'email': emailController.value.text,
-                                      'password': passwordController.value.text,
-                                      'password_confirmation':
-                                          passwordConfirmationController
-                                              .value.text,
-                                    },
-                                  )
-                                : context.read<UserProvider>().login(
-                                    {
-                                      'email': emailController.value.text,
-                                      'password': passwordController.value.text,
-                                    },
-                                  ),
+                            onPressed: () {
+                              if (!(formKey.currentState?.validate() ??
+                                  false)) {
+                                return;
+                              }
+                              signUp
+                                  // Sign up
+                                  ? context.read<UserProvider>().register(
+                                      {
+                                        'email': emailController.value.text,
+                                        'password':
+                                            passwordController.value.text,
+                                        'password_confirmation':
+                                            passwordConfirmationController
+                                                .value.text,
+                                      },
+                                    )
+                                  // Log in
+                                  : context.read<UserProvider>().login(
+                                      {
+                                        'email': emailController.value.text,
+                                        'password':
+                                            passwordController.value.text,
+                                      },
+                                    );
+                            },
                           ),
                         ),
                       ),
