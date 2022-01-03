@@ -23,6 +23,7 @@ void main() {
         dictionaryId: 1,
         learningStatus: LearningStatus.reviewing,
         timesReviewed: 0,
+        favorite: false,
       ),
       Word(
         wordForeign: 'siema',
@@ -32,6 +33,7 @@ void main() {
         dictionaryId: 1,
         learningStatus: LearningStatus.reviewing,
         timesReviewed: 0,
+        favorite: false,
       ),
     ],
     language: Languages.english,

@@ -56,7 +56,16 @@ class WordsInDictionaryWidget extends StatelessWidget {
               ),
             )
           : ImplicitlyAnimatedList<Word>(
-              items: items,
+              items: [...items]..sort(
+                  (w1, w2) {
+                    if (w1.favorite && !w2.favorite) {
+                      return -1;
+                    } else if (w2.favorite && !w1.favorite) {
+                      return 1;
+                    }
+                    return 0;
+                  },
+                ),
               areItemsTheSame: (a, b) => a == b,
               itemBuilder: (context, itemAnimation, item, index) {
                 return WordListItem(
@@ -102,10 +111,12 @@ class WordListItem extends StatelessWidget {
                   label: 'Delete',
                   backgroundColor: Theme.of(context).errorColor,
                   icon: Icons.delete,
-                  onPressed: (context) => _state.removeWord(
-                    word,
-                    searching: searching,
-                  ),
+                  onPressed: (context) {
+                    _state.removeWord(
+                      word,
+                      searching: searching,
+                    );
+                  },
                 ),
               ],
             ),
@@ -126,23 +137,39 @@ class WordListItem extends StatelessWidget {
                         ),
                   ),
                 ),
-                trailing: InkWell(
-                  onTap: () {
-                    showWordDialog(
-                      context,
-                      editWordTitle,
-                      (newWord) => _state.editWord(
-                        word,
-                        newWord,
-                        searching: searching,
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        _state.editWord(word, {
+                          Word.favoriteId: !word.favorite,
+                        });
+                      },
+                      icon: Icon(
+                        word.favorite ? Icons.star : Icons.star_border,
+                        color: Theme.of(context).colorScheme.onPrimary,
                       ),
-                      wordToEdit: word,
-                    );
-                  },
-                  child: Icon(
-                    Icons.edit,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        showWordDialog(
+                          context,
+                          editWordTitle,
+                          (newWord) => _state.editWord(
+                            word,
+                            newWord,
+                            searching: searching,
+                          ),
+                          wordToEdit: word,
+                        );
+                      },
+                      icon: Icon(
+                        Icons.edit,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

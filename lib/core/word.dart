@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:logger/logger.dart';
 
 import 'constants.dart';
 
@@ -45,7 +44,6 @@ extension LearningStatusExtension on LearningStatus {
 }
 
 class Word extends Equatable {
-  /// 7 variables
   final int id;
   final String wordForeign;
   final String wordTranslation;
@@ -53,6 +51,7 @@ class Word extends Equatable {
   final int timesReviewed;
   final int dictionaryId;
   final DateTime updatedAt;
+  final bool favorite;
 
   const Word({
     required this.id,
@@ -62,6 +61,7 @@ class Word extends Equatable {
     required this.learningStatus,
     required this.timesReviewed,
     required this.updatedAt,
+    required this.favorite,
   });
 
   static const dictionaryIdId = 'dictionary_id';
@@ -69,26 +69,31 @@ class Word extends Equatable {
   static const wordTranslationId = 'word_translation';
   static const learningStatusId = 'learning_status';
   static const timesReviewedId = 'times_reviewed';
+  static const favoriteId = 'favorite';
 
   factory Word.fromMap(Map map) {
-    try {
-      return Word(
-        id: cast(map[idId]) ?? 0,
-        wordForeign: cast(map[Word.wordForeignId]) ?? '',
-        wordTranslation: cast(map[Word.wordTranslationId]) ?? '',
-        learningStatus: LearningStatusExtension.fromString(
-          cast(map[Word.learningStatusId]),
-        ),
-        timesReviewed: cast(map[Word.timesReviewedId]) ?? 0,
-        dictionaryId: cast(map[Word.dictionaryIdId]) ?? 0,
-        updatedAt: DateTime.parse(
-          cast(map[updatedAtId]),
-        ),
-      );
-    } catch (e) {
-      Logger().e(e);
-      rethrow;
+    final favoriteVar = map[Word.favoriteId];
+    bool favorite = false;
+    if (favoriteVar is bool) {
+      favorite = favoriteVar;
+    } else if (favoriteVar is num) {
+      favorite = favoriteVar == 1;
     }
+
+    return Word(
+      id: cast(map[idId]) ?? 0,
+      wordForeign: cast(map[Word.wordForeignId]) ?? '',
+      wordTranslation: cast(map[Word.wordTranslationId]) ?? '',
+      learningStatus: LearningStatusExtension.fromString(
+        cast(map[Word.learningStatusId]),
+      ),
+      timesReviewed: cast(map[Word.timesReviewedId]) ?? 0,
+      dictionaryId: cast(map[Word.dictionaryIdId]) ?? 0,
+      favorite: favorite,
+      updatedAt: DateTime.parse(
+        cast(map[updatedAtId]),
+      ),
+    );
   }
 
   Word copyWithMap(Map map) {
@@ -103,6 +108,7 @@ class Word extends Equatable {
         Word.learningStatusId: learningStatus.statusToString,
         Word.timesReviewedId: timesReviewed,
         Word.dictionaryIdId: dictionaryId,
+        Word.favoriteId: favorite,
       };
 
   @override
@@ -113,6 +119,7 @@ class Word extends Equatable {
         learningStatus,
         timesReviewed,
         dictionaryId,
+        favorite,
         updatedAt,
       ];
 }

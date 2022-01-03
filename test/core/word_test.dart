@@ -17,6 +17,7 @@ void main() {
     id: 1,
     dictionaryId: 1,
     learningStatus: LearningStatus.reviewing,
+    favorite: false,
     timesReviewed: 0,
   );
 
@@ -51,6 +52,7 @@ void main() {
           Word(
             wordForeign: 'szkola',
             wordTranslation: 'hello',
+            favorite: false,
             updatedAt: tDateTime,
             id: 1,
             dictionaryId: 1,
@@ -70,6 +72,7 @@ void main() {
           Word(
             wordForeign: 'szkola',
             wordTranslation: 'school',
+            favorite: false,
             updatedAt: tDateTime,
             id: 1,
             dictionaryId: 1,

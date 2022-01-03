@@ -274,8 +274,6 @@ class DictionaryProvider extends ChangeNotifier {
     Map changedMap, {
     bool? searching,
   }) async {
-    _prepareMethod();
-
     final wordBankEither = await dictionaryRepository.editWord(
       user,
       oldWord.id,
