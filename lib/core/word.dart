@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 
 import 'constants.dart';
 
-enum LearningStatus { learning, reviewing, mastered }
+enum LearningStatus { reviewing, learning, mastered }
 
 extension LearningStatusExtension on LearningStatus {
   static const learningId = 'learning';

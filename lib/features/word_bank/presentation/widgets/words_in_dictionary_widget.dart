@@ -178,7 +178,7 @@ class WordListItem extends StatelessWidget {
         Divider(
           color: getSecondSheetColor(context),
           height: 1.h,
-          thickness: 1.sp,
+          thickness: 1.5.h,
         ),
       ],
     );

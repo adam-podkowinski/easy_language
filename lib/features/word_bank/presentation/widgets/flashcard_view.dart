@@ -69,21 +69,34 @@ class _FlashcardViewState extends State<FlashcardView> {
     });
   }
 
+  Widget orientationWrapper({required Orientation o, required Widget child}) {
+    if (o == Orientation.landscape) {
+      return SingleChildScrollView(child: child);
+    } else {
+      return child;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        buildWordsLearningStatus(context),
-        buildFlashcardBox(context, value),
-        Text(
-          '${(widget.state.flashcardIndex ?? 0) + 1} '
-          '/ '
-          '${currentDictionary.words.length}',
-          style: Theme.of(context).textTheme.headline3,
+    return OrientationBuilder(
+      builder: (context, orientation) => orientationWrapper(
+        o: orientation,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            buildWordsLearningStatus(context),
+            buildFlashcardBox(context, value),
+            Text(
+              '${(widget.state.flashcardIndex ?? 0) + 1} '
+              '/ '
+              '${currentDictionary.words.length}',
+              style: Theme.of(context).textTheme.headline3,
+            ),
+            buildFlashcardControls(context),
+          ],
         ),
-        buildFlashcardControls(context),
-      ],
+      ),
     );
   }
 
@@ -244,18 +257,18 @@ class _FlashcardViewState extends State<FlashcardView> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         StatusWidget(
-          color: Theme.of(context).primaryColor,
-          numberString: widget.state
-              .getLearningLength(widget.state.currentLanguage!)
-              .toString(),
-          text: 'Learning',
-        ),
-        StatusWidget(
           color: Colors.grey,
           numberString: widget.state
               .getReviewingLength(widget.state.currentLanguage!)
               .toString(),
           text: 'Reviewing',
+        ),
+        StatusWidget(
+          color: Theme.of(context).primaryColor,
+          numberString: widget.state
+              .getLearningLength(widget.state.currentLanguage!)
+              .toString(),
+          text: 'Learning',
         ),
         StatusWidget(
           color: Theme.of(context).colorScheme.secondary,
