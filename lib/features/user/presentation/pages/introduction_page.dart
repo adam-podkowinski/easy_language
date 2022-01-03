@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/features/user/presentation/pages/authenticate_page.dart';
+import 'package:easy_language/features/user/presentation/widgets/theme_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -34,13 +35,20 @@ class IntroductionPage extends StatelessWidget {
         context,
         'Learn new languages',
         '$svgPrefix/learning_primary_first.svg',
-        'Memorize new vocabulary easily with our help',
+        'Memorize new vocabulary easily with our help.',
       ),
       _buildPage(
         context,
         'Minimal and simple',
         '$svgPrefix/learning_primary_clean.svg',
-        'Translate new words and store them fast',
+        'Translate new words and store them fast.',
+      ),
+      _buildPage(
+        context,
+        'Light or dark?',
+        '$svgPrefix/dark_mode.svg',
+        'Choose your preferable theme for this application.',
+        footer: const ThemePicker(),
       ),
       _buildPage(
         context,

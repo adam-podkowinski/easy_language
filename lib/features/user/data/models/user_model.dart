@@ -74,7 +74,7 @@ class UserModel extends User {
     }
   }
 
-  static String mapThemeModeToString(ThemeMode theme) {
+  static String mapThemeModeToString(ThemeMode? theme) {
     switch (theme) {
       case ThemeMode.light:
         return User.lightThemeId;

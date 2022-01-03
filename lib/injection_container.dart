@@ -14,6 +14,7 @@ import 'package:easy_language/features/word_bank/presentation/manager/dictionary
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final sl = GetIt.instance;
 
@@ -70,7 +71,8 @@ Future registerWordBank() async {
   );
 }
 
-Future clearAllBoxes() async {
+Future clearAll() async {
+  await (await SharedPreferences.getInstance()).clear();
   await (await Hive.openBox(cachedUserId)).clear();
   await (await Hive.openBox(cachedWordBankId)).clear();
 }
@@ -80,7 +82,7 @@ Future init() async {
   final Directory dir = await getApplicationDocumentsDirectory();
   Hive.init(dir.path);
 
-  await (await Hive.openBox(cachedWordBankId)).clear();
+  await clearAll();
 
   // Features
   await registerUser();

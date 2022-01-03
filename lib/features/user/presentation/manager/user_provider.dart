@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/features/user/data/models/user_model.dart';
 import 'package:easy_language/features/user/domain/entities/user.dart';
@@ -17,12 +18,15 @@ class UserProvider extends ChangeNotifier {
 
   UserFailure? userFailure;
 
+  Map createMap = {};
+
   UserProvider({
     required this.userRepository,
   });
 
-  String get themeModeString =>
-      UserModel.mapThemeModeToString(user?.themeMode ?? ThemeMode.system);
+  String get themeModeString => loggedIn
+      ? UserModel.mapThemeModeToString(user?.themeMode)
+      : cast(createMap[User.themeModeId]) ?? 'System';
 
   void _prepareMethod() {
     loading = true;
@@ -57,6 +61,12 @@ class UserProvider extends ChangeNotifier {
 
   Future editUser(Map<String, dynamic> changedSettings) async {
     _prepareMethod();
+
+    if (!loggedIn) {
+      createMap.addAll(changedSettings);
+      _finishMethod();
+      return;
+    }
 
     final userEither = await userRepository.editUser(
       userMap: changedSettings,
@@ -94,7 +104,9 @@ class UserProvider extends ChangeNotifier {
   Future register(Map<String, String> registerForm) async {
     _prepareMethod();
 
-    final userEither = await userRepository.register(formMap: registerForm);
+    final registerMap = {...registerForm, ...createMap};
+
+    final userEither = await userRepository.register(formMap: registerMap);
 
     userEither.fold(
       (l) {

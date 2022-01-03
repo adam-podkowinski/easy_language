@@ -27,7 +27,7 @@ class EasyLanguage extends StatelessWidget {
           ChangeNotifierProvider<UserProvider>(
             create: (context) {
               final user = di.sl<UserProvider>();
-              SharedPreferences.getInstance().then((prefs) {
+              SharedPreferences.getInstance().then((prefs) async {
                 baseURL = prefs.getString('baseURL') ?? defaultURL;
                 user.initUser();
               });
