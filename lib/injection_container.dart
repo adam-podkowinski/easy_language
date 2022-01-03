@@ -82,8 +82,6 @@ Future init() async {
   final Directory dir = await getApplicationDocumentsDirectory();
   Hive.init(dir.path);
 
-  await clearAll();
-
   // Features
   await registerUser();
   await registerWordBank();
