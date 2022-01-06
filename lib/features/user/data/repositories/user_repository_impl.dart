@@ -190,4 +190,38 @@ class UserRepositoryImpl implements UserRepository {
       return UserUnauthenticatedFailure("Couldn't register");
     }
   }
+
+  @override
+  Future<bool> removeAccount({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      if (_user == null) {
+        return false;
+      }
+
+      final response = await http.delete(
+        Uri.parse('$api/user'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${_user!.token}',
+        },
+        body: {'email': email, 'password': password},
+      );
+
+      if (!response.ok) {
+        Logger().e(response.body);
+        return false;
+      }
+
+      localDataSource.clearUser();
+      _user = null;
+
+      return true;
+    } catch (e) {
+      Logger().e(e);
+      return false;
+    }
+  }
 }

@@ -17,15 +17,9 @@ class LogoutButton extends StatelessWidget {
         backgroundColor: MaterialStateProperty.all(
           Colors.red,
         ),
-        shape: MaterialStateProperty.all(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(40.w),
-          ),
-        ),
       ),
       child: const Text(
         'Logout',
-        style: TextStyle(fontSize: 18),
       ),
     );
   }

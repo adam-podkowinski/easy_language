@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/features/user/data/models/user_model.dart';
 import 'package:easy_language/features/user/domain/entities/user.dart';
@@ -132,6 +133,25 @@ class UserProvider extends ChangeNotifier {
       userFailure = failure;
     }
 
+    _finishMethod();
+  }
+
+  Future removeAccount({
+    required BuildContext context,
+    required String email,
+    required String password,
+  }) async {
+    _prepareMethod();
+    final successful =
+        await userRepository.removeAccount(email: email, password: password);
+    if (successful) {
+      user = null;
+      sl<DictionaryRepository>().logout();
+    } else {
+      userFailure = UserUnauthenticatedFailure(
+        "Couldn't remove an account. Contact support at: $contactAddress",
+      );
+    }
     _finishMethod();
   }
 }

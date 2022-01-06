@@ -40,6 +40,12 @@ const languageId = 'language';
 const updatedAtId = 'updated_at';
 const createdAtId = 'created_at';
 
+const resetPasswordContent =
+    'To reset your password send an e-mail with your problem to an address below (click to copy). Your e-mail address has to be the same as the address associated with your account.';
+const removeAccountContent =
+    'To remove an account type in your credentials. Remember, your whole progress and all data will be lost forever.';
+const contactAddress = 'easy.language.dev.contact@gmail.com';
+
 const Map<String, String> pageTitlesFromIds = {
   wordBankPageId: 'Word Bank',
   introductionPageId: 'Introduction',
