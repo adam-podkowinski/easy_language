@@ -8,6 +8,7 @@ import 'package:easy_language/features/word_bank/presentation/pages/flashcard_pa
 import 'package:easy_language/features/word_bank/presentation/pages/word_bank_page.dart';
 import 'package:easy_language/injection_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class MainApp extends StatelessWidget {
@@ -39,6 +40,13 @@ class MainApp extends StatelessWidget {
         darkTheme: buildDark(context),
         debugShowCheckedModeBanner: false,
         initialRoute: wordBankPageId,
+        builder: (context, widget) {
+          ScreenUtil.setContext(context);
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+            child: widget ?? const SizedBox(),
+          );
+        },
         routes: {
           wordBankPageId: (context) => const WordBankPage(),
           settingsPageId: (context) => const SettingsPage(),

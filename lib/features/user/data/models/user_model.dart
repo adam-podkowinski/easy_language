@@ -27,7 +27,8 @@ class UserModel extends User {
   /// Takes map and returns a [UserModel]
   factory UserModel.fromMap(Map map) {
     try {
-      final Map data = cast(map['data']['user']);
+      // TODO: FIX casting (require API changes)
+      final Map data = cast((map['data'] as Map)['user']);
       return UserModel(
         id: cast(data[idId]) ?? 0,
         themeMode: mapStringToThemeMode(cast(data[User.themeModeId])),

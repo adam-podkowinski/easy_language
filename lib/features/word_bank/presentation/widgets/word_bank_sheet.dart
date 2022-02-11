@@ -10,7 +10,7 @@ Color getSheetColor(BuildContext context) {
   final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
   if (isDark) {
-    return Theme.of(context).colorScheme.primaryVariant;
+    return Theme.of(context).colorScheme.primaryContainer;
   } else {
     return Theme.of(context).colorScheme.primary;
   }
@@ -20,7 +20,7 @@ Color getSecondSheetColor(BuildContext context) {
   final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
   if (!isDark) {
-    return Theme.of(context).colorScheme.primaryVariant;
+    return Theme.of(context).colorScheme.primaryContainer;
   } else {
     return Theme.of(context).colorScheme.primary;
   }

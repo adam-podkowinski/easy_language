@@ -26,7 +26,7 @@ class WordBankControls extends StatelessWidget {
       final Widget continueButton = OutlinedButton(
         onPressed: () {
           if (state.currentLanguage != null) {
-            state.removeLanguage(state.currentLanguage!);
+            state.removeDictionary(state.currentLanguage!);
           }
           Navigator.of(context).pop();
         },

@@ -57,7 +57,8 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
       final Map dictMap = cast(jsonDecode(response.body));
 
-      final List wordListJSON = cast(dictMap['data']['words']);
+      // TODO: FIX casting (require API changes)
+      final List wordListJSON = cast((dictMap['data'] as Map)['words']);
 
       final List<Word> wordList =
           wordListJSON.map((e) => Word.fromMap(cast(e))).toList();
@@ -208,7 +209,8 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
         Logger().e(response.body);
       }
 
-      final List remoteDicts = cast(jsonDecode(response.body));
+      final Iterable remoteDictsIterable = cast(jsonDecode(response.body));
+      final List<Map> remoteDicts = List<Map>.from(remoteDictsIterable);
 
       var shouldCache = false;
 

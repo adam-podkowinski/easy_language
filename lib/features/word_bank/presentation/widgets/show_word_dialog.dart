@@ -140,7 +140,7 @@ class _WordDialogState extends State<WordDialog> {
             child: const Text('Accept'),
           ),
           SizedBox(
-            height: 2.h,
+            height: 0.005.sh,
           ),
           ElevatedButton(
             style: ButtonStyle(

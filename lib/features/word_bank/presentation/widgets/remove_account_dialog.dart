@@ -71,6 +71,7 @@ class RemoveAccountDialog extends StatelessWidget {
                     if (!EmailValidator.validate(s) || s.length > 140) {
                       return 'Please, provide a valid e-mail address.';
                     }
+                    return null;
                   },
                 ),
                 SizedBox(
@@ -86,6 +87,7 @@ class RemoveAccountDialog extends StatelessWidget {
                     } else if (pass.length < 6 || pass.length > 140) {
                       return 'Password length should be 6 - 140 characters.';
                     }
+                    return null;
                   },
                 ),
               ],

@@ -45,7 +45,7 @@ class DictionaryLocalDataSourceImpl implements DictionaryLocalDataSource {
         return Future.value({});
       }
 
-      final dbMap = dictionariesBox.toMap()['dictionaries'];
+      final Map dbMap = cast(dictionariesBox.toMap()['dictionaries']);
       final DictionariesModel dictionaries = {};
       dbMap.forEach((langIso, dictMap) {
         final lang = Language.fromIsoCode(cast(langIso));

@@ -1,6 +1,5 @@
 import 'package:easy_language/features/user/presentation/manager/user_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class LogoutButton extends StatelessWidget {

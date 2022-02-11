@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:easy_language/core/constants.dart';
 import 'package:equatable/equatable.dart';
-
-import 'constants.dart';
 
 enum LearningStatus { reviewing, learning, mastered }
 

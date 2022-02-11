@@ -8,6 +8,7 @@ import 'package:easy_language/features/user/data/data_sources/user_remote_data_s
 import 'package:easy_language/features/user/data/models/user_model.dart';
 import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/user/domain/repositories/user_repository.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
@@ -88,6 +89,44 @@ class UserRepositoryImpl implements UserRepository {
     } catch (e) {
       Logger().e(e);
       return Left(UserGetFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> googleSignIn() async {
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
+      final GoogleSignInAccount? gAcc = await googleSignIn.signIn();
+      if (gAcc == null) {
+        return Left(UserUnauthenticatedFailure("Couldn't sign in."));
+      }
+      final accToken = (await gAcc.authentication).accessToken;
+
+      final response = await http.post(
+        Uri.parse('$api/auth/google'),
+        body: {'accessToken': accToken},
+        headers: {'Accept': 'application/json'},
+      );
+
+      final Map bodyMap = cast(jsonDecode(response.body));
+
+      if (!response.ok) {
+        Logger().e(response.body);
+        Logger().e(response.statusCode);
+        return Left(
+          UserUnauthenticatedFailure(
+            "Couldn't register: ${bodyMap['message']}",
+          ),
+        );
+      }
+
+      _user = UserModel.fromMap(bodyMap);
+      localDataSource.cacheUser(_user!);
+
+      return Right(_user!);
+    } catch (e) {
+      Logger().e(e);
+      return Left(UserUnauthenticatedFailure("Couldn't sign in."));
     }
   }
 

@@ -71,9 +71,9 @@ ThemeData buildLight(BuildContext context) {
     colorScheme: const ColorScheme(
       brightness: brightnessLight,
       primary: primary,
-      primaryVariant: primaryVariant,
+      primaryContainer: primaryVariant,
       secondary: secondary,
-      secondaryVariant: secondaryVariant,
+      secondaryContainer: secondaryVariant,
       surface: surface,
       background: backgroundLight,
       error: error,
@@ -96,9 +96,9 @@ ThemeData buildDark(BuildContext context) {
     colorScheme: const ColorScheme(
       brightness: brightnessDark,
       primary: primary,
-      primaryVariant: primaryVariant,
+      primaryContainer: primaryVariant,
       secondary: secondary,
-      secondaryVariant: secondaryVariant,
+      secondaryContainer: secondaryVariant,
       surface: surface,
       background: backgroundDark,
       error: error,

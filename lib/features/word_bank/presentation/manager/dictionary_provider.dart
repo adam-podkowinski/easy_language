@@ -123,6 +123,7 @@ class DictionaryProvider extends ChangeNotifier {
         .toList();
 
     notifyListeners();
+    return null;
   }
 
   Future initDictionaryProvider(User loggedInUser) async {
@@ -178,7 +179,7 @@ class DictionaryProvider extends ChangeNotifier {
     _finishMethod();
   }
 
-  Future removeLanguage(Language lang) async {
+  Future removeDictionary(Language lang) async {
     _prepareMethod();
 
     final wordBankEither = await dictionaryRepository.removeDictionary(

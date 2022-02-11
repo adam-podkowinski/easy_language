@@ -85,6 +85,23 @@ class UserProvider extends ChangeNotifier {
     _finishMethod();
   }
 
+  Future googleSignIn() async {
+    _prepareMethod();
+
+    final userEither = await userRepository.googleSignIn();
+
+    userEither.fold(
+      (l) {
+        if (l is UserFailure) {
+          userFailure = l;
+        }
+      },
+      (r) => user = r,
+    );
+
+    _finishMethod();
+  }
+
   Future login(Map<String, dynamic> loginForm) async {
     _prepareMethod();
 

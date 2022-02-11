@@ -7,7 +7,6 @@ import 'package:easy_language/features/word_bank/presentation/widgets/forgot_pas
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -100,6 +99,7 @@ class AuthenticatePage extends StatelessWidget {
                           if (!EmailValidator.validate(s) || s.length > 140) {
                             return 'Please, provide a valid e-mail address.';
                           }
+                          return null;
                         },
                         decoration: buildInputDecoration('E-mail'),
                       ),
@@ -115,6 +115,7 @@ class AuthenticatePage extends StatelessWidget {
                           } else if (pass.length < 6 || pass.length > 140) {
                             return 'Password length should be 6 - 140 characters.';
                           }
+                          return null;
                         },
                         decoration: buildInputDecoration('Password'),
                       ),
@@ -129,6 +130,7 @@ class AuthenticatePage extends StatelessWidget {
                             if (confirmation != passwordController.value.text) {
                               return "Passwords don't match.";
                             }
+                            return null;
                           },
                           decoration: buildInputDecoration(
                             'Password confirmation',
@@ -227,6 +229,15 @@ class AuthenticatePage extends StatelessWidget {
                         ),
                       ),
                     ],
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      context.read<UserProvider>().googleSignIn();
+                    },
+                    child: const Text('Google Sign In'),
                   ),
                 ),
               ],

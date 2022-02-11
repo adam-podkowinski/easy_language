@@ -71,7 +71,9 @@ class _FlashcardViewState extends State<FlashcardView> {
 
   Widget orientationWrapper({required Orientation o, required Widget child}) {
     if (o == Orientation.landscape) {
-      return SingleChildScrollView(child: child);
+      return Center(
+        child: child,
+      );
     } else {
       return child;
     }
@@ -196,10 +198,10 @@ class _FlashcardViewState extends State<FlashcardView> {
             colors: isTurned
                 ? [
                     Theme.of(context).primaryColor,
-                    Theme.of(context).colorScheme.primaryVariant,
+                    Theme.of(context).colorScheme.primaryContainer,
                   ]
                 : [
-                    Theme.of(context).colorScheme.primaryVariant,
+                    Theme.of(context).colorScheme.primaryContainer,
                     Theme.of(context).primaryColor,
                   ],
             begin: Alignment.topLeft,
