@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/main_app.dart';
 import 'package:easy_language/features/user/presentation/manager/user_provider.dart';
@@ -6,13 +8,22 @@ import 'package:easy_language/features/user/presentation/pages/welcome_app.dart'
 import 'package:easy_language/injection_container.dart' as di;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_sign_in_dartio/google_sign_in_dartio.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
+
+  await DotEnv().load();
+  if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+    GoogleSignInDart.register(
+      clientId: DotEnv().env['OAUTH_CLIENT_ID']!,
+    );
+  }
   runApp(EasyLanguage());
 }
 

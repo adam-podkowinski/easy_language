@@ -35,6 +35,8 @@ dependencies:
   shared_preferences: ^2.0.13
   email_validator: ^2.0.1
   google_sign_in: ^5.2.3
+  google_sign_in_dartio: ^0.1.0
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_native_splash: ^2.0.1+1
@@ -55,6 +57,7 @@ flutter:
         - asset: assets/fonts/Mulish-BlackItalic.ttf
   assets:
     - assets/svgs/
+    - .env
 
 flutter_native_splash:
   color: "#4f42ee"
