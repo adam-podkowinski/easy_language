@@ -18,10 +18,10 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
 
-  await DotEnv().load();
+  await dotenv.load();
   if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
-    GoogleSignInDart.register(
-      clientId: DotEnv().env['OAUTH_CLIENT_ID']!,
+    await GoogleSignInDart.register(
+      clientId: dotenv.env['OAUTH_CLIENT_ID']!,
     );
   }
   runApp(EasyLanguage());

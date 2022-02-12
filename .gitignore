@@ -48,3 +48,4 @@ app.*.map.json
 /android/app/src/main/res/values/ids.xml
 
 .env
+*.env
