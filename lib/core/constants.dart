@@ -14,7 +14,7 @@ extension IsOk on http.Response {
 const Size screenSize = Size(393, 781);
 
 String defaultURL = kDebugMode
-    ? 'http://localhost:3000'
+    ? 'http://192.168.3.23:3000'
     : 'https://easy-language.herokuapp.com';
 String baseURL = defaultURL;
 

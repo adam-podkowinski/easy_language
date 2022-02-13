@@ -266,7 +266,6 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
       final postMap = {
         ...wordMap,
-        languageId: _currentLanguage!.isoCode,
         Word.dictionaryIdId: _currentDictionary!.id.toString(),
       };
 

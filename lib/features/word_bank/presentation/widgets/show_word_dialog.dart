@@ -80,6 +80,54 @@ class _WordDialogState extends State<WordDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final buttons = [
+      ElevatedButton(
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(_padding),
+            ),
+          ),
+        ),
+        onPressed: () {
+          if (_formKey.currentState!.validate()) {
+            widget.onAccepted(
+              {
+                Word.wordForeignId: foreignWordController.text.trim(),
+                Word.wordTranslationId: wordTranslationController.text.trim(),
+              },
+            );
+            Navigator.of(context).pop();
+          }
+        },
+        child: Padding(
+          padding: EdgeInsets.all(5.sp),
+          child: const Text(
+            'Accept',
+            style: TextStyle(fontSize: 15),
+          ),
+        ),
+      ),
+      ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(Colors.red),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(_padding),
+            ),
+          ),
+        ),
+        onPressed: () => Navigator.of(context).pop(),
+        child: Padding(
+          padding: EdgeInsets.all(5.sp),
+          child: const Text(
+            'Cancel',
+            style: TextStyle(fontSize: 15),
+          ),
+        ),
+      )
+    ];
+
     return Form(
       key: _formKey,
       child: SimpleDialog(
@@ -117,43 +165,35 @@ class _WordDialogState extends State<WordDialog> {
           Divider(
             color: Theme.of(context).primaryColor,
           ),
-          ElevatedButton(
-            style: ButtonStyle(
-              shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(_padding),
-                ),
-              ),
-            ),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                widget.onAccepted(
-                  {
-                    Word.wordForeignId: foreignWordController.text.trim(),
-                    Word.wordTranslationId:
-                        wordTranslationController.text.trim(),
-                  },
-                );
-                Navigator.of(context).pop();
-              }
-            },
-            child: const Text('Accept'),
-          ),
-          SizedBox(
-            height: 0.005.sh,
-          ),
-          ElevatedButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.red),
-              shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(_padding),
-                ),
-              ),
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
+          if (MediaQuery.of(context).orientation == Orientation.portrait)
+            Column(
+              children: buttons
+                  .map(
+                    (e) => Container(
+                      width: double.infinity,
+                      height: 40.h,
+                      margin: EdgeInsets.all(5.h),
+                      child: e,
+                    ),
+                  )
+                  .toList(),
+            )
+          else
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: buttons
+                  .map(
+                    (e) => Expanded(
+                      child: Container(
+                        margin: EdgeInsets.all(5.w),
+                        height: 20.w,
+                        constraints: BoxConstraints(maxHeight: 80.h),
+                        child: e,
+                      ),
+                    ),
+                  )
+                  .toList(),
+            )
         ],
       ),
     );

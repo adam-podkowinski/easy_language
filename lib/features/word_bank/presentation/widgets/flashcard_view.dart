@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/word_bank/domain/entities/dictionary.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
@@ -44,7 +45,7 @@ class _FlashcardViewState extends State<FlashcardView> {
     isTurned = false;
 
     Timer(
-      const Duration(seconds: 1),
+      const Duration(milliseconds: 750),
       () {
         if (currentDictionary.words.length <= 1) return;
         setState(() {
@@ -81,24 +82,22 @@ class _FlashcardViewState extends State<FlashcardView> {
 
   @override
   Widget build(BuildContext context) {
-    return OrientationBuilder(
-      builder: (context, orientation) => orientationWrapper(
-        o: orientation,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            buildWordsLearningStatus(context),
-            buildFlashcardBox(context, value),
-            Text(
+    return Column(
+      children: [
+        Expanded(child: buildWordsLearningStatus(context)),
+        Expanded(flex: 2, child: buildFlashcardBox(context, value)),
+        Expanded(
+          child: Center(
+            child: Text(
               '${(widget.state.flashcardIndex ?? 0) + 1} '
               '/ '
               '${currentDictionary.words.length}',
               style: Theme.of(context).textTheme.headline3,
             ),
-            buildFlashcardControls(context),
-          ],
+          ),
         ),
-      ),
+        Expanded(child: buildFlashcardControls(context)),
+      ],
     );
   }
 
@@ -186,7 +185,6 @@ class _FlashcardViewState extends State<FlashcardView> {
         child: ch,
       ),
       child: AnimatedContainer(
-        height: 0.35.sh,
         margin: EdgeInsets.symmetric(horizontal: 50.sp),
         clipBehavior: Clip.hardEdge,
         curve: Curves.easeInOut,
@@ -237,13 +235,13 @@ class _FlashcardViewState extends State<FlashcardView> {
                   ),
                 );
               },
-              child: Text(
+              child: AutoSizeText(
                 value,
                 key: ValueKey<String>(value),
                 style: Theme.of(context).textTheme.headline6!.copyWith(
                       color: Theme.of(context).colorScheme.onPrimary,
-                      fontSize: 32.sp,
-                      letterSpacing: 1.sp,
+                      fontSize: 30,
+                      letterSpacing: 1,
                     ),
                 textAlign: TextAlign.center,
               ),
