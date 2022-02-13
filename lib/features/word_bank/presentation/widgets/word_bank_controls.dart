@@ -104,7 +104,7 @@ class WordBankControls extends StatelessWidget {
                   .toList(),
             ),
             IconButton(
-              onPressed: state.currentLanguage != null
+              onPressed: state.dictionaries.isNotEmpty
                   ? () => showRemoveLanguageConfirmationDialog(context)
                   : null,
               icon: Icon(

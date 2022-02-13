@@ -233,6 +233,7 @@ class AuthenticatePage extends StatelessWidget {
                 ),
                 SizedBox(
                   width: double.infinity,
+                  height: 40.h,
                   child: ElevatedButton(
                     onPressed: () {
                       context.read<UserProvider>().googleSignIn();
