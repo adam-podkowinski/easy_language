@@ -3,7 +3,6 @@ import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:flutter/material.dart';
 import 'package:language_picker/languages.dart';
-import 'package:logger/logger.dart';
 
 class UserModel extends User {
   const UserModel({
