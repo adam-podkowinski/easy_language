@@ -31,7 +31,7 @@ class NoLanguagesWidget extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             SizedBox(
-              height: 10.h,
+              height: 18.h,
             ),
             ElevatedButton(
               onPressed: () {
@@ -57,7 +57,15 @@ class NoLanguagesWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              child: const Text('Add new language'),
+              child: Padding(
+                padding: EdgeInsets.all(5.sp),
+                child: Text(
+                  'Add new language',
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                  ),
+                ),
+              ),
             ),
           ],
         ),

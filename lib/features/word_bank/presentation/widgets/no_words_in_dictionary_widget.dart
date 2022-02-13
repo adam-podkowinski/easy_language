@@ -52,11 +52,11 @@ class NoWordsInDictionaryWidget extends StatelessWidget {
                 ),
               ),
               child: Padding(
-                padding: EdgeInsets.all(10.w),
-                child: const Text(
+                padding: EdgeInsets.all(5.sp),
+                child: Text(
                   'Add new word',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 15.sp,
                   ),
                 ),
               ),
