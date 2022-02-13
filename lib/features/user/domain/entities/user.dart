@@ -21,12 +21,12 @@ class User extends Equatable {
     this.currentDictionaryId = 0,
   });
 
-  static const nativeLanguageId = 'native_language';
+  static const nativeLanguageId = 'nativeLanguage';
   static const emailId = 'email';
-  static const currentDictionaryIdId = 'current_dictionary_id';
-  static const tokenId = 'token';
+  static const currentDictionaryIdId = 'currentDictionaryId';
+  static const tokenId = 'accessToken';
 
-  static const themeModeId = 'theme_mode';
+  static const themeModeId = 'themeMode';
   static const darkThemeId = 'Dark';
   static const lightThemeId = 'Light';
   static const systemThemeId = 'System';

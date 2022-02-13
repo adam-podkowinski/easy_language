@@ -7,6 +7,7 @@ import 'package:easy_language/features/user/presentation/pages/loading_page.dart
 import 'package:easy_language/features/user/presentation/pages/welcome_app.dart';
 import 'package:easy_language/injection_container.dart' as di;
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,10 +20,12 @@ Future main() async {
   await di.init();
 
   await dotenv.load();
-  if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
-    await GoogleSignInDart.register(
-      clientId: dotenv.env['OAUTH_CLIENT_ID']!,
-    );
+  if (!kIsWeb) {
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+      await GoogleSignInDart.register(
+        clientId: dotenv.env['OAUTH_CLIENT_ID']!,
+      );
+    }
   }
   runApp(EasyLanguage());
 }

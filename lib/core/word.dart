@@ -48,7 +48,6 @@ class Word extends Equatable {
   final String wordTranslation;
   final LearningStatus learningStatus;
   final int timesReviewed;
-  final int dictionaryId;
   final DateTime updatedAt;
   final bool favorite;
 
@@ -56,18 +55,17 @@ class Word extends Equatable {
     required this.id,
     required this.wordForeign,
     required this.wordTranslation,
-    required this.dictionaryId,
     required this.learningStatus,
     required this.timesReviewed,
     required this.updatedAt,
     required this.favorite,
   });
 
-  static const dictionaryIdId = 'dictionary_id';
-  static const wordForeignId = 'word_foreign';
-  static const wordTranslationId = 'word_translation';
-  static const learningStatusId = 'learning_status';
-  static const timesReviewedId = 'times_reviewed';
+  static const dictionaryIdId = 'dictionaryId';
+  static const wordForeignId = 'wordForeign';
+  static const wordTranslationId = 'wordTranslation';
+  static const learningStatusId = 'learningStatus';
+  static const timesReviewedId = 'timesReviewed';
   static const favoriteId = 'favorite';
 
   factory Word.fromMap(Map map) {
@@ -87,7 +85,6 @@ class Word extends Equatable {
         cast(map[Word.learningStatusId]),
       ),
       timesReviewed: cast(map[Word.timesReviewedId]) ?? 0,
-      dictionaryId: cast(map[Word.dictionaryIdId]) ?? 0,
       favorite: favorite,
       updatedAt: DateTime.parse(
         cast(map[updatedAtId]),
@@ -106,7 +103,6 @@ class Word extends Equatable {
         Word.wordTranslationId: wordTranslation,
         Word.learningStatusId: learningStatus.statusToString,
         Word.timesReviewedId: timesReviewed,
-        Word.dictionaryIdId: dictionaryId,
         Word.favoriteId: favorite,
       };
 
@@ -117,7 +113,6 @@ class Word extends Equatable {
         wordTranslation,
         learningStatus,
         timesReviewed,
-        dictionaryId,
         favorite,
         updatedAt,
       ];

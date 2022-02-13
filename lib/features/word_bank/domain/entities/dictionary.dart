@@ -11,8 +11,7 @@ class Dictionary extends Equatable {
   final int flashcardId;
 
   static const wordsId = 'words';
-  static const dictionaryIdId = 'dictionary';
-  static const flashcardIdId = 'flashcard_id';
+  static const flashcardIdId = 'flashcardId';
 
   const Dictionary({
     required this.words,

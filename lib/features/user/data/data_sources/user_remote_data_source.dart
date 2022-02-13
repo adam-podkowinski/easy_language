@@ -36,7 +36,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         throw UserUnauthenticatedFailure(response.body);
       }
 
-      return userToFetch.copyWithMap(bodyMap);
+      return userToFetch.copyWithMap({'user': bodyMap});
     } catch (e) {
       Logger().e(e);
       rethrow;
@@ -48,28 +48,23 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     required UserModel userToEdit,
     required Map<dynamic, dynamic> editMap,
   }) async {
-    try {
-      final response = await http.put(
-        Uri.parse('$api/user'),
-        body: editMap,
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer ${userToEdit.token}'
-        },
-      );
+    final response = await http.patch(
+      Uri.parse('$api/user'),
+      body: editMap,
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${userToEdit.token}'
+      },
+    );
 
-      final Map bodyMap = cast(jsonDecode(response.body));
+    final Map bodyMap = cast(jsonDecode(response.body));
 
-      if (!response.ok) {
-        Logger().e(response.body);
-        Logger().e(response.statusCode);
-        throw UserUnauthenticatedFailure(response.body);
-      }
-
-      return userToEdit.copyWithMap(bodyMap);
-    } catch (e) {
-      Logger().e(e);
-      rethrow;
+    if (!response.ok) {
+      Logger().e(response.body);
+      Logger().e(response.statusCode);
+      throw UserUnauthenticatedFailure(response.body);
     }
+
+    return userToEdit.copyWithMap({'user': bodyMap});
   }
 }

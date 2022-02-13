@@ -103,8 +103,8 @@ class UserRepositoryImpl implements UserRepository {
       final accToken = (await gAcc.authentication).accessToken;
 
       final response = await http.post(
-        Uri.parse('$api/auth/google'),
-        body: {'accessToken': accToken},
+        Uri.parse('$api/google-authentication'),
+        body: {'token': accToken},
         headers: {'Accept': 'application/json'},
       );
 
@@ -134,7 +134,7 @@ class UserRepositoryImpl implements UserRepository {
   Future<Either<Failure, User>> login({required Map formMap}) async {
     try {
       final response = await http.post(
-        Uri.parse('$api/login'),
+        Uri.parse('$api/authentication/login'),
         body: formMap,
         headers: {'Accept': 'application/json'},
       );
@@ -165,7 +165,7 @@ class UserRepositoryImpl implements UserRepository {
   Future<Either<Failure, User>> register({required Map formMap}) async {
     try {
       final response = await http.post(
-        Uri.parse('$api/register'),
+        Uri.parse('$api/authentication/register'),
         body: formMap,
         headers: {'Accept': 'application/json'},
       );
@@ -202,6 +202,8 @@ class UserRepositoryImpl implements UserRepository {
       final String? token = _user?.token;
 
       _user = null;
+
+      await GoogleSignIn.standard().signOut();
 
       localDataSource.clearUser();
 

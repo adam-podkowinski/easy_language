@@ -7,6 +7,7 @@ import 'package:easy_language/features/user/domain/repositories/user_repository.
 import 'package:easy_language/features/word_bank/domain/repositories/dictionary_repository.dart';
 import 'package:easy_language/injection_container.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class UserProvider extends ChangeNotifier {
   bool loading = true;

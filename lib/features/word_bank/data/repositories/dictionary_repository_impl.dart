@@ -57,8 +57,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
       final Map dictMap = cast(jsonDecode(response.body));
 
-      // TODO: FIX casting (require API changes)
-      final List wordListJSON = cast((dictMap['data'] as Map)['words']);
+      final List wordListJSON = cast(dictMap['words']);
 
       final List<Word> wordList =
           wordListJSON.map((e) => Word.fromMap(cast(e))).toList();
@@ -103,13 +102,16 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   ) async {
     try {
       final toRemove = _dictionaries[language];
-      if (toRemove != null) {
-        _dictionaries.removeWhere((key, value) => key == language);
-        await http.delete(
-          Uri.parse('$api/dictionaries/${toRemove.id}'),
-          headers: {'Authorization': 'Bearer ${user.token}'},
-        );
+      if (toRemove == null) {
+        return Left(DictionariesCacheFailure(_dictionaries));
       }
+
+      _dictionaries.removeWhere((key, value) => key == language);
+      // TODO: Get new current dictionary from http delete response
+      await http.delete(
+        Uri.parse('$api/dictionaries/${toRemove.id}'),
+        headers: {'Authorization': 'Bearer ${user.token}'},
+      );
 
       if (_dictionaries.isNotEmpty) {
         await changeCurrentDictionary(user, _dictionaries.keys.first);
@@ -143,7 +145,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
         localDataSource.cacheDictionaries(_dictionaries);
       }
 
-      http.put(
+      http.patch(
         Uri.parse('$api/user'),
         headers: {'Authorization': 'Bearer ${user.token}'},
         body: {User.currentDictionaryIdId: _currentDictionary!.id.toString()},
@@ -166,7 +168,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
         (dict) => dict.id == user.currentDictionaryId,
         orElse: () {
           _currentLanguage = _dictionaries.values.first.language;
-          http.put(
+          http.patch(
             Uri.parse('$api/user'),
             headers: {'Authorization': 'Bearer ${user.token}'},
             body: {
@@ -227,20 +229,14 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
         final bool shouldFetch =
             localDict?.updatedAt.isBefore(remoteUpdatedAt) ?? true;
 
-        final editMap = {
-          'data': {
-            'dictionary': dict,
-          },
-        };
-
         if (shouldFetch) {
           shouldCache = true;
           final dictionary = localDict == null
               ? DictionaryModel.fromMap(
-                  editMap,
+                  dict,
                   shouldFetch: shouldFetch,
                 )
-              : localDict.copyWith(editMap, shouldFetch: shouldFetch);
+              : localDict.copyWith(dict, shouldFetch: shouldFetch);
           _dictionaries[dictionary.language] = dictionary;
         } else {
           _dictionaries[localDict!.language] = localDict;
@@ -270,8 +266,8 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
       final postMap = {
         ...wordMap,
-        'language': _currentLanguage!.isoCode,
-        'dictionary_id': _currentDictionary!.id.toString(),
+        languageId: _currentLanguage!.isoCode,
+        Word.dictionaryIdId: _currentDictionary!.id.toString(),
       };
 
       final response = await http.post(
@@ -315,7 +311,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
         throw Error();
       }
 
-      final response = await http.put(
+      final response = await http.patch(
         Uri.parse('$api/words/$id'),
         headers: {
           'Authorization': 'Bearer ${user.token}',
@@ -460,7 +456,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
   // Helper methods
   Future<String> _updateCurrentDictionaryRemotely(User user, Map body) async {
-    final res = await http.put(
+    final res = await http.patch(
       Uri.parse('$api/dictionaries/${_currentDictionary!.id}'),
       headers: {
         'Authorization': 'Bearer ${user.token}',

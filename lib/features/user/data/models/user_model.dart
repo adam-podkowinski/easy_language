@@ -26,24 +26,18 @@ class UserModel extends User {
 
   /// Takes map and returns a [UserModel]
   factory UserModel.fromMap(Map map) {
-    try {
-      // TODO: FIX casting (require API changes)
-      final Map data = cast((map['data'] as Map)['user']);
-      return UserModel(
-        id: cast(data[idId]) ?? 0,
-        themeMode: mapStringToThemeMode(cast(data[User.themeModeId])),
-        email: cast(data[User.emailId]) ?? '',
-        currentDictionaryId: cast(data[User.currentDictionaryIdId]) ?? 0,
-        token: cast(map[User.tokenId]),
-        updatedAt: DateTime.parse(cast(data[updatedAtId])),
-        nativeLanguage: Language.fromIsoCode(
-          cast(data[User.nativeLanguageId]) ?? Languages.english.isoCode,
-        ),
-      );
-    } catch (e) {
-      Logger().e(e);
-      rethrow;
-    }
+    final Map data = cast(map['user']);
+    return UserModel(
+      id: cast(data[idId]) ?? 0,
+      themeMode: mapStringToThemeMode(cast(data[User.themeModeId])),
+      email: cast(data[User.emailId]) ?? '',
+      currentDictionaryId: cast(data[User.currentDictionaryIdId]) ?? 0,
+      token: cast(map[User.tokenId]),
+      updatedAt: DateTime.parse(cast(data[updatedAtId])),
+      nativeLanguage: Language.fromIsoCode(
+        cast(data[User.nativeLanguageId]) ?? Languages.english.isoCode,
+      ),
+    );
   }
 
   UserModel copyWithMap(Map map) {
@@ -52,15 +46,13 @@ class UserModel extends User {
 
   Map<String, dynamic> toMap() => {
         User.tokenId: token,
-        'data': {
-          'user': {
-            idId: this.id,
-            updatedAtId: updatedAt.toIso8601String(),
-            User.themeModeId: mapThemeModeToString(themeMode),
-            User.nativeLanguageId: nativeLanguage.isoCode,
-            User.emailId: email,
-            User.currentDictionaryIdId: currentDictionaryId,
-          }
+        'user': {
+          idId: this.id,
+          updatedAtId: updatedAt.toIso8601String(),
+          User.themeModeId: mapThemeModeToString(themeMode),
+          User.nativeLanguageId: nativeLanguage.isoCode,
+          User.emailId: email,
+          User.currentDictionaryIdId: currentDictionaryId,
         }
       };
 

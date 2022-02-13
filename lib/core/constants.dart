@@ -14,11 +14,11 @@ extension IsOk on http.Response {
 const Size screenSize = Size(393, 781);
 
 String defaultURL = kDebugMode
-    ? 'http://localhost:8000'
+    ? 'http://localhost:3000'
     : 'https://easy-language.herokuapp.com';
 String baseURL = defaultURL;
 
-String get api => '$baseURL/api/v1';
+String get api => baseURL;
 
 const wordBankPageId = '/dictionary';
 const introductionPageId = '/introduction';
@@ -26,19 +26,18 @@ const flashcardsPageId = '/flashcards';
 const settingsPageId = '/settings';
 const cachedUserId = 'settings';
 const cachedWordBankId = 'dictionary';
-const cachedCurrentLanguageId = 'current_language';
-const cachedCurrentFlashcardId = 'current_flashcard';
+const cachedCurrentLanguageId = 'currentLanguage';
+const cachedCurrentFlashcardId = 'currentFlashcard';
 const emptyString = 'Empty';
 const addNewWordTitle = 'Add a new word';
 const editWordTitle = 'Edit a word';
 const svgPrefix = 'assets/svgs';
-const isStartupId = 'is_startup';
+const isStartupId = 'isStartup';
 
 const idId = 'id';
-const userIdId = 'user_id';
+const userIdId = 'useraId';
 const languageId = 'language';
-const updatedAtId = 'updated_at';
-const createdAtId = 'created_at';
+const updatedAtId = 'updatedAt';
 
 const resetPasswordContent =
     'To reset your password send an e-mail with your problem to an address below (click to copy). Your e-mail address has to be the same as the address associated with your account.';

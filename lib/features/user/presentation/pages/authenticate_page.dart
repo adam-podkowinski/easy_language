@@ -46,7 +46,7 @@ class AuthenticatePage extends StatelessWidget {
 
     SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
       if (failure != null && failure is UserUnauthenticatedFailure) {
-        showError(context, failure.toString());
+        showError(context, failure.errorMessage);
         context.read<UserProvider>().clearError();
       }
     });

@@ -25,10 +25,10 @@ class DictionaryLocalDataSourceImpl implements DictionaryLocalDataSource {
   }
 
   @override
-  Future cacheDictionaries(DictionariesModel wordBankModel) async {
+  Future cacheDictionaries(DictionariesModel dictionariesModel) async {
     try {
       await dictionariesBox.putAll({
-        'dictionaries': wordBankModel.map(
+        'dictionaries': dictionariesModel.map(
           (key, value) => MapEntry(key.isoCode, value.toMap()),
         ),
       });
