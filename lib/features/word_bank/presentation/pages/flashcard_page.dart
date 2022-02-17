@@ -3,7 +3,6 @@ import 'package:easy_language/features/word_bank/presentation/manager/dictionary
 import 'package:easy_language/features/word_bank/presentation/widgets/flashcard_view.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/no_flashcards.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class FlashcardPage extends StatefulWidget {
