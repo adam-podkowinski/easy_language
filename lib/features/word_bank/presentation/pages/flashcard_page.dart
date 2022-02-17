@@ -32,7 +32,6 @@ class _FlashcardPageState extends State<FlashcardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 75.h,
         title: Text(pageTitlesFromIds[flashcardsPageId] ?? 'Flashcards'),
       ),
       body: AnimatedSwitcher(

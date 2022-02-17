@@ -103,7 +103,7 @@ class UserRepositoryImpl implements UserRepository {
       final accToken = (await gAcc.authentication).accessToken;
 
       final response = await http.post(
-        Uri.parse('$api/google-authentication'),
+        Uri.parse('$api/authentication/google-authentication'),
         body: {'token': accToken},
         headers: {'Accept': 'application/json'},
       );

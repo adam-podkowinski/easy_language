@@ -52,7 +52,6 @@ class _WordBankPageState extends State<WordBankPage> {
     final radius = 30.r;
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 75.r,
         title: AnimatedSwitcher(
           switchInCurve: Curves.easeInOut,
           switchOutCurve: Curves.easeInOut,

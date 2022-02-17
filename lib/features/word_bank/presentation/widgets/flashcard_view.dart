@@ -83,10 +83,12 @@ class _FlashcardViewState extends State<FlashcardView> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Expanded(child: buildWordsLearningStatus(context)),
-        Expanded(flex: 2, child: buildFlashcardBox(context, value)),
-        Expanded(
+        buildWordsLearningStatus(context),
+        SizedBox(height: 0.37.sh, child: buildFlashcardBox(context, value)),
+        Container(
+          margin: EdgeInsets.only(bottom: 15.h),
           child: Center(
             child: Text(
               '${(widget.state.flashcardIndex ?? 0) + 1} '
@@ -96,7 +98,7 @@ class _FlashcardViewState extends State<FlashcardView> {
             ),
           ),
         ),
-        Expanded(child: buildFlashcardControls(context)),
+        buildFlashcardControls(context),
       ],
     );
   }

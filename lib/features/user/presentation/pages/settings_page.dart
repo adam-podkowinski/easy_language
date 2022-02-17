@@ -14,7 +14,6 @@ import 'package:language_picker/languages.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// TODO: show remove account button
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key}) : super(key: key);
 
@@ -29,7 +28,6 @@ class SettingsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 75.r,
         title: Text(pageTitlesFromIds[settingsPageId] ?? 'Settings'),
       ),
       body: Container(
