@@ -1,7 +1,9 @@
 import 'package:easy_language/core/constants.dart';
+import 'package:easy_language/core/presentation/show_error.dart';
 import 'package:easy_language/features/user/presentation/manager/user_provider.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
@@ -29,13 +31,21 @@ class RemoveAccountDialog extends StatelessWidget {
           width: 10.w,
         ),
         ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             if (!(formKey.currentState?.validate() ?? false)) return;
-            context.read<UserProvider>().removeAccount(
+            if (!await context.read<UserProvider>().removeAccount(
                   context: context,
                   email: emailController.value.text,
                   password: passwordController.value.text,
-                );
+                )) {
+              Navigator.of(context).pop();
+              Clipboard.setData(const ClipboardData(text: contactAddress));
+              showError(
+                context,
+                'Could not remove an account. Please, contact us about your issue: $contactAddress.'
+                '\nE-mail copied to clipboard.',
+              );
+            }
           },
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(Colors.red),
