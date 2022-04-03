@@ -13,6 +13,7 @@ class UserModel extends User {
     required DateTime updatedAt,
     int currentDictionaryId = 0,
     ThemeMode themeMode = ThemeMode.system,
+    bool isRegisteredWithGoogle = false,
   }) : super(
           id: id,
           themeMode: themeMode,
@@ -21,6 +22,7 @@ class UserModel extends User {
           currentDictionaryId: currentDictionaryId,
           token: token,
           updatedAt: updatedAt,
+          isRegisteredWithGoogle: isRegisteredWithGoogle,
         );
 
   /// Takes map and returns a [UserModel]
@@ -33,6 +35,8 @@ class UserModel extends User {
       currentDictionaryId: cast(data[User.currentDictionaryIdId]) ?? 0,
       token: cast(map[User.tokenId]),
       updatedAt: DateTime.parse(cast(data[updatedAtId])),
+      isRegisteredWithGoogle:
+          cast(data[User.isRegisteredWithGoogleId]) ?? false,
       nativeLanguage: Language.fromIsoCode(
         cast(data[User.nativeLanguageId]) ?? Languages.english.isoCode,
       ),
@@ -52,6 +56,7 @@ class UserModel extends User {
           User.nativeLanguageId: nativeLanguage.isoCode,
           User.emailId: email,
           User.currentDictionaryIdId: currentDictionaryId,
+          User.isRegisteredWithGoogleId: isRegisteredWithGoogle,
         }
       };
 

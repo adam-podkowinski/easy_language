@@ -10,6 +10,7 @@ class User extends Equatable {
   final int currentDictionaryId;
   final String token;
   final DateTime updatedAt;
+  final bool isRegisteredWithGoogle;
 
   const User({
     required this.id,
@@ -19,12 +20,14 @@ class User extends Equatable {
     required this.token,
     required this.updatedAt,
     this.currentDictionaryId = 0,
+    this.isRegisteredWithGoogle = false,
   });
 
   static const nativeLanguageId = 'nativeLanguage';
   static const emailId = 'email';
   static const currentDictionaryIdId = 'currentDictionaryId';
   static const tokenId = 'accessToken';
+  static const isRegisteredWithGoogleId = 'isRegisteredWithGoogle';
 
   static const themeModeId = 'themeMode';
   static const darkThemeId = 'Dark';
@@ -39,6 +42,7 @@ class User extends Equatable {
         nativeLanguage,
         token,
         currentDictionaryId,
+        isRegisteredWithGoogle,
         email,
         updatedAt,
       ];
