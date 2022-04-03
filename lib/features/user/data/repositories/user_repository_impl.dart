@@ -207,17 +207,16 @@ class UserRepositoryImpl implements UserRepository {
 
       localDataSource.clearUser();
 
-      final response = await http.post(
-        Uri.parse('$api/logout'),
+      final response = await http.get(
+        Uri.parse('$api/user/logout'),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token'
         },
       );
 
-      final Map bodyMap = cast(jsonDecode(response.body));
-
       if (!response.ok) {
+        final Map bodyMap = cast(jsonDecode(response.body));
         Logger().e(response.body);
         Logger().e(response.statusCode);
         return UserUnauthenticatedFailure(
