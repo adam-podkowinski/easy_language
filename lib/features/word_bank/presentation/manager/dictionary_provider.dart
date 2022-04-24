@@ -14,8 +14,8 @@ class DictionaryProvider extends ChangeNotifier {
 
   final DictionaryRepository dictionaryRepository;
 
-  Language? currentLanguage;
-  Dictionaries dictionaries = {};
+  Language? get currentLanguage => dictionaryRepository.currentLanguage;
+  Dictionaries get dictionaries => dictionaryRepository.dictionaries;
   Dictionary? get currentDictionary => dictionaries[currentLanguage];
 
   DictionariesFailure? dictionariesFailure;
@@ -137,24 +137,24 @@ class DictionaryProvider extends ChangeNotifier {
     final currentDictionaryEither =
         await dictionaryRepository.initCurrentDictionary(user);
 
-    wordBankEither.fold(
-      (l) {
-        if (l is DictionariesFailure) {
-          dictionaries = l.dictionaries;
-          dictionariesFailure = l;
-        }
-      },
-      (r) => dictionaries = r,
-    );
+    // wordBankEither.fold(
+    //   (l) {
+    //     if (l is DictionariesFailure) {
+    //       // dictionaries = l.dictionaries;
+    //       dictionariesFailure = l;
+    //     }
+    //   },
+    //   (r) => dictionaries = r,
+    // );
 
-    currentDictionaryEither.fold(
-      (l) {
-        if (l is DictionaryFailure) {
-          currentDictionaryFailure = l;
-        }
-      },
-      (r) => currentLanguage = r?.language,
-    );
+    // currentDictionaryEither.fold(
+    //   (l) {
+    //     if (l is DictionaryFailure) {
+    //       currentDictionaryFailure = l;
+    //     }
+    //   },
+    //   (r) => currentLanguage = r?.language,
+    // );
 
     _finishMethod();
   }
@@ -164,17 +164,17 @@ class DictionaryProvider extends ChangeNotifier {
 
     final wordBankEither = await dictionaryRepository.addDictionary(user, lang);
 
-    wordBankEither.fold(
-      (l) {
-        if (l is DictionariesFailure) {
-          dictionariesFailure = l;
-          dictionaries = l.dictionaries;
-        }
-      },
-      (r) => dictionaries = r,
-    );
+    // wordBankEither.fold(
+    //   (l) {
+    //     if (l is DictionariesFailure) {
+    //       dictionariesFailure = l;
+    //       dictionaries = l.dictionaries;
+    //     }
+    //   },
+    //   (r) => dictionaries = r,
+    // );
 
-    currentLanguage = lang;
+    // currentLanguage = lang;
 
     _finishMethod();
   }
@@ -187,26 +187,26 @@ class DictionaryProvider extends ChangeNotifier {
       lang,
     );
 
-    wordBankEither.fold(
-      (l) {
-        if (l is DictionariesFailure) {
-          dictionariesFailure = l;
-          dictionaries = l.dictionaries;
-        }
-      },
-      (r) => dictionaries = r,
-    );
+    // wordBankEither.fold(
+    //   (l) {
+    //     if (l is DictionariesFailure) {
+    //       dictionariesFailure = l;
+    //       dictionaries = l.dictionaries;
+    //     }
+    //   },
+    //   (r) => dictionaries = r,
+    // );
 
     final currentDictionaryEither =
         await dictionaryRepository.initCurrentDictionary(user);
-    currentDictionaryEither.fold(
-      (l) {
-        if (l is DictionaryFailure) {
-          currentDictionaryFailure = l;
-        }
-      },
-      (r) => currentLanguage = r?.language,
-    );
+    // currentDictionaryEither.fold(
+    //   (l) {
+    //     if (l is DictionaryFailure) {
+    //       currentDictionaryFailure = l;
+    //     }
+    //   },
+    //   (r) => currentLanguage = r?.language,
+    // );
 
     _finishMethod();
   }
@@ -224,15 +224,15 @@ class DictionaryProvider extends ChangeNotifier {
           wordToAddMap,
         );
 
-        wordBankEither.fold(
-          (l) {
-            if (l is DictionariesFailure) {
-              dictionariesFailure = l;
-              dictionaries = l.dictionaries;
-            }
-          },
-          (r) => dictionaries = r,
-        );
+        // wordBankEither.fold(
+        //   (l) {
+        //     if (l is DictionariesFailure) {
+        //       dictionariesFailure = l;
+        //       dictionaries = l.dictionaries;
+        //     }
+        //   },
+        //   (r) => dictionaries = r,
+        // );
       }
     }
 
@@ -256,15 +256,15 @@ class DictionaryProvider extends ChangeNotifier {
         user,
         language,
       );
-      currentDictionaryEither.fold(
-        (l) {
-          if (l is DictionaryFailure) {
-            currentLanguage = l.currentDictionary?.language;
-            currentDictionaryFailure = l;
-          }
-        },
-        (r) => currentLanguage = r.language,
-      );
+      // currentDictionaryEither.fold(
+      //   (l) {
+      //     if (l is DictionaryFailure) {
+      //       currentLanguage = l.currentDictionary?.language;
+      //       currentDictionaryFailure = l;
+      //     }
+      //   },
+      //   (r) => currentLanguage = r.language,
+      // );
     }
 
     _finishMethod();
@@ -281,15 +281,15 @@ class DictionaryProvider extends ChangeNotifier {
       changedMap,
     );
 
-    wordBankEither.fold(
-      (l) {
-        if (l is DictionariesFailure) {
-          dictionariesFailure = l;
-          dictionaries = l.dictionaries;
-        }
-      },
-      (r) => dictionaries = r,
-    );
+    // wordBankEither.fold(
+    //   (l) {
+    //     if (l is DictionariesFailure) {
+    //       dictionariesFailure = l;
+    //       dictionaries = l.dictionaries;
+    //     }
+    //   },
+    //   (r) => dictionaries = r,
+    // );
 
     if (searching ?? false) {
       searchWords(null);
@@ -309,15 +309,15 @@ class DictionaryProvider extends ChangeNotifier {
       wordToRemove,
     );
 
-    dictionariesEither.fold(
-      (l) {
-        if (l is DictionariesFailure) {
-          dictionariesFailure = l;
-          dictionaries = l.dictionaries;
-        }
-      },
-      (r) => dictionaries = r,
-    );
+    // dictionariesEither.fold(
+    //   (l) {
+    //     if (l is DictionariesFailure) {
+    //       dictionariesFailure = l;
+    //       dictionaries = l.dictionaries;
+    //     }
+    //   },
+    //   (r) => dictionaries = r,
+    // );
 
     if (searching ?? false) {
       searchWords(null);

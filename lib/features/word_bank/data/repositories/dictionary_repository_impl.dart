@@ -15,10 +15,12 @@ import 'package:language_picker/languages.dart';
 import 'package:logger/logger.dart';
 
 class DictionaryRepositoryImpl implements DictionaryRepository {
-  DictionariesModel _dictionaries = {};
-  Language? _currentLanguage;
-
-  DictionaryModel? get _currentDictionary => _dictionaries[_currentLanguage];
+  @override
+  DictionariesModel dictionaries = {};
+  @override
+  Language? currentLanguage;
+  @override
+  DictionaryModel? get currentDictionary => dictionaries[currentLanguage];
 
   final DictionaryLocalDataSource localDataSource;
   final DictionaryRemoteDataSource remoteDataSource;
@@ -30,20 +32,20 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
   @override
   void logout() {
-    _dictionaries.clear();
-    _currentLanguage = null;
+    dictionaries.clear();
+    currentLanguage = null;
     localDataSource.logout();
   }
 
   @override
   Future<List<Word>> fetchCurrentDictionaryWords(User user) async {
     try {
-      if (_currentDictionary == null) {
+      if (currentDictionary == null) {
         throw 'currentDictionary is null';
       }
 
       final response = await http.get(
-        Uri.parse('$api/dictionaries/${_currentDictionary!.id}/words'),
+        Uri.parse('$api/dictionaries/${currentDictionary!.id}/words'),
         headers: {
           'Authorization': 'Bearer ${user.token}',
           'Accept': 'application/json',
@@ -62,7 +64,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
       final List<Word> wordList =
           wordListJSON.map((e) => Word.fromMap(cast(e))).toList();
 
-      _dictionaries[_currentLanguage!] = _currentDictionary!.copyWith(
+      dictionaries[currentLanguage!] = currentDictionary!.copyWith(
         {},
         shouldFetch: false,
       );
@@ -80,18 +82,18 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
     Language language,
   ) async {
     try {
-      if (_dictionaries.containsKey(language)) {
+      if (dictionaries.containsKey(language)) {
         await changeCurrentDictionary(user, language);
       } else {
-        _dictionaries[language] = await _addDictionaryRemote(user, language);
+        dictionaries[language] = await _addDictionaryRemote(user, language);
         await changeCurrentDictionary(user, language);
       }
 
-      localDataSource.cacheDictionaries(_dictionaries);
+      localDataSource.cacheDictionaries(dictionaries);
 
-      return Right(_dictionaries);
+      return Right(dictionaries);
     } catch (_) {
-      return Left(DictionariesCacheFailure(_dictionaries));
+      return Left(DictionariesCacheFailure(dictionaries));
     }
   }
 
@@ -101,30 +103,30 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
     Language language,
   ) async {
     try {
-      final toRemove = _dictionaries[language];
+      final toRemove = dictionaries[language];
       if (toRemove == null) {
-        return Left(DictionariesCacheFailure(_dictionaries));
+        return Left(DictionariesCacheFailure(dictionaries));
       }
 
-      _dictionaries.removeWhere((key, value) => key == language);
+      dictionaries.removeWhere((key, value) => key == language);
       // TODO: Get new current dictionary from http delete response
       await http.delete(
         Uri.parse('$api/dictionaries/${toRemove.id}'),
         headers: {'Authorization': 'Bearer ${user.token}'},
       );
 
-      if (_dictionaries.isNotEmpty) {
-        await changeCurrentDictionary(user, _dictionaries.keys.first);
+      if (dictionaries.isNotEmpty) {
+        await changeCurrentDictionary(user, dictionaries.keys.first);
       } else {
-        _currentLanguage = null;
+        currentLanguage = null;
       }
 
-      localDataSource.cacheDictionaries(_dictionaries);
+      localDataSource.cacheDictionaries(dictionaries);
 
-      return Right(_dictionaries);
+      return Right(dictionaries);
     } catch (e) {
       Logger().e(e);
-      return Left(DictionariesCacheFailure(_dictionaries));
+      return Left(DictionariesCacheFailure(dictionaries));
     }
   }
 
@@ -134,64 +136,64 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
     Language language,
   ) async {
     try {
-      _currentLanguage = language;
+      currentLanguage = language;
 
-      if (_currentDictionary!.shouldFetchWords) {
+      if (currentDictionary!.shouldFetchWords) {
         final words = await fetchCurrentDictionaryWords(user);
 
-        _dictionaries[_currentLanguage]?.words.clear();
-        _dictionaries[_currentLanguage]?.words.addAll(words);
+        dictionaries[currentLanguage]?.words.clear();
+        dictionaries[currentLanguage]?.words.addAll(words);
 
-        localDataSource.cacheDictionaries(_dictionaries);
+        localDataSource.cacheDictionaries(dictionaries);
       }
 
       http.patch(
         Uri.parse('$api/user'),
         headers: {'Authorization': 'Bearer ${user.token}'},
-        body: {User.currentDictionaryIdId: _currentDictionary!.id.toString()},
+        body: {User.currentDictionaryIdId: currentDictionary!.id.toString()},
       );
     } catch (e) {
       Logger().e(e);
-      return Left(DictionaryCacheFailure(_currentDictionary));
+      return Left(DictionaryCacheFailure(currentDictionary));
     }
-    return Right(_currentDictionary!);
+    return Right(currentDictionary!);
   }
 
   @override
   Future<Either<Failure, Dictionary?>> initCurrentDictionary(User user) async {
     try {
-      if (_dictionaries.isEmpty) {
+      if (dictionaries.isEmpty) {
         throw DictionaryGetFailure(null);
       }
 
-      _currentLanguage = _dictionaries.values.firstWhere(
+      currentLanguage = dictionaries.values.firstWhere(
         (dict) => dict.id == user.currentDictionaryId,
         orElse: () {
-          _currentLanguage = _dictionaries.values.first.language;
+          currentLanguage = dictionaries.values.first.language;
           http.patch(
             Uri.parse('$api/user'),
             headers: {'Authorization': 'Bearer ${user.token}'},
             body: {
-              User.currentDictionaryIdId: _currentDictionary!.id.toString()
+              User.currentDictionaryIdId: currentDictionary!.id.toString()
             },
           );
-          return _currentDictionary!;
+          return currentDictionary!;
         },
       ).language;
 
-      if (_currentDictionary!.shouldFetchWords) {
+      if (currentDictionary!.shouldFetchWords) {
         final words = await fetchCurrentDictionaryWords(user);
 
-        _dictionaries[_currentLanguage]?.words.clear();
-        _dictionaries[_currentLanguage]?.words.addAll(words);
+        dictionaries[currentLanguage]?.words.clear();
+        dictionaries[currentLanguage]?.words.addAll(words);
 
-        localDataSource.cacheDictionaries(_dictionaries);
+        localDataSource.cacheDictionaries(dictionaries);
       }
     } catch (_) {
-      return Left(DictionaryGetFailure(_currentDictionary));
+      return Left(DictionaryGetFailure(currentDictionary));
     }
 
-    return Right(_currentDictionary);
+    return Right(currentDictionary);
   }
 
   @override
@@ -200,7 +202,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
       final DictionariesModel cachedDictionaries =
           await localDataSource.getLocalDictionaries();
 
-      _dictionaries = cachedDictionaries;
+      dictionaries = cachedDictionaries;
 
       final response = await http.get(
         Uri.parse('$api/dictionaries'),
@@ -216,7 +218,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
       var shouldCache = false;
 
-      if (remoteDicts.isNotEmpty) _dictionaries = {};
+      if (remoteDicts.isNotEmpty) dictionaries = {};
 
       for (final dict in remoteDicts) {
         final Language dictLang = Language.fromIsoCode(cast(dict[languageId]));
@@ -237,36 +239,36 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
                   shouldFetch: shouldFetch,
                 )
               : localDict.copyWith(dict, shouldFetch: shouldFetch);
-          _dictionaries[dictionary.language] = dictionary;
+          dictionaries[dictionary.language] = dictionary;
         } else {
-          _dictionaries[localDict!.language] = localDict;
+          dictionaries[localDict!.language] = localDict;
         }
       }
 
       if (shouldCache) {
-        localDataSource.cacheDictionaries(_dictionaries);
+        localDataSource.cacheDictionaries(dictionaries);
       }
     } catch (e) {
       Logger().e(e);
-      return Left(DictionariesGetFailure(_dictionaries));
+      return Left(DictionariesGetFailure(dictionaries));
     }
 
-    return Right(_dictionaries);
+    return Right(dictionaries);
   }
 
   @override
   Future<Either<Failure, Dictionaries>> addWord(User user, Map wordMap) async {
     try {
-      if (_currentLanguage == null) {
+      if (currentLanguage == null) {
         throw 'no current dictionary';
       }
-      if (_dictionaries[_currentLanguage!] == null) {
+      if (dictionaries[currentLanguage!] == null) {
         throw 'no dictionary';
       }
 
       final postMap = {
         ...wordMap,
-        Word.dictionaryIdId: _currentDictionary!.id.toString(),
+        Word.dictionaryIdId: currentDictionary!.id.toString(),
       };
 
       final response = await http.post(
@@ -288,14 +290,14 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
       final newWord = Word.fromMap(newWordMap);
 
-      _dictionaries[_currentLanguage!]!.words.insert(0, newWord);
+      dictionaries[currentLanguage!]!.words.insert(0, newWord);
 
-      localDataSource.cacheDictionaries(_dictionaries);
+      localDataSource.cacheDictionaries(dictionaries);
 
-      return Right(_dictionaries);
+      return Right(dictionaries);
     } catch (e) {
       Logger().e(e);
-      return Left(DictionariesCacheFailure(_dictionaries));
+      return Left(DictionariesCacheFailure(dictionaries));
     }
   }
 
@@ -306,7 +308,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
     Map editMap,
   ) async {
     try {
-      if (_currentLanguage == null) {
+      if (currentLanguage == null) {
         throw Error();
       }
 
@@ -329,18 +331,18 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
       final Word newWord = Word.fromMap(newWordMap);
 
-      final index = _currentDictionary!.words.indexWhere(
+      final index = currentDictionary!.words.indexWhere(
         (element) => element.id == newWord.id,
       );
 
-      _currentDictionary!.words[index] = newWord;
+      currentDictionary!.words[index] = newWord;
 
-      localDataSource.cacheDictionaries(_dictionaries);
+      localDataSource.cacheDictionaries(dictionaries);
 
-      return Right(_dictionaries);
+      return Right(dictionaries);
     } catch (e) {
       Logger().e(e);
-      return Left(DictionariesFailure(_dictionaries));
+      return Left(DictionariesFailure(dictionaries));
     }
   }
 
@@ -350,13 +352,13 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
     Word wordToRemove,
   ) async {
     try {
-      if (_currentLanguage == null) {
+      if (currentLanguage == null) {
         throw Error();
       }
 
       final idToRemove = wordToRemove.id;
 
-      _currentDictionary!.words.remove(wordToRemove);
+      currentDictionary!.words.remove(wordToRemove);
 
       final response = await http.delete(
         Uri.parse('$api/words/$idToRemove'),
@@ -371,34 +373,34 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
         throw response;
       }
 
-      localDataSource.cacheDictionaries(_dictionaries);
+      localDataSource.cacheDictionaries(dictionaries);
 
-      return Right(_dictionaries);
+      return Right(dictionaries);
     } catch (e) {
       Logger().e(e);
-      return Left(DictionariesFailure(_dictionaries));
+      return Left(DictionariesFailure(dictionaries));
     }
   }
 
   @override
   int? getFlashcardIndex() {
-    return _currentDictionary?.words.indexWhere(
-      (w) => w.id == _currentDictionary!.flashcardId,
+    return currentDictionary?.words.indexWhere(
+      (w) => w.id == currentDictionary!.flashcardId,
     );
   }
 
   @override
   Word? getCurrentFlashcard(User user) {
-    if (_currentDictionary == null ||
-        (_currentDictionary?.words.isEmpty ?? true)) {
+    if (currentDictionary == null ||
+        (currentDictionary?.words.isEmpty ?? true)) {
       return null;
     }
 
-    final Word word = _currentDictionary!.words.firstWhere(
-      (w) => w.id == _currentDictionary!.flashcardId,
+    final Word word = currentDictionary!.words.firstWhere(
+      (w) => w.id == currentDictionary!.flashcardId,
       orElse: () {
-        final flashcard = _currentDictionary!.words.first;
-        _dictionaries[_currentLanguage!] = _currentDictionary!.copyWith({
+        final flashcard = currentDictionary!.words.first;
+        dictionaries[currentLanguage!] = currentDictionary!.copyWith({
           Dictionary.flashcardIdId: flashcard.id,
         });
 
@@ -417,32 +419,32 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
   @override
   Word? getNextFlashcard(User user) {
-    if (_currentDictionary == null ||
-        (_currentDictionary?.words.isEmpty ?? true)) {
+    if (currentDictionary == null ||
+        (currentDictionary?.words.isEmpty ?? true)) {
       return null;
     }
 
-    int currentFlashcardIndex = _currentDictionary!.words.indexWhere(
-      (w) => w.id == _currentDictionary?.flashcardId,
+    int currentFlashcardIndex = currentDictionary!.words.indexWhere(
+      (w) => w.id == currentDictionary?.flashcardId,
     );
 
     if (currentFlashcardIndex < 0) {
       return null;
     }
 
-    if (currentFlashcardIndex >= _currentDictionary!.words.length - 1) {
+    if (currentFlashcardIndex >= currentDictionary!.words.length - 1) {
       currentFlashcardIndex = 0;
     } else {
       currentFlashcardIndex++;
     }
 
-    final Word flashcard = _currentDictionary!.words[currentFlashcardIndex];
+    final Word flashcard = currentDictionary!.words[currentFlashcardIndex];
 
-    _dictionaries[_currentDictionary!.language] = _currentDictionary!.copyWith({
+    dictionaries[currentDictionary!.language] = currentDictionary!.copyWith({
       Dictionary.flashcardIdId: flashcard.id,
     });
 
-    localDataSource.cacheDictionaries(_dictionaries);
+    localDataSource.cacheDictionaries(dictionaries);
 
     // Save current flashcard id.
     _updateCurrentDictionaryRemotely(
@@ -456,7 +458,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   // Helper methods
   Future<String> _updateCurrentDictionaryRemotely(User user, Map body) async {
     final res = await http.patch(
-      Uri.parse('$api/dictionaries/${_currentDictionary!.id}'),
+      Uri.parse('$api/dictionaries/${currentDictionary!.id}'),
       headers: {
         'Authorization': 'Bearer ${user.token}',
         'Accept': 'application/json',

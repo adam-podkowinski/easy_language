@@ -86,9 +86,9 @@ Future init() async {
   }
 
   // DEBUG
-  // if (kDebugMode) {
-  //   await clearAll();
-  // }
+  if (kDebugMode) {
+    await clearAll();
+  }
 
   // Features
   await registerUser();

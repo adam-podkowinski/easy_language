@@ -128,7 +128,7 @@ class _WordBankPageState extends State<WordBankPage> {
   Widget _addWordWidget(BuildContext context) {
     final state = context.watch<DictionaryProvider>();
     if (state.currentDictionaryFailure is DictionaryCacheFailure) {
-      SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
         if (kDebugMode) {
           showError(context, state.currentDictionaryFailure.toString());
         } else {
@@ -138,7 +138,7 @@ class _WordBankPageState extends State<WordBankPage> {
       });
     }
     if (state.dictionariesFailure is DictionariesCacheFailure) {
-      SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
         if (kDebugMode) {
           showError(context, state.dictionariesFailure.toString());
         } else {

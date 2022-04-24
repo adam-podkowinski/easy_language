@@ -37,8 +37,9 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       }
 
       return userToFetch.copyWithMap({'user': bodyMap});
-    } catch (e) {
+    } catch (e, stacktrace) {
       Logger().e(e);
+      Logger().e(stacktrace);
       rethrow;
     }
   }

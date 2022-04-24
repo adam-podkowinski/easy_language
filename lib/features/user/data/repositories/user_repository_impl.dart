@@ -106,7 +106,10 @@ class UserRepositoryImpl implements UserRepository {
         Uri.parse('$api/authentication/google-authentication'),
         body: {'token': accToken},
         headers: {'Accept': 'application/json'},
-      );
+      ).onError((error, stackTrace) {
+        googleSignIn.signOut();
+        throw Exception(error);
+      });
 
       final Map bodyMap = cast(jsonDecode(response.body));
 

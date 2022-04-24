@@ -17,11 +17,12 @@ class IntroductionPage extends StatelessWidget {
       body: IntroductionScreen(
         pages: _buildPages(context),
         showDoneButton: false,
-        showSkipButton: true,
-        skip: const Text('Skip'),
+        // showSkipButton: true,
+        showBackButton: true,
+        // skip: const Text('Skip'),
         next: const Text('Next'),
-        done: const Text('Done'),
-        color: Theme.of(context).colorScheme.secondary,
+        back: const Text('Back'),
+        // color: Theme.of(context).colorScheme.secondary,
         dotsDecorator: DotsDecorator(
           activeColor: Theme.of(context).colorScheme.secondary,
         ),

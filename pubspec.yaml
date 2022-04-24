@@ -5,7 +5,7 @@ publish_to: 'none'
 version: 1.0.4+4
 
 environment:
-  sdk: ">=2.13.0 <3.0.0"
+  sdk: ">=2.16.0 <3.0.0"
 
 dependencies:
   auto_size_text: ^3.0.0
@@ -20,12 +20,12 @@ dependencies:
   hive: ^2.0.5
   hive_flutter: ^1.1.0
   implicitly_animated_reorderable_list: ^0.4.2
-  introduction_screen: ^2.1.0
+  introduction_screen: ^3.0.2
   language_picker:
     git:
       url: https://github.com/adam-podkowinski/flutter_language_pickers
   logger: ^1.1.0
-  mocktail: ^0.2.0
+  mocktail: ^0.3.0
   uuid: ^3.0.5
   path_provider: ^2.0.8
   provider: ^6.0.2
@@ -33,8 +33,8 @@ dependencies:
   faker: ^2.0.0
   shared_preferences: ^2.0.13
   email_validator: ^2.0.1
-  google_sign_in: ^5.2.3
-  google_sign_in_dartio: ^0.1.0
+  google_sign_in: ^5.3.0
+  google_sign_in_dartio: ^0.2.0
   flutter_dotenv: ^5.0.2
 
 dev_dependencies:

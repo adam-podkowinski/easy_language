@@ -37,7 +37,7 @@ class EasyLanguage extends StatelessWidget {
       designSize: screenSize,
       minTextAdapt: true,
       splitScreenMode: true,
-      builder: () => MultiProvider(
+      builder: (context) => MultiProvider(
         providers: [
           ChangeNotifierProvider<UserProvider>(
             create: (context) {
