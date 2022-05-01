@@ -18,11 +18,11 @@ class DictionaryProvider extends ChangeNotifier {
   Dictionaries get dictionaries => dictionaryRepository.dictionaries;
   Dictionary? get currentDictionary => dictionaries[currentLanguage];
 
-  DictionariesFailure? dictionariesFailure;
-  DictionaryFailure? currentDictionaryFailure;
+  InfoFailure? dictionariesFailure;
+  InfoFailure? currentDictionaryFailure;
 
   Word? currentFlashcard;
-  FlashcardFailure? flashcardFailure;
+  InfoFailure? flashcardFailure;
   int? flashcardIndex;
 
   late final User user;
@@ -83,6 +83,7 @@ class DictionaryProvider extends ChangeNotifier {
   void _prepareMethod() {
     loading = true;
     dictionariesFailure = null;
+    flashcardFailure = null;
     currentDictionaryFailure = null;
     notifyListeners();
   }
@@ -131,30 +132,12 @@ class DictionaryProvider extends ChangeNotifier {
 
     user = loggedInUser;
 
-    final wordBankEither = await dictionaryRepository.initDictionaries(
+    dictionariesFailure = await dictionaryRepository.initDictionaries(
       loggedInUser,
     );
-    final currentDictionaryEither =
+
+    currentDictionaryFailure =
         await dictionaryRepository.initCurrentDictionary(user);
-
-    // wordBankEither.fold(
-    //   (l) {
-    //     if (l is DictionariesFailure) {
-    //       // dictionaries = l.dictionaries;
-    //       dictionariesFailure = l;
-    //     }
-    //   },
-    //   (r) => dictionaries = r,
-    // );
-
-    // currentDictionaryEither.fold(
-    //   (l) {
-    //     if (l is DictionaryFailure) {
-    //       currentDictionaryFailure = l;
-    //     }
-    //   },
-    //   (r) => currentLanguage = r?.language,
-    // );
 
     _finishMethod();
   }
@@ -162,19 +145,7 @@ class DictionaryProvider extends ChangeNotifier {
   Future addDictionary(Language lang) async {
     _prepareMethod();
 
-    final wordBankEither = await dictionaryRepository.addDictionary(user, lang);
-
-    // wordBankEither.fold(
-    //   (l) {
-    //     if (l is DictionariesFailure) {
-    //       dictionariesFailure = l;
-    //       dictionaries = l.dictionaries;
-    //     }
-    //   },
-    //   (r) => dictionaries = r,
-    // );
-
-    // currentLanguage = lang;
+    dictionariesFailure = await dictionaryRepository.addDictionary(user, lang);
 
     _finishMethod();
   }
@@ -182,31 +153,13 @@ class DictionaryProvider extends ChangeNotifier {
   Future removeDictionary(Language lang) async {
     _prepareMethod();
 
-    final wordBankEither = await dictionaryRepository.removeDictionary(
+    dictionariesFailure = await dictionaryRepository.removeDictionary(
       user,
       lang,
     );
 
-    // wordBankEither.fold(
-    //   (l) {
-    //     if (l is DictionariesFailure) {
-    //       dictionariesFailure = l;
-    //       dictionaries = l.dictionaries;
-    //     }
-    //   },
-    //   (r) => dictionaries = r,
-    // );
-
-    final currentDictionaryEither =
+    currentDictionaryFailure =
         await dictionaryRepository.initCurrentDictionary(user);
-    // currentDictionaryEither.fold(
-    //   (l) {
-    //     if (l is DictionaryFailure) {
-    //       currentDictionaryFailure = l;
-    //     }
-    //   },
-    //   (r) => currentLanguage = r?.language,
-    // );
 
     _finishMethod();
   }
@@ -219,20 +172,10 @@ class DictionaryProvider extends ChangeNotifier {
 
     if (currentLanguage != null) {
       if (currentDictionary != null) {
-        final wordBankEither = await dictionaryRepository.addWord(
+        dictionariesFailure = await dictionaryRepository.addWord(
           user,
           wordToAddMap,
         );
-
-        // wordBankEither.fold(
-        //   (l) {
-        //     if (l is DictionariesFailure) {
-        //       dictionariesFailure = l;
-        //       dictionaries = l.dictionaries;
-        //     }
-        //   },
-        //   (r) => dictionaries = r,
-        // );
       }
     }
 
@@ -251,20 +194,11 @@ class DictionaryProvider extends ChangeNotifier {
     }
 
     if (dictionaries[language] != null) {
-      final currentDictionaryEither =
+      currentDictionaryFailure =
           await dictionaryRepository.changeCurrentDictionary(
         user,
         language,
       );
-      // currentDictionaryEither.fold(
-      //   (l) {
-      //     if (l is DictionaryFailure) {
-      //       currentLanguage = l.currentDictionary?.language;
-      //       currentDictionaryFailure = l;
-      //     }
-      //   },
-      //   (r) => currentLanguage = r.language,
-      // );
     }
 
     _finishMethod();
@@ -275,21 +209,11 @@ class DictionaryProvider extends ChangeNotifier {
     Map changedMap, {
     bool? searching,
   }) async {
-    final wordBankEither = await dictionaryRepository.editWord(
+    dictionariesFailure = await dictionaryRepository.editWord(
       user,
       oldWord.id,
       changedMap,
     );
-
-    // wordBankEither.fold(
-    //   (l) {
-    //     if (l is DictionariesFailure) {
-    //       dictionariesFailure = l;
-    //       dictionaries = l.dictionaries;
-    //     }
-    //   },
-    //   (r) => dictionaries = r,
-    // );
 
     if (searching ?? false) {
       searchWords(null);
@@ -304,20 +228,10 @@ class DictionaryProvider extends ChangeNotifier {
   }) async {
     _prepareMethod();
 
-    final dictionariesEither = await dictionaryRepository.removeWord(
+    dictionariesFailure = await dictionaryRepository.removeWord(
       user,
       wordToRemove,
     );
-
-    // dictionariesEither.fold(
-    //   (l) {
-    //     if (l is DictionariesFailure) {
-    //       dictionariesFailure = l;
-    //       dictionaries = l.dictionaries;
-    //     }
-    //   },
-    //   (r) => dictionaries = r,
-    // );
 
     if (searching ?? false) {
       searchWords(null);

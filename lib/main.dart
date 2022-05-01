@@ -23,7 +23,7 @@ Future main() async {
   if (!kIsWeb) {
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
       await GoogleSignInDart.register(
-        clientId: dotenv.env['OAUTH_CLIENT_ID']!,
+        clientId: dotenv.env[oauthClientIdDesktop]!,
       );
     }
   }

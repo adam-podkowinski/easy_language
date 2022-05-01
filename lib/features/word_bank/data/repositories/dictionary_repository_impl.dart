@@ -77,7 +77,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   }
 
   @override
-  Future<Either<Failure, Dictionaries>> addDictionary(
+  Future<InfoFailure?> addDictionary(
     User user,
     Language language,
   ) async {
@@ -91,21 +91,22 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
       localDataSource.cacheDictionaries(dictionaries);
 
-      return Right(dictionaries);
-    } catch (_) {
-      return Left(DictionariesCacheFailure(dictionaries));
+      return null;
+    } catch (e) {
+      Logger().e(e);
+      return InfoFailure(errorMessage: e.toString());
     }
   }
 
   @override
-  Future<Either<Failure, Dictionaries>> removeDictionary(
+  Future<InfoFailure?> removeDictionary(
     User user,
     Language language,
   ) async {
     try {
       final toRemove = dictionaries[language];
       if (toRemove == null) {
-        return Left(DictionariesCacheFailure(dictionaries));
+        throw InfoFailure(errorMessage: 'No word to remove.');
       }
 
       dictionaries.removeWhere((key, value) => key == language);
@@ -123,15 +124,15 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
       localDataSource.cacheDictionaries(dictionaries);
 
-      return Right(dictionaries);
+      return null;
     } catch (e) {
       Logger().e(e);
-      return Left(DictionariesCacheFailure(dictionaries));
+      return InfoFailure(errorMessage: e.toString());
     }
   }
 
   @override
-  Future<Either<Failure, Dictionary>> changeCurrentDictionary(
+  Future<InfoFailure?> changeCurrentDictionary(
     User user,
     Language language,
   ) async {
@@ -154,16 +155,16 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
       );
     } catch (e) {
       Logger().e(e);
-      return Left(DictionaryCacheFailure(currentDictionary));
+      return InfoFailure(errorMessage: e.toString());
     }
-    return Right(currentDictionary!);
+    return null;
   }
 
   @override
-  Future<Either<Failure, Dictionary?>> initCurrentDictionary(User user) async {
+  Future<InfoFailure?> initCurrentDictionary(User user) async {
     try {
       if (dictionaries.isEmpty) {
-        throw DictionaryGetFailure(null);
+        throw InfoFailure(errorMessage: 'Dictionaries is empty');
       }
 
       currentLanguage = dictionaries.values.firstWhere(
@@ -189,15 +190,16 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
         localDataSource.cacheDictionaries(dictionaries);
       }
-    } catch (_) {
-      return Left(DictionaryGetFailure(currentDictionary));
+    } catch (e) {
+      Logger().e(e);
+      return InfoFailure(errorMessage: e.toString());
     }
 
-    return Right(currentDictionary);
+    return null;
   }
 
   @override
-  Future<Either<Failure, Dictionaries>> initDictionaries(User user) async {
+  Future<InfoFailure?> initDictionaries(User user) async {
     try {
       final DictionariesModel cachedDictionaries =
           await localDataSource.getLocalDictionaries();
@@ -250,14 +252,14 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
       }
     } catch (e) {
       Logger().e(e);
-      return Left(DictionariesGetFailure(dictionaries));
+      return InfoFailure(errorMessage: e.toString());
     }
 
-    return Right(dictionaries);
+    return null;
   }
 
   @override
-  Future<Either<Failure, Dictionaries>> addWord(User user, Map wordMap) async {
+  Future<InfoFailure?> addWord(User user, Map wordMap) async {
     try {
       if (currentLanguage == null) {
         throw 'no current dictionary';
@@ -294,15 +296,15 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
       localDataSource.cacheDictionaries(dictionaries);
 
-      return Right(dictionaries);
+      return null;
     } catch (e) {
       Logger().e(e);
-      return Left(DictionariesCacheFailure(dictionaries));
+      return InfoFailure(errorMessage: e.toString());
     }
   }
 
   @override
-  Future<Either<Failure, Dictionaries>> editWord(
+  Future<InfoFailure?> editWord(
     User user,
     int id,
     Map editMap,
@@ -339,15 +341,15 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
       localDataSource.cacheDictionaries(dictionaries);
 
-      return Right(dictionaries);
+      return null;
     } catch (e) {
       Logger().e(e);
-      return Left(DictionariesFailure(dictionaries));
+      return InfoFailure(errorMessage: e.toString());
     }
   }
 
   @override
-  Future<Either<Failure, Dictionaries>> removeWord(
+  Future<InfoFailure?> removeWord(
     User user,
     Word wordToRemove,
   ) async {
@@ -375,10 +377,10 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
       localDataSource.cacheDictionaries(dictionaries);
 
-      return Right(dictionaries);
+      return null;
     } catch (e) {
       Logger().e(e);
-      return Left(DictionariesFailure(dictionaries));
+      return InfoFailure(errorMessage: e.toString());
     }
   }
 

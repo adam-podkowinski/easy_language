@@ -1,12 +1,10 @@
 import 'package:easy_language/core/constants.dart';
-import 'package:easy_language/core/error/failures.dart';
-import 'package:easy_language/core/presentation/show_error.dart';
+import 'package:easy_language/core/presentation/show_failure.dart';
 import 'package:easy_language/core/presentation/styles.dart';
 import 'package:easy_language/features/user/presentation/manager/user_provider.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/forgot_password_dialog.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,13 +41,11 @@ class AuthenticatePage extends StatelessWidget {
     );
 
     final failure = context.watch<UserProvider>().userFailure;
-
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      if (failure != null && failure is UserUnauthenticatedFailure) {
-        showError(context, failure.errorMessage);
-        context.read<UserProvider>().clearError();
-      }
-    });
+    showFailure(
+      context,
+      failure,
+      runAfter: context.read<UserProvider>().clearError,
+    );
 
     return Scaffold(
       backgroundColor: primaryVariant,

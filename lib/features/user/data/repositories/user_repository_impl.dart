@@ -6,8 +6,9 @@ import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/features/user/data/data_sources/user_local_data_source.dart';
 import 'package:easy_language/features/user/data/data_sources/user_remote_data_source.dart';
 import 'package:easy_language/features/user/data/models/user_model.dart';
-import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/user/domain/repositories/user_repository.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
@@ -15,9 +16,11 @@ import 'package:logger/logger.dart';
 class UserRepositoryImpl implements UserRepository {
   bool _initial = true;
 
-  UserModel? _user;
+  @override
+  UserModel? user;
 
-  bool get loggedIn => _user != null;
+  @override
+  bool get loggedIn => user != null;
 
   final SettingsLocalDataSource localDataSource;
   final UserRemoteDataSource remoteDataSource;
@@ -34,71 +37,78 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, User>> editUser({
+  Future<InfoFailure?> editUser({
     required Map userMap,
   }) async {
     try {
       await _ensureInitialized();
 
       if (!loggedIn) {
-        return Left(UserUnauthenticatedFailure('user not logged in'));
+        return InfoFailure(errorMessage: 'user not logged in');
       }
 
-      _user = await remoteDataSource.editUser(
-        userToEdit: _user!,
+      user = await remoteDataSource.editUser(
+        userToEdit: user!,
         editMap: userMap,
       );
 
-      localDataSource.cacheUser(_user!);
-      return Right(_user!);
-    } catch (_) {
-      return Left(UserCacheFailure());
+      localDataSource.cacheUser(user!);
+      return null;
+    } catch (e) {
+      Logger().e(e);
+      return InfoFailure(errorMessage: e.toString());
     }
   }
 
   @override
-  Future<Either<Failure, User>> initUser() async {
+  Future<InfoFailure?> initUser() async {
     try {
       _initial = false;
-      _user = await localDataSource.getCachedUser();
+      user = await localDataSource.getCachedUser();
       await fetchUser();
-      return loggedIn ? Right(_user!) : Left(UserGetFailure());
-    } catch (_) {
+      return loggedIn
+          ? null
+          : InfoFailure(errorMessage: 'User is not logged in (null).');
+    } catch (e) {
       _initial = false;
-      return Left(UserGetFailure());
+      Logger().e(e);
+      return InfoFailure(errorMessage: e.toString(), showErrorMessage: false);
     }
   }
 
   @override
-  Future<Either<Failure, User>> fetchUser() async {
+  Future<InfoFailure?> fetchUser() async {
     await _ensureInitialized();
 
     if (!loggedIn) {
-      return Left(UserUnauthenticatedFailure('user not logged in'));
+      return InfoFailure(errorMessage: 'user not logged in');
     }
 
     try {
-      final newUser = await remoteDataSource.fetchUser(userToFetch: _user!);
+      final newUser = await remoteDataSource.fetchUser(userToFetch: user!);
 
-      if (newUser.updatedAt.isAfter(_user!.updatedAt)) {
-        _user = newUser;
-        localDataSource.cacheUser(_user!);
+      if (newUser.updatedAt.isAfter(user!.updatedAt)) {
+        user = newUser;
+        localDataSource.cacheUser(user!);
       }
 
-      return Right(_user!);
+      return null;
     } catch (e) {
       Logger().e(e);
-      return Left(UserGetFailure());
+      return InfoFailure(errorMessage: e.toString());
     }
   }
 
   @override
-  Future<Either<Failure, User>> googleSignIn() async {
+  Future<InfoFailure?> googleSignIn() async {
     try {
-      final GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        scopes: ['email'],
+        clientId: kIsWeb ? dotenv.env[oauthClientIdWeb] : null,
+      );
       final GoogleSignInAccount? gAcc = await googleSignIn.signIn();
       if (gAcc == null) {
-        return Left(UserUnauthenticatedFailure("Couldn't sign in."));
+        return InfoFailure(errorMessage: "Couldn't sign in.");
       }
       final accToken = (await gAcc.authentication).accessToken;
 
@@ -116,25 +126,23 @@ class UserRepositoryImpl implements UserRepository {
       if (!response.ok) {
         Logger().e(response.body);
         Logger().e(response.statusCode);
-        return Left(
-          UserUnauthenticatedFailure(
-            "Couldn't register: ${bodyMap['message']}",
-          ),
+        return InfoFailure(
+          errorMessage: "Couldn't register: ${bodyMap['message']}",
         );
       }
 
-      _user = UserModel.fromMap(bodyMap);
-      localDataSource.cacheUser(_user!);
+      user = UserModel.fromMap(bodyMap);
+      localDataSource.cacheUser(user!);
 
-      return Right(_user!);
+      return null;
     } catch (e) {
       Logger().e(e);
-      return Left(UserUnauthenticatedFailure("Couldn't sign in."));
+      return InfoFailure(errorMessage: "Couldn't sign in.");
     }
   }
 
   @override
-  Future<Either<Failure, User>> login({required Map formMap}) async {
+  Future<InfoFailure?> login({required Map formMap}) async {
     try {
       final response = await http.post(
         Uri.parse('$api/authentication/login'),
@@ -147,25 +155,23 @@ class UserRepositoryImpl implements UserRepository {
       if (!response.ok) {
         Logger().e(response.body);
         Logger().e(response.statusCode);
-        return Left(
-          UserUnauthenticatedFailure(
-            "Couldn't log in: ${bodyMap['message']}",
-          ),
+        return InfoFailure(
+          errorMessage: "Couldn't log in: ${bodyMap['message']}",
         );
       }
 
-      _user = UserModel.fromMap(bodyMap);
-      localDataSource.cacheUser(_user!);
+      user = UserModel.fromMap(bodyMap);
+      localDataSource.cacheUser(user!);
 
-      return Right(_user!);
+      return null;
     } catch (e) {
       Logger().e(e);
-      return Left(UserUnauthenticatedFailure("Couldn't log in"));
+      return InfoFailure(errorMessage: "Couldn't log in");
     }
   }
 
   @override
-  Future<Either<Failure, User>> register({required Map formMap}) async {
+  Future<InfoFailure?> register({required Map formMap}) async {
     try {
       final response = await http.post(
         Uri.parse('$api/authentication/register'),
@@ -178,33 +184,32 @@ class UserRepositoryImpl implements UserRepository {
       if (!response.ok) {
         Logger().e(response.body);
         Logger().e(response.statusCode);
-        return Left(
-          UserUnauthenticatedFailure(
-            "Couldn't register: ${bodyMap['message']}",
-          ),
+        return InfoFailure(
+          errorMessage: "Couldn't register: ${bodyMap['message']}",
         );
       }
 
-      _user = UserModel.fromMap(bodyMap);
-      localDataSource.cacheUser(_user!);
+      user = UserModel.fromMap(bodyMap);
+      localDataSource.cacheUser(user!);
 
-      return Right(_user!);
+      return null;
     } catch (e) {
       Logger().e(e);
-      return Left(UserUnauthenticatedFailure("Couldn't register"));
+      return InfoFailure(errorMessage: "Couldn't register");
     }
   }
 
+  // TODO: call di.sl<DictionaryRepository>().logout()
   @override
-  Future<Failure?> logout() async {
+  Future<InfoFailure?> logout() async {
     if (!loggedIn) {
-      return UserUnauthenticatedFailure('user not logged in');
+      return InfoFailure(errorMessage: 'user not logged in');
     }
 
     try {
-      final String? token = _user?.token;
+      final String? token = user?.token;
 
-      _user = null;
+      user = null;
 
       await GoogleSignIn.standard().signOut();
 
@@ -222,25 +227,27 @@ class UserRepositoryImpl implements UserRepository {
         final Map bodyMap = cast(jsonDecode(response.body));
         Logger().e(response.body);
         Logger().e(response.statusCode);
-        return UserUnauthenticatedFailure(
-          "Couldn't logout: ${bodyMap['message']}",
+        return InfoFailure(
+          errorMessage: "Couldn't logout: ${bodyMap['message']}",
         );
       }
 
       return null;
     } catch (e) {
       Logger().e(e);
-      return UserUnauthenticatedFailure("Couldn't register");
+      return InfoFailure(errorMessage: "Couldn't register");
     }
   }
 
+  // TODO: call di.sl<DictionaryRepository>().logout()
+  // TODO: return InfoFailure? instead of bool
   @override
   Future<bool> removeAccount({
     required String email,
     required String password,
   }) async {
     try {
-      if (_user == null) {
+      if (user == null) {
         return false;
       }
 
@@ -248,7 +255,7 @@ class UserRepositoryImpl implements UserRepository {
         Uri.parse('$api/user'),
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer ${_user!.token}',
+          'Authorization': 'Bearer ${user!.token}',
         },
         body: {'email': email, 'password': password},
       );
@@ -259,7 +266,7 @@ class UserRepositoryImpl implements UserRepository {
       }
 
       localDataSource.clearUser();
-      _user = null;
+      user = null;
 
       return true;
     } catch (e) {

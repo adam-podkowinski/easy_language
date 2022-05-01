@@ -33,7 +33,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       if (!response.ok) {
         Logger().e(response.body);
         Logger().e(response.statusCode);
-        throw UserUnauthenticatedFailure(response.body);
+        throw InfoFailure(errorMessage: response.body);
       }
 
       return userToFetch.copyWithMap({'user': bodyMap});
@@ -63,7 +63,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     if (!response.ok) {
       Logger().e(response.body);
       Logger().e(response.statusCode);
-      throw UserUnauthenticatedFailure(response.body);
+      throw InfoFailure(errorMessage: response.body);
     }
 
     return userToEdit.copyWithMap({'user': bodyMap});

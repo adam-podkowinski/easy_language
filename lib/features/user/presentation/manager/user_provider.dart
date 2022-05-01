@@ -10,13 +10,12 @@ import 'package:flutter/material.dart';
 class UserProvider extends ChangeNotifier {
   bool loading = true;
 
-  bool get loggedIn => user != null;
-
   final UserRepository userRepository;
 
-  User? user;
+  bool get loggedIn => userRepository.loggedIn;
+  User? get user => userRepository.user;
 
-  UserFailure? userFailure;
+  InfoFailure? userFailure;
 
   Map createMap = {};
 
@@ -46,15 +45,7 @@ class UserProvider extends ChangeNotifier {
   Future initUser() async {
     _prepareMethod();
 
-    final userEither = await userRepository.initUser();
-    userEither.fold(
-      (l) {
-        if (l is UserFailure) {
-          userFailure = l;
-        }
-      },
-      (r) => user = r,
-    );
+    userFailure = await userRepository.initUser();
 
     _finishMethod();
   }
@@ -68,17 +59,8 @@ class UserProvider extends ChangeNotifier {
       return;
     }
 
-    final userEither = await userRepository.editUser(
+    userFailure = await userRepository.editUser(
       userMap: changedSettings,
-    );
-
-    userEither.fold(
-      (l) {
-        if (l is UserFailure) {
-          userFailure = l;
-        }
-      },
-      (r) => user = r,
     );
 
     _finishMethod();
@@ -87,16 +69,7 @@ class UserProvider extends ChangeNotifier {
   Future googleSignIn() async {
     _prepareMethod();
 
-    final userEither = await userRepository.googleSignIn();
-
-    userEither.fold(
-      (l) {
-        if (l is UserFailure) {
-          userFailure = l;
-        }
-      },
-      (r) => user = r,
-    );
+    userFailure = await userRepository.googleSignIn();
 
     _finishMethod();
   }
@@ -104,16 +77,7 @@ class UserProvider extends ChangeNotifier {
   Future login(Map<String, dynamic> loginForm) async {
     _prepareMethod();
 
-    final userEither = await userRepository.login(formMap: loginForm);
-
-    userEither.fold(
-      (l) {
-        if (l is UserFailure) {
-          userFailure = l;
-        }
-      },
-      (r) => user = r,
-    );
+    userFailure = await userRepository.login(formMap: loginForm);
 
     _finishMethod();
   }
@@ -123,16 +87,7 @@ class UserProvider extends ChangeNotifier {
 
     final registerMap = {...registerForm, ...createMap};
 
-    final userEither = await userRepository.register(formMap: registerMap);
-
-    userEither.fold(
-      (l) {
-        if (l is UserFailure) {
-          userFailure = l;
-        }
-      },
-      (r) => user = r,
-    );
+    userFailure = await userRepository.register(formMap: registerMap);
 
     _finishMethod();
   }
@@ -140,14 +95,10 @@ class UserProvider extends ChangeNotifier {
   Future logout() async {
     _prepareMethod();
 
-    final Failure? failure = await userRepository.logout();
-    user = null;
+    userFailure = await userRepository.logout();
 
+    // TODO: move it to the user repository.
     sl<DictionaryRepository>().logout();
-
-    if (failure is UserFailure) {
-      userFailure = failure;
-    }
 
     _finishMethod();
   }
@@ -161,7 +112,7 @@ class UserProvider extends ChangeNotifier {
     final successful =
         await userRepository.removeAccount(email: email, password: password);
     if (successful) {
-      user = null;
+      // TODO: move it to the user repository.
       sl<DictionaryRepository>().logout();
     } else {
       return successful;

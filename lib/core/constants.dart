@@ -33,6 +33,8 @@ const addNewWordTitle = 'Add a new word';
 const editWordTitle = 'Edit a word';
 const svgPrefix = 'assets/svgs';
 const isStartupId = 'isStartup';
+const oauthClientIdDesktop = 'OAUTH_CLIENT_ID_DESKTOP';
+const oauthClientIdWeb = 'OAUTH_CLIENT_ID_WEB';
 
 const idId = 'id';
 const userIdId = 'useraId';

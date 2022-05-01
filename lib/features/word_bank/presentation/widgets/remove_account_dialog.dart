@@ -1,5 +1,6 @@
 import 'package:easy_language/core/constants.dart';
-import 'package:easy_language/core/presentation/show_error.dart';
+import 'package:easy_language/core/error/failures.dart';
+import 'package:easy_language/core/presentation/show_failure.dart';
 import 'package:easy_language/features/user/presentation/manager/user_provider.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -40,10 +41,14 @@ class RemoveAccountDialog extends StatelessWidget {
                 )) {
               Navigator.of(context).pop();
               Clipboard.setData(const ClipboardData(text: contactAddress));
-              showError(
+
+              showFailure(
                 context,
-                'Could not remove an account. Please, contact us about your issue: $contactAddress.'
-                '\nE-mail copied to clipboard.',
+                InfoFailure(
+                  errorMessage:
+                      'Could not remove an account. Please, contact us about your issue: $contactAddress.'
+                      '\nE-mail copied to clipboard.',
+                ),
               );
             }
           },

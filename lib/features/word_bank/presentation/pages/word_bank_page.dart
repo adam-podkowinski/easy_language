@@ -1,15 +1,12 @@
 import 'package:easy_language/core/constants.dart';
-import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/presentation/drawer.dart';
-import 'package:easy_language/core/presentation/show_error.dart';
+import 'package:easy_language/core/presentation/show_failure.dart';
 import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
 import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/show_word_dialog.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_controls.dart';
 import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_sheet.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:language_picker/languages.dart';
 import 'package:provider/provider.dart';
@@ -127,26 +124,13 @@ class _WordBankPageState extends State<WordBankPage> {
 
   Widget _addWordWidget(BuildContext context) {
     final state = context.watch<DictionaryProvider>();
-    if (state.currentDictionaryFailure is DictionaryCacheFailure) {
-      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-        if (kDebugMode) {
-          showError(context, state.currentDictionaryFailure.toString());
-        } else {
-          showError(context, 'Check internet connection');
-        }
-        state.clearError();
-      });
-    }
-    if (state.dictionariesFailure is DictionariesCacheFailure) {
-      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-        if (kDebugMode) {
-          showError(context, state.dictionariesFailure.toString());
-        } else {
-          showError(context, 'Check internet connection');
-        }
-        state.clearError();
-      });
-    }
+    showFailure(
+      context,
+      state.currentDictionaryFailure,
+      runAfter: state.clearError,
+    );
+    showFailure(context, state.dictionariesFailure, runAfter: state.clearError);
+
     return IconButton(
       icon: const Icon(Icons.add),
       onPressed: () {
