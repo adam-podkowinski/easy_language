@@ -4,17 +4,17 @@ import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/word.dart';
+import 'package:easy_language/features/dictionaries/data/data_sources/dictionary_local_data_source.dart';
+import 'package:easy_language/features/dictionaries/data/data_sources/dictionary_remote_data_source.dart';
+import 'package:easy_language/features/dictionaries/data/models/dictionary_model.dart';
+import 'package:easy_language/features/dictionaries/domain/entities/dictionary.dart';
+import 'package:easy_language/features/dictionaries/domain/repositories/dictionary_repository.dart';
 import 'package:easy_language/features/user/domain/entities/user.dart';
-import 'package:easy_language/features/word_bank/data/data_sources/dictionary_local_data_source.dart';
-import 'package:easy_language/features/word_bank/data/data_sources/dictionary_remote_data_source.dart';
-import 'package:easy_language/features/word_bank/data/models/dictionary_model.dart';
-import 'package:easy_language/features/word_bank/domain/entities/dictionary.dart';
-import 'package:easy_language/features/word_bank/domain/repositories/dictionary_repository.dart';
 import 'package:http/http.dart' as http;
 import 'package:language_picker/languages.dart';
 import 'package:logger/logger.dart';
 
-class DictionaryRepositoryImpl implements DictionaryRepository {
+class DictionariesRepositoryImpl implements DictionariesRepository {
   @override
   DictionariesModel dictionaries = {};
   @override
@@ -22,10 +22,10 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   @override
   DictionaryModel? get currentDictionary => dictionaries[currentLanguage];
 
-  final DictionaryLocalDataSource localDataSource;
-  final DictionaryRemoteDataSource remoteDataSource;
+  final DictionariesLocalDataSource localDataSource;
+  final DictionariesRemoteDataSource remoteDataSource;
 
-  DictionaryRepositoryImpl({
+  DictionariesRepositoryImpl({
     required this.localDataSource,
     required this.remoteDataSource,
   });
@@ -457,7 +457,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
     return flashcard;
   }
 
-  // Helper methods
+  // TODO: Move helper methods to the remote data source.
   Future<String> _updateCurrentDictionaryRemotely(User user, Map body) async {
     final res = await http.patch(
       Uri.parse('$api/dictionaries/${currentDictionary!.id}'),

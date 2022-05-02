@@ -1,30 +1,30 @@
-import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
+import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/styles.dart';
-import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
+import 'package:easy_language/features/dictionaries/presentation/manager/dictionary_provider.dart';
+import 'package:easy_language/features/dictionaries/presentation/widgets/show_word_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:language_picker/languages.dart';
 
-class NoLanguagesWidget extends StatelessWidget {
-  const NoLanguagesWidget({
+class NoWordsInDictionaryWidget extends StatelessWidget {
+  const NoWordsInDictionaryWidget({
     Key? key,
     required this.state,
     required this.radius,
   }) : super(key: key);
 
-  final DictionaryProvider state;
+  final DictionariesProvider state;
   final double radius;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(10.w),
+      padding: EdgeInsets.all(10.sp),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Add your first foreign language',
+              'Add your first word to remember it',
               style: Theme.of(context).textTheme.headline6!.copyWith(
                     color: onBackgroundDark,
                   ),
@@ -35,16 +35,10 @@ class NoLanguagesWidget extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                showLanguagePickerDialog(
+                showWordDialog(
                   context,
-                  (lang) async {
-                    return state.addDictionary(lang);
-                  },
-                  Languages.defaultLanguages
-                      .where(
-                        (element) => !state.dictionaries.keys.contains(element),
-                      )
-                      .toList(),
+                  addNewWordTitle,
+                  (word) => state.addWord(context, word),
                 );
               },
               style: ButtonStyle(
@@ -60,7 +54,7 @@ class NoLanguagesWidget extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.all(5.sp),
                 child: Text(
-                  'Add new language',
+                  'Add new word',
                   style: TextStyle(
                     fontSize: 15.sp,
                   ),

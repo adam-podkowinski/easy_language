@@ -3,16 +3,16 @@ import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/util/simplify_string.dart';
 import 'package:easy_language/core/word.dart';
+import 'package:easy_language/features/dictionaries/domain/entities/dictionary.dart';
+import 'package:easy_language/features/dictionaries/domain/repositories/dictionary_repository.dart';
 import 'package:easy_language/features/user/domain/entities/user.dart';
-import 'package:easy_language/features/word_bank/domain/entities/dictionary.dart';
-import 'package:easy_language/features/word_bank/domain/repositories/dictionary_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:language_picker/languages.dart';
 
-class DictionaryProvider extends ChangeNotifier {
+class DictionariesProvider extends ChangeNotifier {
   bool loading = true;
 
-  final DictionaryRepository dictionaryRepository;
+  final DictionariesRepository dictionaryRepository;
 
   Language? get currentLanguage => dictionaryRepository.currentLanguage;
   Dictionaries get dictionaries => dictionaryRepository.dictionaries;
@@ -27,7 +27,7 @@ class DictionaryProvider extends ChangeNotifier {
 
   late final User user;
 
-  DictionaryProvider({
+  DictionariesProvider({
     required this.dictionaryRepository,
   });
 

@@ -1,8 +1,8 @@
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/show_failure.dart';
 import 'package:easy_language/core/presentation/styles.dart';
+import 'package:easy_language/features/dictionaries/presentation/widgets/forgot_password_dialog.dart';
 import 'package:easy_language/features/user/presentation/manager/user_provider.dart';
-import 'package:easy_language/features/word_bank/presentation/widgets/forgot_password_dialog.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

@@ -33,11 +33,11 @@ class EasyLanguageDrawer extends StatelessWidget {
               ),
               DrawerListTile(
                 name: 'Word list',
-                isFocused: pageId == wordBankPageId,
+                isFocused: pageId == dictionariesPageId,
                 leadingIconData: Icons.list,
                 onTap: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).pushNamed(wordBankPageId);
+                  Navigator.of(context).pushNamed(dictionariesPageId);
                 },
               ),
               SizedBox(

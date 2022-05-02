@@ -1,5 +1,5 @@
-import 'package:easy_language/features/word_bank/data/models/dictionary_model.dart';
-import 'package:easy_language/features/word_bank/domain/entities/dictionary.dart';
+import 'package:easy_language/features/dictionaries/data/models/dictionary_model.dart';
+import 'package:easy_language/features/dictionaries/domain/entities/dictionary.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -20,12 +20,12 @@ String baseURL = defaultURL;
 
 String get api => baseURL;
 
-const wordBankPageId = '/dictionary';
+const dictionariesPageId = '/dictionary';
 const introductionPageId = '/introduction';
 const flashcardsPageId = '/flashcards';
 const settingsPageId = '/settings';
 const cachedUserId = 'settings';
-const cachedWordBankId = 'dictionary';
+const cachedDictionariesId = 'dictionary';
 const cachedCurrentLanguageId = 'currentLanguage';
 const cachedCurrentFlashcardId = 'currentFlashcard';
 const emptyString = 'Empty';
@@ -48,7 +48,7 @@ const removeAccountContent =
 const contactAddress = 'easy.language.dev.contact@gmail.com';
 
 const Map<String, String> pageTitlesFromIds = {
-  wordBankPageId: 'Word Bank',
+  dictionariesPageId: 'Word Bank',
   introductionPageId: 'Introduction',
   flashcardsPageId: 'Flashcards',
   settingsPageId: 'Settings',

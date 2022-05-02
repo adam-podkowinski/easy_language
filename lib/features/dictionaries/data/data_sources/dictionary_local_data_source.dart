@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/exceptions.dart';
-import 'package:easy_language/features/word_bank/data/models/dictionary_model.dart';
+import 'package:easy_language/features/dictionaries/data/models/dictionary_model.dart';
 import 'package:hive/hive.dart';
 import 'package:language_picker/languages.dart';
 import 'package:logger/logger.dart';
 
-abstract class DictionaryLocalDataSource {
+abstract class DictionariesLocalDataSource {
   Future<DictionariesModel> getLocalDictionaries();
 
   Future cacheDictionaries(DictionariesModel dictionaries);
@@ -14,10 +14,10 @@ abstract class DictionaryLocalDataSource {
   void logout();
 }
 
-class DictionaryLocalDataSourceImpl implements DictionaryLocalDataSource {
+class DictionariesLocalDataSourceImpl implements DictionariesLocalDataSource {
   final Box dictionariesBox;
 
-  DictionaryLocalDataSourceImpl({required this.dictionariesBox});
+  DictionariesLocalDataSourceImpl({required this.dictionariesBox});
 
   @override
   void logout() {

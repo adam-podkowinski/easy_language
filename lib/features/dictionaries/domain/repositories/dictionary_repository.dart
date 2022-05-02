@@ -1,11 +1,11 @@
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/word.dart';
+import 'package:easy_language/features/dictionaries/data/models/dictionary_model.dart';
 import 'package:easy_language/features/user/domain/entities/user.dart';
-import 'package:easy_language/features/word_bank/data/models/dictionary_model.dart';
 import 'package:language_picker/languages.dart';
 
-abstract class DictionaryRepository {
+abstract class DictionariesRepository {
   DictionariesModel dictionaries = {};
   Language? currentLanguage;
   DictionaryModel? get currentDictionary;

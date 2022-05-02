@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/error/failures.dart';
+import 'package:easy_language/features/dictionaries/domain/repositories/dictionary_repository.dart';
 import 'package:easy_language/features/user/data/models/user_model.dart';
 import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/user/domain/repositories/user_repository.dart';
-import 'package:easy_language/features/word_bank/domain/repositories/dictionary_repository.dart';
 import 'package:easy_language/injection_container.dart';
 import 'package:flutter/material.dart';
 
@@ -98,7 +98,7 @@ class UserProvider extends ChangeNotifier {
     userFailure = await userRepository.logout();
 
     // TODO: move it to the user repository.
-    sl<DictionaryRepository>().logout();
+    sl<DictionariesRepository>().logout();
 
     _finishMethod();
   }
@@ -113,7 +113,7 @@ class UserProvider extends ChangeNotifier {
         await userRepository.removeAccount(email: email, password: password);
     if (successful) {
       // TODO: move it to the user repository.
-      sl<DictionaryRepository>().logout();
+      sl<DictionariesRepository>().logout();
     } else {
       return successful;
     }

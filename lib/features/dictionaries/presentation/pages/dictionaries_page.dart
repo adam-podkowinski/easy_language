@@ -2,27 +2,27 @@ import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/drawer.dart';
 import 'package:easy_language/core/presentation/show_failure.dart';
 import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
-import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
-import 'package:easy_language/features/word_bank/presentation/widgets/show_word_dialog.dart';
-import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_controls.dart';
-import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_sheet.dart';
+import 'package:easy_language/features/dictionaries/presentation/manager/dictionary_provider.dart';
+import 'package:easy_language/features/dictionaries/presentation/widgets/dictionaries_controls.dart';
+import 'package:easy_language/features/dictionaries/presentation/widgets/dictionary_sheet.dart';
+import 'package:easy_language/features/dictionaries/presentation/widgets/show_word_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:language_picker/languages.dart';
 import 'package:provider/provider.dart';
 
-class WordBankPage extends StatefulWidget {
-  const WordBankPage({Key? key}) : super(key: key);
+class DictionariesPage extends StatefulWidget {
+  const DictionariesPage({Key? key}) : super(key: key);
 
   @override
-  _WordBankPageState createState() => _WordBankPageState();
+  _DictionariesPageState createState() => _DictionariesPageState();
 }
 
-class _WordBankPageState extends State<WordBankPage> {
+class _DictionariesPageState extends State<DictionariesPage> {
   bool _searching = false;
 
   void _controllerCallback() {
-    context.read<DictionaryProvider>().searchWords(
+    context.read<DictionariesProvider>().searchWords(
           _controller.text,
         );
   }
@@ -73,7 +73,7 @@ class _WordBankPageState extends State<WordBankPage> {
               : Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    pageTitlesFromIds[wordBankPageId] ?? 'Word Bank',
+                    pageTitlesFromIds[dictionariesPageId] ?? 'Word Bank',
                   ),
                 ),
         ),
@@ -108,14 +108,14 @@ class _WordBankPageState extends State<WordBankPage> {
           ),
         ],
       ),
-      drawer: const EasyLanguageDrawer(pageId: wordBankPageId),
+      drawer: const EasyLanguageDrawer(pageId: dictionariesPageId),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 11.sp),
         child: Column(
           children: [
-            Center(child: WordBankControls(radius: radius)),
+            Center(child: DictionariesControls(radius: radius)),
             SizedBox(height: 10.h),
-            WordBankSheet(radius: radius, controller: _controller),
+            DictionarySheet(radius: radius, controller: _controller),
           ],
         ),
       ),
@@ -123,7 +123,7 @@ class _WordBankPageState extends State<WordBankPage> {
   }
 
   Widget _addWordWidget(BuildContext context) {
-    final state = context.watch<DictionaryProvider>();
+    final state = context.watch<DictionariesProvider>();
     showFailure(
       context,
       state.currentDictionaryFailure,

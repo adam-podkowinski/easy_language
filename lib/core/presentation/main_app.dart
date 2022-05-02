@@ -1,11 +1,11 @@
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/presentation/styles.dart';
+import 'package:easy_language/features/dictionaries/presentation/manager/dictionary_provider.dart';
+import 'package:easy_language/features/dictionaries/presentation/pages/dictionaries_page.dart';
+import 'package:easy_language/features/dictionaries/presentation/pages/flashcard_page.dart';
 import 'package:easy_language/features/user/presentation/manager/user_provider.dart';
 import 'package:easy_language/features/user/presentation/pages/settings_page.dart';
-import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
-import 'package:easy_language/features/word_bank/presentation/pages/flashcard_page.dart';
-import 'package:easy_language/features/word_bank/presentation/pages/word_bank_page.dart';
 import 'package:easy_language/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,9 +25,9 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<DictionaryProvider>(
+        ChangeNotifierProvider<DictionariesProvider>(
           create: (context) {
-            final provider = sl<DictionaryProvider>();
+            final provider = sl<DictionariesProvider>();
             provider.initDictionaryProvider(context.read<UserProvider>().user!);
             return provider;
           },
@@ -39,7 +39,7 @@ class MainApp extends StatelessWidget {
         theme: buildLight(context),
         darkTheme: buildDark(context),
         debugShowCheckedModeBanner: false,
-        initialRoute: wordBankPageId,
+        initialRoute: dictionariesPageId,
         builder: (context, widget) {
           ScreenUtil.setContext(context);
           return MediaQuery(
@@ -48,7 +48,7 @@ class MainApp extends StatelessWidget {
           );
         },
         routes: {
-          wordBankPageId: (context) => const WordBankPage(),
+          dictionariesPageId: (context) => const DictionariesPage(),
           settingsPageId: (context) => const SettingsPage(),
           flashcardsPageId: (context) => const FlashcardPage(),
         },

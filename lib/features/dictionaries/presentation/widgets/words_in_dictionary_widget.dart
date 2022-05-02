@@ -1,9 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/word.dart';
-import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
-import 'package:easy_language/features/word_bank/presentation/widgets/show_word_dialog.dart';
-import 'package:easy_language/features/word_bank/presentation/widgets/word_bank_sheet.dart';
+import 'package:easy_language/features/dictionaries/presentation/manager/dictionary_provider.dart';
+import 'package:easy_language/features/dictionaries/presentation/widgets/dictionary_sheet.dart';
+import 'package:easy_language/features/dictionaries/presentation/widgets/show_word_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -23,7 +23,7 @@ class WordsInDictionaryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<DictionaryProvider>();
+    final state = context.watch<DictionariesProvider>();
 
     List<Word> items = wordList;
 
@@ -93,7 +93,7 @@ class WordListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DictionaryProvider _state = context.watch<DictionaryProvider>();
+    final DictionariesProvider _state = context.watch<DictionariesProvider>();
 
     return Column(
       mainAxisSize: MainAxisSize.min,

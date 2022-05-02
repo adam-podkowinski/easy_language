@@ -1,8 +1,8 @@
 import 'package:easy_language/core/presentation/circular_progress_indicator.dart';
-import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
-import 'package:easy_language/features/word_bank/presentation/widgets/no_languages_widget.dart';
-import 'package:easy_language/features/word_bank/presentation/widgets/no_words_in_dictionary_widget.dart';
-import 'package:easy_language/features/word_bank/presentation/widgets/words_in_dictionary_widget.dart';
+import 'package:easy_language/features/dictionaries/presentation/manager/dictionary_provider.dart';
+import 'package:easy_language/features/dictionaries/presentation/widgets/no_languages_widget.dart';
+import 'package:easy_language/features/dictionaries/presentation/widgets/no_words_in_dictionary_widget.dart';
+import 'package:easy_language/features/dictionaries/presentation/widgets/words_in_dictionary_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,8 +26,8 @@ Color getSecondSheetColor(BuildContext context) {
   }
 }
 
-class WordBankSheet extends StatefulWidget {
-  const WordBankSheet({
+class DictionarySheet extends StatefulWidget {
+  const DictionarySheet({
     Key? key,
     required this.radius,
     required this.controller,
@@ -37,11 +37,11 @@ class WordBankSheet extends StatefulWidget {
   final TextEditingController controller;
 
   @override
-  _WordBankSheetState createState() => _WordBankSheetState();
+  _DictionarySheetState createState() => _DictionarySheetState();
 }
 
-class _WordBankSheetState extends State<WordBankSheet> {
-  late final DictionaryProvider state;
+class _DictionarySheetState extends State<DictionarySheet> {
+  late final DictionariesProvider state;
   Widget currentWidget = const Center(
     child: CustomCircularProgressIndicator(),
   );
@@ -51,7 +51,7 @@ class _WordBankSheetState extends State<WordBankSheet> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (init) {
-      state = context.watch<DictionaryProvider>();
+      state = context.watch<DictionariesProvider>();
       state.addListener(_changeCurrentWidget);
       init = false;
     }

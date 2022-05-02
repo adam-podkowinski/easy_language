@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/word.dart';
-import 'package:easy_language/features/word_bank/domain/entities/dictionary.dart';
-import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
-import 'package:easy_language/features/word_bank/presentation/widgets/status_widget.dart';
+import 'package:easy_language/features/dictionaries/domain/entities/dictionary.dart';
+import 'package:easy_language/features/dictionaries/presentation/manager/dictionary_provider.dart';
+import 'package:easy_language/features/dictionaries/presentation/widgets/status_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -16,7 +16,7 @@ class FlashcardView extends StatefulWidget {
   }) : super(key: key);
 
   final Word flashcard;
-  final DictionaryProvider state;
+  final DictionariesProvider state;
 
   @override
   State<FlashcardView> createState() => _FlashcardViewState();

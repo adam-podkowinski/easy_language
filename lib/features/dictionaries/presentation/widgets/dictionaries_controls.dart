@@ -1,13 +1,13 @@
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
-import 'package:easy_language/features/word_bank/presentation/manager/dictionary_provider.dart';
+import 'package:easy_language/features/dictionaries/presentation/manager/dictionary_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:language_picker/languages.dart';
 import 'package:provider/provider.dart';
 
-class WordBankControls extends StatelessWidget {
-  const WordBankControls({
+class DictionariesControls extends StatelessWidget {
+  const DictionariesControls({
     Key? key,
     required this.radius,
   }) : super(key: key);
@@ -16,7 +16,7 @@ class WordBankControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<DictionaryProvider>();
+    final state = context.watch<DictionariesProvider>();
 
     void showRemoveLanguageConfirmationDialog(BuildContext context) {
       final Widget cancelButton = OutlinedButton(
