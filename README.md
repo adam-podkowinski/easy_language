@@ -1,11 +1,11 @@
 # Easy Language
 
 ### An application that will help you learn new languages!
-### Made using Flutter framework
+### Created with Flutter framework.
 
 ## Stack
 
-It uses flutter beta, nestjs backend, and provider.
+It uses flutter beta, nestjs backend, and the provider state management.
 Riverpod and flutter hooks are to be used in the future.
 
 ### Connected to backend: [easy-language-backend](https://github.com/adam-podkowinski/easy-language-backend)
