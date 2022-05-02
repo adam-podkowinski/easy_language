@@ -1,7 +1,8 @@
 # Easy Language
 
-## An application that will help you learn new languages!
-## Made using Flutter framework
+### An application that will help you learn new languages!
+### Made using Flutter framework
+
 ## Stack
 
 It uses flutter beta, nestjs backend, and provider.
