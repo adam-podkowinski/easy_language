@@ -2,7 +2,7 @@ import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/drawer.dart';
 import 'package:easy_language/core/presentation/show_failure.dart';
 import 'package:easy_language/core/presentation/show_language_picker_dialog.dart';
-import 'package:easy_language/features/dictionaries/presentation/manager/dictionary_provider.dart';
+import 'package:easy_language/features/dictionaries/presentation/manager/dictionaries_provider.dart';
 import 'package:easy_language/features/dictionaries/presentation/widgets/dictionaries_controls.dart';
 import 'package:easy_language/features/dictionaries/presentation/widgets/dictionary_sheet.dart';
 import 'package:easy_language/features/dictionaries/presentation/widgets/show_word_dialog.dart';

@@ -20,7 +20,7 @@ String baseURL = defaultURL;
 
 String get api => baseURL;
 
-const dictionariesPageId = '/dictionary';
+const dictionariesPageId = '/dictionaries';
 const introductionPageId = '/introduction';
 const flashcardsPageId = '/flashcards';
 const settingsPageId = '/settings';

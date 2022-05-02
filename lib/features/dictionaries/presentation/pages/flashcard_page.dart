@@ -1,5 +1,5 @@
 import 'package:easy_language/core/constants.dart';
-import 'package:easy_language/features/dictionaries/presentation/manager/dictionary_provider.dart';
+import 'package:easy_language/features/dictionaries/presentation/manager/dictionaries_provider.dart';
 import 'package:easy_language/features/dictionaries/presentation/widgets/flashcard_view.dart';
 import 'package:easy_language/features/dictionaries/presentation/widgets/no_flashcards.dart';
 import 'package:flutter/material.dart';

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/dictionaries/domain/entities/dictionary.dart';
-import 'package:easy_language/features/dictionaries/presentation/manager/dictionary_provider.dart';
+import 'package:easy_language/features/dictionaries/presentation/manager/dictionaries_provider.dart';
 import 'package:easy_language/features/dictionaries/presentation/widgets/status_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -127,9 +127,10 @@ class _FlashcardViewState extends State<FlashcardView> {
             child: InkWell(
               onTap: turnFlashcard,
               child: Padding(
-                padding: EdgeInsets.all(20.sp),
+                padding: EdgeInsets.all(15.sp),
                 child: Icon(
                   isTurned ? Icons.visibility : Icons.visibility_off,
+                  size: 32.r,
                   color: Theme.of(context).colorScheme.onSecondary,
                 ),
               ),
@@ -161,9 +162,10 @@ class _FlashcardViewState extends State<FlashcardView> {
               onTap: available ? nextFlashcard : null,
               enableFeedback: false,
               child: Padding(
-                padding: EdgeInsets.all(20.sp),
+                padding: EdgeInsets.all(15.sp),
                 child: Icon(
                   Icons.arrow_forward,
+                  size: 32.r,
                   color: Theme.of(context).colorScheme.onSecondary,
                 ),
               ),

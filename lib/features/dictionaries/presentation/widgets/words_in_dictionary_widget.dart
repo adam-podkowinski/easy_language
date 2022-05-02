@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/word.dart';
-import 'package:easy_language/features/dictionaries/presentation/manager/dictionary_provider.dart';
+import 'package:easy_language/features/dictionaries/presentation/manager/dictionaries_provider.dart';
 import 'package:easy_language/features/dictionaries/presentation/widgets/dictionary_sheet.dart';
 import 'package:easy_language/features/dictionaries/presentation/widgets/show_word_dialog.dart';
 import 'package:flutter/material.dart';

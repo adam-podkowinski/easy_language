@@ -1,5 +1,5 @@
 import 'package:easy_language/core/presentation/circular_progress_indicator.dart';
-import 'package:easy_language/features/dictionaries/presentation/manager/dictionary_provider.dart';
+import 'package:easy_language/features/dictionaries/presentation/manager/dictionaries_provider.dart';
 import 'package:easy_language/features/dictionaries/presentation/widgets/no_languages_widget.dart';
 import 'package:easy_language/features/dictionaries/presentation/widgets/no_words_in_dictionary_widget.dart';
 import 'package:easy_language/features/dictionaries/presentation/widgets/words_in_dictionary_widget.dart';

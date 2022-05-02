@@ -26,7 +26,7 @@ class WelcomeApp extends StatelessWidget {
         cast(context.watch<UserProvider>().createMap[User.themeModeId]),
       ),
       builder: (context, widget) {
-        ScreenUtil.setContext(context);
+        ScreenUtil.init(context);
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
           child: widget ?? const SizedBox(),

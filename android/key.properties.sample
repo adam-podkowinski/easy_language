@@ -1,0 +1,4 @@
+keyAlias=upload
+keyPassword=pass
+storePassword=pass
+storeFile=/home/bodzio/code/secure/upload-keystore.jks

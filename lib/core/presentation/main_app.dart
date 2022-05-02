@@ -1,7 +1,7 @@
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/presentation/styles.dart';
-import 'package:easy_language/features/dictionaries/presentation/manager/dictionary_provider.dart';
+import 'package:easy_language/features/dictionaries/presentation/manager/dictionaries_provider.dart';
 import 'package:easy_language/features/dictionaries/presentation/pages/dictionaries_page.dart';
 import 'package:easy_language/features/dictionaries/presentation/pages/flashcard_page.dart';
 import 'package:easy_language/features/user/presentation/manager/user_provider.dart';
@@ -41,7 +41,7 @@ class MainApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         initialRoute: dictionariesPageId,
         builder: (context, widget) {
-          ScreenUtil.setContext(context);
+          ScreenUtil.init(context);
           return MediaQuery(
             data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
             child: widget ?? const SizedBox(),

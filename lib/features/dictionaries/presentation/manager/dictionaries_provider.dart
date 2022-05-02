@@ -4,7 +4,7 @@ import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/util/simplify_string.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/dictionaries/domain/entities/dictionary.dart';
-import 'package:easy_language/features/dictionaries/domain/repositories/dictionary_repository.dart';
+import 'package:easy_language/features/dictionaries/domain/repositories/dictionaries_repository.dart';
 import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:language_picker/languages.dart';
@@ -12,10 +12,10 @@ import 'package:language_picker/languages.dart';
 class DictionariesProvider extends ChangeNotifier {
   bool loading = true;
 
-  final DictionariesRepository dictionaryRepository;
+  final DictionariesRepository dictionariesRepository;
 
-  Language? get currentLanguage => dictionaryRepository.currentLanguage;
-  Dictionaries get dictionaries => dictionaryRepository.dictionaries;
+  Language? get currentLanguage => dictionariesRepository.currentLanguage;
+  Dictionaries get dictionaries => dictionariesRepository.dictionaries;
   Dictionary? get currentDictionary => dictionaries[currentLanguage];
 
   InfoFailure? dictionariesFailure;
@@ -28,7 +28,7 @@ class DictionariesProvider extends ChangeNotifier {
   late final User user;
 
   DictionariesProvider({
-    required this.dictionaryRepository,
+    required this.dictionariesRepository,
   });
 
   List<Word>? searchedWords;
@@ -132,12 +132,12 @@ class DictionariesProvider extends ChangeNotifier {
 
     user = loggedInUser;
 
-    dictionariesFailure = await dictionaryRepository.initDictionaries(
+    dictionariesFailure = await dictionariesRepository.initDictionaries(
       loggedInUser,
     );
 
     currentDictionaryFailure =
-        await dictionaryRepository.initCurrentDictionary(user);
+        await dictionariesRepository.initCurrentDictionary(user);
 
     _finishMethod();
   }
@@ -145,7 +145,8 @@ class DictionariesProvider extends ChangeNotifier {
   Future addDictionary(Language lang) async {
     _prepareMethod();
 
-    dictionariesFailure = await dictionaryRepository.addDictionary(user, lang);
+    dictionariesFailure =
+        await dictionariesRepository.addDictionary(user, lang);
 
     _finishMethod();
   }
@@ -153,13 +154,13 @@ class DictionariesProvider extends ChangeNotifier {
   Future removeDictionary(Language lang) async {
     _prepareMethod();
 
-    dictionariesFailure = await dictionaryRepository.removeDictionary(
+    dictionariesFailure = await dictionariesRepository.removeDictionary(
       user,
       lang,
     );
 
     currentDictionaryFailure =
-        await dictionaryRepository.initCurrentDictionary(user);
+        await dictionariesRepository.initCurrentDictionary(user);
 
     _finishMethod();
   }
@@ -172,7 +173,7 @@ class DictionariesProvider extends ChangeNotifier {
 
     if (currentLanguage != null) {
       if (currentDictionary != null) {
-        dictionariesFailure = await dictionaryRepository.addWord(
+        dictionariesFailure = await dictionariesRepository.addWord(
           user,
           wordToAddMap,
         );
@@ -195,7 +196,7 @@ class DictionariesProvider extends ChangeNotifier {
 
     if (dictionaries[language] != null) {
       currentDictionaryFailure =
-          await dictionaryRepository.changeCurrentDictionary(
+          await dictionariesRepository.changeCurrentDictionary(
         user,
         language,
       );
@@ -209,7 +210,7 @@ class DictionariesProvider extends ChangeNotifier {
     Map changedMap, {
     bool? searching,
   }) async {
-    dictionariesFailure = await dictionaryRepository.editWord(
+    dictionariesFailure = await dictionariesRepository.editWord(
       user,
       oldWord.id,
       changedMap,
@@ -228,7 +229,7 @@ class DictionariesProvider extends ChangeNotifier {
   }) async {
     _prepareMethod();
 
-    dictionariesFailure = await dictionaryRepository.removeWord(
+    dictionariesFailure = await dictionariesRepository.removeWord(
       user,
       wordToRemove,
     );
@@ -241,14 +242,14 @@ class DictionariesProvider extends ChangeNotifier {
   }
 
   void getCurrentFlashcard() {
-    currentFlashcard = dictionaryRepository.getCurrentFlashcard(user);
-    flashcardIndex = dictionaryRepository.getFlashcardIndex();
+    currentFlashcard = dictionariesRepository.getCurrentFlashcard(user);
+    flashcardIndex = dictionariesRepository.getFlashcardIndex();
   }
 
   Future getNextFlashcard() async {
     _prepareMethod();
-    currentFlashcard = dictionaryRepository.getNextFlashcard(user);
-    flashcardIndex = dictionaryRepository.getFlashcardIndex();
+    currentFlashcard = dictionariesRepository.getNextFlashcard(user);
+    flashcardIndex = dictionariesRepository.getFlashcardIndex();
     _finishMethod();
   }
 }

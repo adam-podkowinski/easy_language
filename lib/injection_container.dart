@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/features/dictionaries/data/data_sources/dictionary_local_data_source.dart';
 import 'package:easy_language/features/dictionaries/data/data_sources/dictionary_remote_data_source.dart';
-import 'package:easy_language/features/dictionaries/data/repositories/dictionary_repository_impl.dart';
-import 'package:easy_language/features/dictionaries/domain/repositories/dictionary_repository.dart';
-import 'package:easy_language/features/dictionaries/presentation/manager/dictionary_provider.dart';
+import 'package:easy_language/features/dictionaries/data/repositories/dictionaries_repository_impl.dart';
+import 'package:easy_language/features/dictionaries/domain/repositories/dictionaries_repository.dart';
+import 'package:easy_language/features/dictionaries/presentation/manager/dictionaries_provider.dart';
 import 'package:easy_language/features/user/data/data_sources/user_local_data_source.dart';
 import 'package:easy_language/features/user/data/data_sources/user_remote_data_source.dart';
 import 'package:easy_language/features/user/data/repositories/user_repository_impl.dart';
@@ -50,7 +50,7 @@ Future registerDictionaries() async {
   // Provider
   sl.registerFactory(
     () => DictionariesProvider(
-      dictionaryRepository: sl(),
+      dictionariesRepository: sl(),
     ),
   );
 

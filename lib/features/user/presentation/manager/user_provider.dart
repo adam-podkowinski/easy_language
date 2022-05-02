@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/error/failures.dart';
-import 'package:easy_language/features/dictionaries/domain/repositories/dictionary_repository.dart';
+import 'package:easy_language/features/dictionaries/domain/repositories/dictionaries_repository.dart';
 import 'package:easy_language/features/user/data/models/user_model.dart';
 import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/user/domain/repositories/user_repository.dart';

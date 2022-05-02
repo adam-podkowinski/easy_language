@@ -8,7 +8,7 @@ import 'package:easy_language/features/dictionaries/data/data_sources/dictionary
 import 'package:easy_language/features/dictionaries/data/data_sources/dictionary_remote_data_source.dart';
 import 'package:easy_language/features/dictionaries/data/models/dictionary_model.dart';
 import 'package:easy_language/features/dictionaries/domain/entities/dictionary.dart';
-import 'package:easy_language/features/dictionaries/domain/repositories/dictionary_repository.dart';
+import 'package:easy_language/features/dictionaries/domain/repositories/dictionaries_repository.dart';
 import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:language_picker/languages.dart';
@@ -192,7 +192,7 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
       }
     } catch (e) {
       Logger().e(e);
-      return InfoFailure(errorMessage: e.toString());
+      return InfoFailure(errorMessage: e.toString(), showErrorMessage: false);
     }
 
     return null;
