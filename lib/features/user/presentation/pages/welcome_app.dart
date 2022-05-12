@@ -6,7 +6,6 @@ import 'package:easy_language/features/user/presentation/manager/user_provider.d
 import 'package:easy_language/features/user/presentation/pages/authenticate_page.dart';
 import 'package:easy_language/features/user/presentation/pages/introduction_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class WelcomeApp extends StatelessWidget {
@@ -25,13 +24,6 @@ class WelcomeApp extends StatelessWidget {
       themeMode: UserModel.mapStringToThemeMode(
         cast(context.watch<UserProvider>().createMap[User.themeModeId]),
       ),
-      builder: (context, widget) {
-        ScreenUtil.init(context);
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-          child: widget ?? const SizedBox(),
-        );
-      },
       home: showIntroduction
           ? const IntroductionPage()
           : const AuthenticatePage(),

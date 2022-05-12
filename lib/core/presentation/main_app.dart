@@ -8,7 +8,6 @@ import 'package:easy_language/features/user/presentation/manager/user_provider.d
 import 'package:easy_language/features/user/presentation/pages/settings_page.dart';
 import 'package:easy_language/injection_container.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class MainApp extends StatelessWidget {
@@ -40,13 +39,6 @@ class MainApp extends StatelessWidget {
         darkTheme: buildDark(context),
         debugShowCheckedModeBanner: false,
         initialRoute: dictionariesPageId,
-        builder: (context, widget) {
-          ScreenUtil.init(context);
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-            child: widget ?? const SizedBox(),
-          );
-        },
         routes: {
           dictionariesPageId: (context) => const DictionariesPage(),
           settingsPageId: (context) => const SettingsPage(),
