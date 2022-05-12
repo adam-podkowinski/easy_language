@@ -33,24 +33,24 @@ Future main() async {
 class EasyLanguage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: screenSize,
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context) => MultiProvider(
-        providers: [
-          ChangeNotifierProvider<UserProvider>(
-            create: (context) {
-              final user = di.sl<UserProvider>();
-              SharedPreferences.getInstance().then((prefs) async {
-                baseURL = prefs.getString('baseURL') ?? defaultURL;
-                user.initUser();
-              });
-              return user;
-            },
-          ),
-        ],
-        child: FutureBuilder<SharedPreferences>(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<UserProvider>(
+          create: (context) {
+            final user = di.sl<UserProvider>();
+            SharedPreferences.getInstance().then((prefs) async {
+              baseURL = prefs.getString('baseURL') ?? defaultURL;
+              user.initUser();
+            });
+            return user;
+          },
+        ),
+      ],
+      child: ScreenUtilInit(
+        designSize: screenSize,
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (_) => FutureBuilder<SharedPreferences>(
           future: SharedPreferences.getInstance(),
           builder: (context, snapshot) {
             final state = context.watch<UserProvider>();

@@ -13,11 +13,11 @@ dependencies:
   equatable: ^2.0.3
   flutter:
     sdk: flutter
-  flutter_screenutil: ^5.1.1
+  flutter_screenutil: ^5.5.2
   flutter_slidable: ^1.2.0
   flutter_svg: ^1.0.3
   get_it: ^7.2.0
-  hive: ^2.0.5
+  hive: ^2.1.0
   hive_flutter: ^1.1.0
   implicitly_animated_reorderable_list: ^0.4.2
   introduction_screen: ^3.0.2
@@ -26,19 +26,19 @@ dependencies:
       url: https://github.com/adam-podkowinski/flutter_language_pickers
   logger: ^1.1.0
   mocktail: ^0.3.0
-  uuid: ^3.0.5
-  path_provider: ^2.0.8
+  uuid: ^3.0.6
+  path_provider: ^2.0.10
   provider: ^6.0.2
   http: ^0.13.4
   faker: ^2.0.0
-  shared_preferences: ^2.0.13
+  shared_preferences: ^2.0.15
   email_validator: ^2.0.1
-  google_sign_in: ^5.3.0
-  google_sign_in_dartio: ^0.2.0
+  google_sign_in: ^5.3.1
+  google_sign_in_dartio: ^0.2.1
   flutter_dotenv: ^5.0.2
 
 dev_dependencies:
-  flutter_native_splash: ^2.0.1+1
+  flutter_native_splash: ^2.1.6
   flutter_test:
     sdk: flutter
   lint: ^1.8.2
