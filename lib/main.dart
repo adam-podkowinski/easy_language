@@ -33,19 +33,15 @@ Future main() async {
 class EasyLanguage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<UserProvider>(
-          create: (context) {
-            final user = di.sl<UserProvider>();
-            SharedPreferences.getInstance().then((prefs) async {
-              baseURL = prefs.getString('baseURL') ?? defaultURL;
-              user.initUser();
-            });
-            return user;
-          },
-        ),
-      ],
+    return ChangeNotifierProvider<UserProvider>(
+      create: (context) {
+        final user = di.sl<UserProvider>();
+        SharedPreferences.getInstance().then((prefs) async {
+          baseURL = prefs.getString('baseURL') ?? defaultURL;
+          user.initUser();
+        });
+        return user;
+      },
       child: ScreenUtilInit(
         designSize: screenSize,
         minTextAdapt: true,

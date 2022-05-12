@@ -21,7 +21,7 @@ final sl = GetIt.instance;
 
 Future registerUser() async {
   // Provider
-  sl.registerLazySingleton(
+  sl.registerFactory(
     () => UserProvider(
       userRepository: sl(),
     ),

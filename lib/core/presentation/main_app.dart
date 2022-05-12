@@ -22,16 +22,12 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<DictionariesProvider>(
-          create: (context) {
-            final provider = sl<DictionariesProvider>();
-            provider.initDictionaryProvider(context.read<UserProvider>().user!);
-            return provider;
-          },
-        ),
-      ],
+    return ChangeNotifierProvider<DictionariesProvider>(
+      create: (context) {
+        final provider = sl<DictionariesProvider>();
+        provider.initDictionaryProvider(context.read<UserProvider>().user!);
+        return provider;
+      },
       child: MaterialApp(
         title: 'Easy Language',
         themeMode: themeMode,

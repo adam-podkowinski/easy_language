@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 const primary = Color(0xff148af9);
 
@@ -26,22 +27,22 @@ const onBackgroundDark = Colors.white;
 TextTheme buildTextTheme(BuildContext context, Color onBackground) {
   return TextTheme(
     headline6: TextStyle(
-      fontSize: 24,
+      fontSize: 24.sp,
       fontWeight: FontWeight.w900,
       color: onBackground,
     ),
-    headline5: const TextStyle(
-      fontSize: 26,
+    headline5: TextStyle(
+      fontSize: 26.sp,
       fontWeight: FontWeight.w900,
       color: primary,
     ),
     headline4: TextStyle(
-      fontSize: 28,
+      fontSize: 28.sp,
       fontWeight: FontWeight.w900,
       color: onBackground,
     ),
     headline3: TextStyle(
-      fontSize: 20,
+      fontSize: 20.sp,
       fontWeight: FontWeight.w900,
       color: onBackground,
     ),
@@ -53,8 +54,8 @@ TextTheme buildTextTheme(BuildContext context, Color onBackground) {
       fontFamily: 'Mulish',
       fontWeight: FontWeight.bold,
     ),
-    bodyText1: const TextStyle(
-      fontSize: 15,
+    bodyText1: TextStyle(
+      fontSize: 15.sp,
       fontWeight: FontWeight.bold,
     ),
     bodyText2: const TextStyle(),
@@ -124,7 +125,7 @@ AppBarTheme appBarTheme(
     backgroundColor: background,
     foregroundColor: secondary,
     titleTextStyle: TextStyle(
-      fontSize: 24,
+      fontSize: 24.sp,
       fontWeight: FontWeight.w900,
       color: onBackground,
       fontFamily: 'Mulish',
