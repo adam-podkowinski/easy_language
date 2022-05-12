@@ -95,7 +95,7 @@ class _DictionarySheetState extends State<DictionarySheet> {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        clipBehavior: Clip.hardEdge,
+        clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
