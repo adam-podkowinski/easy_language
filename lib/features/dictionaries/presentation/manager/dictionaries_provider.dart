@@ -1,6 +1,6 @@
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
-import 'package:easy_language/core/util/simplify_string.dart';
+import 'package:easy_language/core/utils.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/dictionaries/domain/entities/dictionary.dart';
 import 'package:easy_language/features/dictionaries/domain/repositories/dictionaries_repository.dart';

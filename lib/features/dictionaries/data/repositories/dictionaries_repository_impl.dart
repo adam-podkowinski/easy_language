@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
-import 'package:easy_language/core/util/headers.dart';
+import 'package:easy_language/core/utils.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/dictionaries/data/data_sources/dictionary_local_data_source.dart';
 import 'package:easy_language/features/dictionaries/data/data_sources/dictionary_remote_data_source.dart';
