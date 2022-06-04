@@ -33,12 +33,15 @@ class RemoveAccountDialog extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () async {
+            // Validation
             if (!(formKey.currentState?.validate() ?? false)) return;
+
             if (!await context.read<UserProvider>().removeAccount(
                   context: context,
                   email: emailController.value.text,
                   password: passwordController.value.text,
                 )) {
+              // Couldn't remove an account
               Navigator.of(context).pop();
               Clipboard.setData(const ClipboardData(text: contactAddress));
 

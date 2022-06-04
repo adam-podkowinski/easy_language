@@ -86,8 +86,9 @@ class DictionariesControls extends StatelessWidget {
               hint: const Text(emptyString),
               elevation: 0,
               value: state.currentLanguage,
-              onChanged: (value) =>
-                  state.changeCurrentDictionary(context, value),
+              onChanged: (value) => value != null
+                  ? state.changeCurrentDictionary(context, value)
+                  : () {},
               iconEnabledColor: Theme.of(context).colorScheme.secondary,
               items: languagesList
                   .map(

@@ -3,10 +3,13 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
+import 'package:easy_language/core/util/headers.dart';
+import 'package:easy_language/features/dictionaries/domain/repositories/dictionaries_repository.dart';
 import 'package:easy_language/features/user/data/data_sources/user_local_data_source.dart';
 import 'package:easy_language/features/user/data/data_sources/user_remote_data_source.dart';
 import 'package:easy_language/features/user/data/models/user_model.dart';
 import 'package:easy_language/features/user/domain/repositories/user_repository.dart';
+import 'package:easy_language/injection_container.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -112,11 +115,13 @@ class UserRepositoryImpl implements UserRepository {
       }
       final accToken = (await gAcc.authentication).accessToken;
 
-      final response = await http.post(
+      final response = await http
+          .post(
         Uri.parse('$api/authentication/google-authentication'),
-        body: {'token': accToken},
-        headers: {'Accept': 'application/json'},
-      ).onError((error, stackTrace) {
+        body: jsonEncode({'token': accToken}),
+        headers: headers(),
+      )
+          .onError((error, stackTrace) {
         googleSignIn.signOut();
         throw Exception(error);
       });
@@ -146,8 +151,8 @@ class UserRepositoryImpl implements UserRepository {
     try {
       final response = await http.post(
         Uri.parse('$api/authentication/login'),
-        body: formMap,
-        headers: {'Accept': 'application/json'},
+        body: jsonEncode(formMap),
+        headers: headers(),
       );
 
       final Map bodyMap = cast(jsonDecode(response.body));
@@ -175,8 +180,8 @@ class UserRepositoryImpl implements UserRepository {
     try {
       final response = await http.post(
         Uri.parse('$api/authentication/register'),
-        body: formMap,
-        headers: {'Accept': 'application/json'},
+        body: jsonEncode(formMap),
+        headers: headers(),
       );
 
       final Map bodyMap = cast(jsonDecode(response.body));
@@ -199,7 +204,6 @@ class UserRepositoryImpl implements UserRepository {
     }
   }
 
-  // TODO: call di.sl<DictionaryRepository>().logout()
   @override
   Future<InfoFailure?> logout() async {
     if (!loggedIn) {
@@ -217,10 +221,7 @@ class UserRepositoryImpl implements UserRepository {
 
       final response = await http.get(
         Uri.parse('$api/user/logout'),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token'
-        },
+        headers: headers(token),
       );
 
       if (!response.ok) {
@@ -229,8 +230,11 @@ class UserRepositoryImpl implements UserRepository {
         Logger().e(response.statusCode);
         return InfoFailure(
           errorMessage: "Couldn't logout: ${bodyMap['message']}",
+          showErrorMessage: false,
         );
       }
+
+      sl<DictionariesRepository>().logout();
 
       return null;
     } catch (e) {
@@ -239,39 +243,35 @@ class UserRepositoryImpl implements UserRepository {
     }
   }
 
-  // TODO: call di.sl<DictionaryRepository>().logout()
-  // TODO: return InfoFailure? instead of bool
   @override
-  Future<bool> removeAccount({
+  Future<InfoFailure?> removeAccount({
     required String email,
     required String password,
   }) async {
     try {
       if (user == null) {
-        return false;
+        throw 'User is null';
       }
 
       final response = await http.delete(
         Uri.parse('$api/user'),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer ${user!.token}',
-        },
-        body: {'email': email, 'password': password},
+        headers: headers(user!.token),
+        body: jsonEncode({'email': email, 'password': password}),
       );
 
       if (!response.ok) {
-        Logger().e(response.body);
-        return false;
+        throw response.body;
       }
 
       localDataSource.clearUser();
       user = null;
 
-      return true;
+      sl<DictionariesRepository>().logout();
+
+      return null;
     } catch (e) {
       Logger().e(e);
-      return false;
+      return InfoFailure(errorMessage: e.toString());
     }
   }
 }

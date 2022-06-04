@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
+import 'package:easy_language/core/util/headers.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/dictionaries/data/data_sources/dictionary_local_data_source.dart';
 import 'package:easy_language/features/dictionaries/data/data_sources/dictionary_remote_data_source.dart';
@@ -10,6 +11,8 @@ import 'package:easy_language/features/dictionaries/data/models/dictionary_model
 import 'package:easy_language/features/dictionaries/domain/entities/dictionary.dart';
 import 'package:easy_language/features/dictionaries/domain/repositories/dictionaries_repository.dart';
 import 'package:easy_language/features/user/domain/entities/user.dart';
+import 'package:easy_language/features/user/domain/repositories/user_repository.dart';
+import 'package:easy_language/injection_container.dart';
 import 'package:http/http.dart' as http;
 import 'package:language_picker/languages.dart';
 import 'package:logger/logger.dart';
@@ -46,10 +49,7 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
 
       final response = await http.get(
         Uri.parse('$api/dictionaries/${currentDictionary!.id}/words'),
-        headers: {
-          'Authorization': 'Bearer ${user.token}',
-          'Accept': 'application/json',
-        },
+        headers: headers(user.token),
       );
 
       if (!response.ok) {
@@ -113,7 +113,7 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
       // TODO: Get new current dictionary from http delete response
       await http.delete(
         Uri.parse('$api/dictionaries/${toRemove.id}'),
-        headers: {'Authorization': 'Bearer ${user.token}'},
+        headers: headers(user.token),
       );
 
       if (dictionaries.isNotEmpty) {
@@ -142,16 +142,16 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
       if (currentDictionary!.shouldFetchWords) {
         final words = await fetchCurrentDictionaryWords(user);
 
-        dictionaries[currentLanguage]?.words.clear();
-        dictionaries[currentLanguage]?.words.addAll(words);
+        currentDictionary?.words.clear();
+        currentDictionary?.words.addAll(words);
 
         localDataSource.cacheDictionaries(dictionaries);
       }
 
-      http.patch(
-        Uri.parse('$api/user'),
-        headers: {'Authorization': 'Bearer ${user.token}'},
-        body: {User.currentDictionaryIdId: currentDictionary!.id.toString()},
+      sl<UserRepository>().editUser(
+        userMap: {
+          User.currentDictionaryIdId: currentDictionary?.id,
+        },
       );
     } catch (e) {
       Logger().e(e);
@@ -171,11 +171,10 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
         (dict) => dict.id == user.currentDictionaryId,
         orElse: () {
           currentLanguage = dictionaries.values.first.language;
-          http.patch(
-            Uri.parse('$api/user'),
-            headers: {'Authorization': 'Bearer ${user.token}'},
-            body: {
-              User.currentDictionaryIdId: currentDictionary!.id.toString()
+
+          sl<UserRepository>().editUser(
+            userMap: {
+              User.currentDictionaryIdId: currentDictionary!.id,
             },
           );
           return currentDictionary!;
@@ -185,8 +184,8 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
       if (currentDictionary!.shouldFetchWords) {
         final words = await fetchCurrentDictionaryWords(user);
 
-        dictionaries[currentLanguage]?.words.clear();
-        dictionaries[currentLanguage]?.words.addAll(words);
+        currentDictionary?.words.clear();
+        currentDictionary?.words.addAll(words);
 
         localDataSource.cacheDictionaries(dictionaries);
       }
@@ -208,7 +207,7 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
 
       final response = await http.get(
         Uri.parse('$api/dictionaries'),
-        headers: {'Authorization': 'Bearer ${user.token}'},
+        headers: headers(user.token),
       );
 
       if (!response.ok) {
@@ -227,9 +226,7 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
         final DateTime remoteUpdatedAt = DateTime.parse(
           cast(dict[updatedAtId]),
         );
-
         final DictionaryModel? localDict = cachedDictionaries[dictLang];
-
         final bool shouldFetch =
             localDict?.updatedAt.isBefore(remoteUpdatedAt) ?? true;
 
@@ -275,11 +272,7 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
 
       final response = await http.post(
         Uri.parse('$api/words'),
-        headers: {
-          'Authorization': 'Bearer ${user.token}',
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
+        headers: headers(user.token),
         body: jsonEncode(postMap),
       );
 
@@ -316,11 +309,7 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
 
       final response = await http.patch(
         Uri.parse('$api/words/$id'),
-        headers: {
-          'Authorization': 'Bearer ${user.token}',
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
+        headers: headers(user.token),
         body: jsonEncode(editMap),
       );
 
@@ -364,10 +353,7 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
 
       final response = await http.delete(
         Uri.parse('$api/words/$idToRemove'),
-        headers: {
-          'Authorization': 'Bearer ${user.token}',
-          'Accept': 'application/json',
-        },
+        headers: headers(user.token),
       );
 
       if (!response.ok) {
@@ -461,11 +447,7 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
   Future<String> _updateCurrentDictionaryRemotely(User user, Map body) async {
     final res = await http.patch(
       Uri.parse('$api/dictionaries/${currentDictionary!.id}'),
-      headers: {
-        'Authorization': 'Bearer ${user.token}',
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
+      headers: headers(user.token),
       body: jsonEncode(body),
     );
     if (!res.ok) Logger().e(res.body);
@@ -479,11 +461,8 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
   ) async {
     final response = await http.post(
       Uri.parse('$api/dictionaries'),
-      body: {'language': language.isoCode},
-      headers: {
-        'Authorization': 'Bearer ${user.token}',
-        'Accept': 'application/json',
-      },
+      body: jsonEncode({'language': language.isoCode}),
+      headers: headers(user.token),
     );
 
     final Map dictJSON = cast(jsonDecode(response.body));

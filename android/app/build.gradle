@@ -40,7 +40,7 @@ android {
 
     defaultConfig {
         applicationId "com.adamPodkDev.easy_language"
-        minSdkVersion 16
+        minSdkVersion 23
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -52,6 +52,9 @@ android {
             keyPassword keystoreProperties['keyPassword']
             storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
             storePassword keystoreProperties['storePassword']
+
+            v1SigningEnabled true
+            v2SigningEnabled true
         }
     }
     buildTypes {
@@ -59,9 +62,6 @@ android {
             signingConfig signingConfigs.release
         }
         debug {
-            signingConfig signingConfigs.release
-        }
-        profile {
             signingConfig signingConfigs.release
         }
     }

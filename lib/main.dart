@@ -46,7 +46,7 @@ class EasyLanguage extends StatelessWidget {
         designSize: screenSize,
         minTextAdapt: true,
         splitScreenMode: true,
-        builder: (_) => FutureBuilder<SharedPreferences>(
+        builder: (context, _) => FutureBuilder<SharedPreferences>(
           future: SharedPreferences.getInstance(),
           builder: (context, snapshot) {
             final state = context.watch<UserProvider>();

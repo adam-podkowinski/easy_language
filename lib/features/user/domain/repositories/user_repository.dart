@@ -19,5 +19,8 @@ abstract class UserRepository {
 
   Future<InfoFailure?> logout();
 
-  Future<bool> removeAccount({required String email, required String password});
+  Future<InfoFailure?> removeAccount({
+    required String email,
+    required String password,
+  });
 }

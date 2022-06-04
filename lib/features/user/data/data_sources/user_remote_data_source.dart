@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
+import 'package:easy_language/core/util/headers.dart';
 import 'package:easy_language/features/user/data/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
@@ -22,10 +23,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     try {
       final response = await http.get(
         Uri.parse('$api/user'),
-        headers: {
-          'Authorization': 'Bearer ${userToFetch.token}',
-          'Accept': 'application/json',
-        },
+        headers: headers(userToFetch.token),
       );
 
       final Map bodyMap = cast(jsonDecode(response.body));
@@ -51,11 +49,8 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }) async {
     final response = await http.patch(
       Uri.parse('$api/user'),
-      body: editMap,
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer ${userToEdit.token}'
-      },
+      body: jsonEncode(editMap),
+      headers: headers(userToEdit.token),
     );
 
     final Map bodyMap = cast(jsonDecode(response.body));

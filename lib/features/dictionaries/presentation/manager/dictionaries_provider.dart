@@ -1,5 +1,4 @@
 import 'package:easy_language/core/constants.dart';
-import 'package:easy_language/core/error/exceptions.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/util/simplify_string.dart';
 import 'package:easy_language/core/word.dart';
@@ -171,36 +170,25 @@ class DictionariesProvider extends ChangeNotifier {
   ) async {
     _prepareMethod();
 
-    if (currentLanguage != null) {
-      if (currentDictionary != null) {
-        dictionariesFailure = await dictionariesRepository.addWord(
-          user,
-          wordToAddMap,
-        );
-      }
-    }
+    dictionariesFailure = await dictionariesRepository.addWord(
+      user,
+      wordToAddMap,
+    );
 
     _finishMethod();
   }
 
   Future changeCurrentDictionary(
     BuildContext context,
-    Language? language,
+    Language language,
   ) async {
     _prepareMethod();
 
-    if (language == null) {
-      _finishMethod();
-      throw UnexpectedException();
-    }
-
-    if (dictionaries[language] != null) {
-      currentDictionaryFailure =
-          await dictionariesRepository.changeCurrentDictionary(
-        user,
-        language,
-      );
-    }
+    currentDictionaryFailure =
+        await dictionariesRepository.changeCurrentDictionary(
+      user,
+      language,
+    );
 
     _finishMethod();
   }
