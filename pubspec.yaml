@@ -36,6 +36,8 @@ dependencies:
   google_sign_in: ^5.3.1
   google_sign_in_dartio: ^0.2.1
   flutter_dotenv: ^5.0.2
+  dio: ^4.0.6
+  jwt_decoder: ^2.0.1
 
 dev_dependencies:
   flutter_native_splash: ^2.1.6

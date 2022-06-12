@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
+import 'package:easy_language/core/api/api_repository.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/features/dictionaries/data/data_sources/dictionary_local_data_source.dart';
 import 'package:easy_language/features/dictionaries/data/data_sources/dictionary_remote_data_source.dart';
@@ -32,6 +34,7 @@ Future registerUser() async {
     () => UserRepositoryImpl(
       localDataSource: sl(),
       remoteDataSource: sl(),
+      api: sl(),
     ),
   );
 
@@ -59,6 +62,7 @@ Future registerDictionaries() async {
     () => DictionariesRepositoryImpl(
       localDataSource: sl(),
       remoteDataSource: sl(),
+      api: sl(),
     ),
   );
 
@@ -69,6 +73,16 @@ Future registerDictionaries() async {
   );
   sl.registerLazySingleton<DictionariesRemoteDataSource>(
     () => DictionariesRemoteDataSourceImpl(),
+  );
+}
+
+Future registerOthersFirst() async {
+  final box = await Hive.openBox(cachedApiBoxId);
+  sl.registerLazySingleton<ApiRepository>(
+    () => ApiRepositoryImpl(
+      Dio(BaseOptions(baseUrl: api)),
+      box,
+    ),
   );
 }
 
@@ -91,6 +105,7 @@ Future init() async {
   //}
 
   // Features
+  await registerOthersFirst();
   await registerUser();
   await registerDictionaries();
 }

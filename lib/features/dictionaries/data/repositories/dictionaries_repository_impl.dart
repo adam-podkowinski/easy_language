@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
+import 'package:easy_language/core/api/api_repository.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/utils.dart';
@@ -27,10 +28,12 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
 
   final DictionariesLocalDataSource localDataSource;
   final DictionariesRemoteDataSource remoteDataSource;
+  final ApiRepository api;
 
   DictionariesRepositoryImpl({
     required this.localDataSource,
     required this.remoteDataSource,
+    required this.api,
   });
 
   @override

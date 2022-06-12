@@ -9,6 +9,7 @@ class User extends Equatable {
   final String email;
   final int currentDictionaryId;
   final String token;
+  final String refreshToken;
   final DateTime updatedAt;
   final bool isRegisteredWithGoogle;
 
@@ -18,6 +19,7 @@ class User extends Equatable {
     required this.nativeLanguage,
     required this.email,
     required this.token,
+    required this.refreshToken,
     required this.updatedAt,
     this.currentDictionaryId = 0,
     this.isRegisteredWithGoogle = false,
@@ -27,6 +29,7 @@ class User extends Equatable {
   static const emailId = 'email';
   static const currentDictionaryIdId = 'currentDictionaryId';
   static const tokenId = 'accessToken';
+  static const refreshTokenId = 'refreshToken';
   static const isRegisteredWithGoogleId = 'isRegisteredWithGoogle';
 
   static const themeModeId = 'themeMode';
@@ -41,6 +44,7 @@ class User extends Equatable {
         themeMode,
         nativeLanguage,
         token,
+        refreshToken,
         currentDictionaryId,
         isRegisteredWithGoogle,
         email,

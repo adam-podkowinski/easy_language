@@ -10,6 +10,8 @@ import 'package:easy_language/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 class MainApp extends StatelessWidget {
   final ThemeMode? themeMode;
   final Failure? failure;
@@ -35,6 +37,7 @@ class MainApp extends StatelessWidget {
         darkTheme: buildDark(context),
         debugShowCheckedModeBanner: false,
         initialRoute: dictionariesPageId,
+        key: navigatorKey,
         routes: {
           dictionariesPageId: (context) => const DictionariesPage(),
           settingsPageId: (context) => const SettingsPage(),

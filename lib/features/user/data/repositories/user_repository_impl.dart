@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
+import 'package:easy_language/core/api/api_repository.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/utils.dart';
@@ -8,6 +9,7 @@ import 'package:easy_language/features/dictionaries/domain/repositories/dictiona
 import 'package:easy_language/features/user/data/data_sources/user_local_data_source.dart';
 import 'package:easy_language/features/user/data/data_sources/user_remote_data_source.dart';
 import 'package:easy_language/features/user/data/models/user_model.dart';
+import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/user/domain/repositories/user_repository.dart';
 import 'package:easy_language/injection_container.dart';
 import 'package:flutter/foundation.dart';
@@ -27,10 +29,12 @@ class UserRepositoryImpl implements UserRepository {
 
   final SettingsLocalDataSource localDataSource;
   final UserRemoteDataSource remoteDataSource;
+  final ApiRepository api;
 
   UserRepositoryImpl({
     required this.localDataSource,
     required this.remoteDataSource,
+    required this.api,
   });
 
   Future _ensureInitialized() async {
@@ -241,6 +245,13 @@ class UserRepositoryImpl implements UserRepository {
       Logger().e(e);
       return InfoFailure(errorMessage: "Couldn't register");
     }
+  }
+
+  @override
+  Future<InfoFailure?> refreshToken({required String token}) async {
+    if (user == null) return InfoFailure(errorMessage: 'User is null');
+    user = user!.copyWithMap({User.tokenId: token});
+    return null;
   }
 
   // TODO: remove account when it's linked with google

@@ -10,6 +10,7 @@ class UserModel extends User {
     required Language nativeLanguage,
     required String email,
     required String token,
+    required String refreshToken,
     required DateTime updatedAt,
     int currentDictionaryId = 0,
     ThemeMode themeMode = ThemeMode.system,
@@ -21,6 +22,7 @@ class UserModel extends User {
           email: email,
           currentDictionaryId: currentDictionaryId,
           token: token,
+          refreshToken: refreshToken,
           updatedAt: updatedAt,
           isRegisteredWithGoogle: isRegisteredWithGoogle,
         );
@@ -34,6 +36,7 @@ class UserModel extends User {
       email: cast(data[User.emailId]) ?? '',
       currentDictionaryId: cast(data[User.currentDictionaryIdId]) ?? 0,
       token: cast(map[User.tokenId]),
+      refreshToken: cast(map[User.refreshTokenId]),
       updatedAt: DateTime.parse(cast(data[updatedAtId])),
       isRegisteredWithGoogle:
           cast(data[User.isRegisteredWithGoogleId]) ?? false,
@@ -49,6 +52,7 @@ class UserModel extends User {
 
   Map<String, dynamic> toMap() => {
         User.tokenId: token,
+        User.refreshTokenId: refreshToken,
         'user': {
           idId: this.id,
           updatedAtId: updatedAt.toIso8601String(),

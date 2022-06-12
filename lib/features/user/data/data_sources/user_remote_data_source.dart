@@ -26,13 +26,13 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         headers: headers(userToFetch.token),
       );
 
-      final Map bodyMap = cast(jsonDecode(response.body));
-
       if (!response.ok) {
         Logger().e(response.body);
         Logger().e(response.statusCode);
         throw InfoFailure(errorMessage: response.body);
       }
+
+      final Map bodyMap = cast(jsonDecode(response.body));
 
       return userToFetch.copyWithMap({'user': bodyMap});
     } catch (e, stacktrace) {

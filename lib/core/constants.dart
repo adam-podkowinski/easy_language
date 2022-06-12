@@ -28,6 +28,7 @@ const cachedUserId = 'settings';
 const cachedDictionariesId = 'dictionary';
 const cachedCurrentLanguageId = 'currentLanguage';
 const cachedCurrentFlashcardId = 'currentFlashcard';
+const cachedApiBoxId = 'apiBox';
 const emptyString = 'Empty';
 const addNewWordTitle = 'Add a new word';
 const editWordTitle = 'Edit a word';

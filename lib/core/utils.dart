@@ -1,3 +1,4 @@
+import 'package:http/http.dart';
 import 'package:language_picker/languages.dart';
 import 'package:logger/logger.dart';
 
@@ -30,4 +31,11 @@ Map<String, String> headers([String? token]) {
     'Content-Type': 'application/json',
     if (token != null) 'Authorization': 'Bearer $token'
   };
+}
+
+// TODO: to implement (check before each request jwt expires at) and add to dio interceptors
+Future<Response> handleRefreshToken(
+  Future<Response> Function() function,
+) {
+  return function();
 }
