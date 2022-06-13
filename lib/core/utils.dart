@@ -1,4 +1,4 @@
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 import 'package:language_picker/languages.dart';
 import 'package:logger/logger.dart';
 
@@ -23,6 +23,15 @@ String simplifyString(String val) {
       .replaceAll(':', '')
       .replaceAll('"', '')
       .replaceAll('-', '');
+}
+
+Options options() {
+  return Options(
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+  );
 }
 
 Map<String, String> headers([String? token]) {

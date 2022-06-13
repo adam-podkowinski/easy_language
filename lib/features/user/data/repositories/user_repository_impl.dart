@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:easy_language/core/api/api_repository.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
@@ -29,12 +30,12 @@ class UserRepositoryImpl implements UserRepository {
 
   final SettingsLocalDataSource localDataSource;
   final UserRemoteDataSource remoteDataSource;
-  final ApiRepository api;
+  final ApiRepository dio;
 
   UserRepositoryImpl({
     required this.localDataSource,
     required this.remoteDataSource,
-    required this.api,
+    required this.dio,
   });
 
   Future _ensureInitialized() async {
@@ -119,21 +120,21 @@ class UserRepositoryImpl implements UserRepository {
       }
       final accToken = (await gAcc.authentication).accessToken;
 
-      final response = await http
+      final Response response = await dio()
           .post(
-        Uri.parse('$api/authentication/google-authentication'),
-        body: jsonEncode({'token': accToken}),
-        headers: headers(),
+        '$api/authentication/google-authentication',
+        data: {'token': accToken},
+        options: Options(headers: {'requiresToken': false}),
       )
           .onError((error, stackTrace) {
         googleSignIn.signOut();
         throw Exception(error);
       });
 
-      final Map bodyMap = cast(jsonDecode(response.body));
+      final Map bodyMap = cast(response.data);
 
       if (!response.ok) {
-        Logger().e(response.body);
+        Logger().e(response.data);
         Logger().e(response.statusCode);
         return InfoFailure(
           errorMessage: "Couldn't register: ${bodyMap['message']}",
@@ -153,16 +154,16 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<InfoFailure?> login({required Map formMap}) async {
     try {
-      final response = await http.post(
-        Uri.parse('$api/authentication/login'),
-        body: jsonEncode(formMap),
-        headers: headers(),
+      final response = await dio().post(
+        '$api/authentication/login',
+        data: jsonEncode(formMap),
+        options: Options(headers: {'requiresToken': false}),
       );
 
-      final Map bodyMap = cast(jsonDecode(response.body));
+      final Map bodyMap = cast(response.data);
 
       if (!response.ok) {
-        Logger().e(response.body);
+        Logger().e(response.data);
         Logger().e(response.statusCode);
         return InfoFailure(
           errorMessage: "Couldn't log in: ${bodyMap['message']}",

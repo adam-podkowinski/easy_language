@@ -15,6 +15,7 @@ enum TokenErrorType {
   failedToRegenerateAccessToken
 }
 
+//TODO: show error when token is blank and requiresToken header is not set to false
 class AuthInterceptor extends QueuedInterceptor {
   final Dio _dio;
   final Box _box;
@@ -53,6 +54,7 @@ class AuthInterceptor extends QueuedInterceptor {
     final refreshToken = _getRefreshToken();
 
     if (accessToken == null || refreshToken == null) {
+      Logger().e('Token not found');
       _performLogout(_dio);
 
       // create custom dio error

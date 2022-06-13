@@ -28,12 +28,12 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
 
   final DictionariesLocalDataSource localDataSource;
   final DictionariesRemoteDataSource remoteDataSource;
-  final ApiRepository api;
+  final ApiRepository dio;
 
   DictionariesRepositoryImpl({
     required this.localDataSource,
     required this.remoteDataSource,
-    required this.api,
+    required this.dio,
   });
 
   @override

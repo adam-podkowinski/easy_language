@@ -5,7 +5,7 @@ import 'package:hive/hive.dart';
 abstract class ApiRepository {
   final Dio api;
 
-  Dio get call;
+  Dio call();
 
   ApiRepository(this.api);
 }
@@ -15,7 +15,7 @@ class ApiRepositoryImpl implements ApiRepository {
   final Dio api;
   final Box apiBox;
   @override
-  Dio get call => api;
+  Dio call() => api;
 
   String? accessToken;
 

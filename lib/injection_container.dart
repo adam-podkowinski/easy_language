@@ -34,7 +34,7 @@ Future registerUser() async {
     () => UserRepositoryImpl(
       localDataSource: sl(),
       remoteDataSource: sl(),
-      api: sl(),
+      dio: sl(),
     ),
   );
 
@@ -62,7 +62,7 @@ Future registerDictionaries() async {
     () => DictionariesRepositoryImpl(
       localDataSource: sl(),
       remoteDataSource: sl(),
-      api: sl(),
+      dio: sl(),
     ),
   );
 
@@ -78,9 +78,9 @@ Future registerDictionaries() async {
 
 Future registerOthersFirst() async {
   final box = await Hive.openBox(cachedApiBoxId);
-  sl.registerLazySingleton<ApiRepository>(
-    () => ApiRepositoryImpl(
-      Dio(BaseOptions(baseUrl: api)),
+  sl.registerSingleton<ApiRepository>(
+    ApiRepositoryImpl(
+      Dio(),
       box,
     ),
   );
@@ -90,6 +90,7 @@ Future clearAll() async {
   await (await SharedPreferences.getInstance()).clear();
   await (await Hive.openBox(cachedUserId)).clear();
   await (await Hive.openBox(cachedDictionariesId)).clear();
+  await (await Hive.openBox(cachedApiBoxId)).clear();
 }
 
 Future init() async {

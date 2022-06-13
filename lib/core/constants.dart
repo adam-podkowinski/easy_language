@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:easy_language/features/dictionaries/data/models/dictionary_model.dart';
 import 'package:easy_language/features/dictionaries/domain/entities/dictionary.dart';
 import 'package:flutter/foundation.dart';
@@ -8,6 +9,13 @@ import 'package:language_picker/languages.dart';
 extension IsOk on http.Response {
   bool get ok {
     return (statusCode ~/ 100) == 2;
+  }
+}
+
+extension IsOkDio on Response {
+  bool get ok {
+    if (statusCode == null) return false;
+    return (statusCode! ~/ 100) == 2;
   }
 }
 
