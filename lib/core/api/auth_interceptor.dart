@@ -82,9 +82,7 @@ class AuthInterceptor extends QueuedInterceptor {
       return handler.reject(error);
     } else if (accessTokenHasExpired) {
       // regenerate access token
-      /* _dio.interceptors.requestLock.lock(); */
       _refreshed = await _regenerateAccessToken();
-      /* _dio.interceptors.requestLock.unlock(); */
     }
 
     if (_refreshed) {
@@ -118,20 +116,14 @@ class AuthInterceptor extends QueuedInterceptor {
   }
 
   Future _performLogout(Dio dio) async {
-    /* _dio.interceptors.requestLock.clear(); */
-    /* _dio.interceptors.requestLock.lock(); */
-
     await _removeTokens(); // remove token from local storage
 
     // back to login page without using context
-    // check this https://stackoverflow.com/a/53397266/9101876
     navigatorKey.currentState?.pushReplacement(
       CupertinoPageRoute(
         builder: (context) => const AuthenticatePage(),
       ),
     );
-
-    /* _dio.interceptors.requestLock.unlock(); */
   }
 
   /// return true if it is successfully regenerate the access token

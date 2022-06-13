@@ -31,7 +31,6 @@ dependencies:
   provider: ^6.0.2
   http: ^0.13.4
   faker: ^2.0.0
-  shared_preferences: ^2.0.15
   email_validator: ^2.0.1
   google_sign_in: ^5.3.1
   google_sign_in_dartio: ^0.2.1

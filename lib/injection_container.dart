@@ -17,7 +17,6 @@ import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final sl = GetIt.instance;
 
@@ -39,7 +38,7 @@ Future registerUser() async {
   );
 
   // Data sources
-  final userBox = await Hive.openBox(cachedUserId);
+  final userBox = await Hive.openBox(cachedUserBoxId);
   sl.registerLazySingleton<SettingsLocalDataSource>(
     () => UserLocalDataSourceImpl(userBox: userBox),
   );
@@ -67,7 +66,7 @@ Future registerDictionaries() async {
   );
 
   // Data sources
-  final dictionariesBox = await Hive.openBox(cachedDictionariesId);
+  final dictionariesBox = await Hive.openBox(cachedDictionariesBoxId);
   sl.registerLazySingleton<DictionariesLocalDataSource>(
     () => DictionariesLocalDataSourceImpl(dictionariesBox: dictionariesBox),
   );
@@ -87,10 +86,10 @@ Future registerOthersFirst() async {
 }
 
 Future clearAll() async {
-  await (await SharedPreferences.getInstance()).clear();
-  await (await Hive.openBox(cachedUserId)).clear();
-  await (await Hive.openBox(cachedDictionariesId)).clear();
+  await (await Hive.openBox(cachedUserBoxId)).clear();
+  await (await Hive.openBox(cachedDictionariesBoxId)).clear();
   await (await Hive.openBox(cachedApiBoxId)).clear();
+  await (await Hive.openBox(cachedConfigBoxId)).clear();
 }
 
 Future init() async {

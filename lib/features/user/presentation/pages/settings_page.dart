@@ -10,9 +10,9 @@ import 'package:easy_language/features/user/presentation/widgets/theme_picker.da
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
 import 'package:language_picker/languages.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -25,6 +25,7 @@ class SettingsPage extends StatelessWidget {
 
     final DictionariesProvider dictionaryState =
         context.watch<DictionariesProvider>();
+    final UserProvider userState = context.watch<UserProvider>();
 
     return Scaffold(
       appBar: AppBar(
@@ -65,7 +66,7 @@ class SettingsPage extends StatelessWidget {
                     onPressed: () => showLanguagePickerDialog(
                       context,
                       (Language languagePicked) {
-                        context.read<UserProvider>().editUser(
+                        userState.editUser(
                           {
                             User.nativeLanguageId: languagePicked.isoCode,
                           },
@@ -74,8 +75,7 @@ class SettingsPage extends StatelessWidget {
                       Languages.defaultLanguages,
                     ),
                     child: Text(
-                      context.watch<UserProvider>().user?.nativeLanguage.name ??
-                          'no user',
+                      userState.user?.nativeLanguage.name ?? 'no user',
                     ),
                   ),
                   leading: const Icon(Icons.translate),
@@ -204,9 +204,8 @@ class SettingsPage extends StatelessWidget {
                                 baseURL = apiController.value.text;
                               }
 
-                              final prefs =
-                                  await SharedPreferences.getInstance();
-                              prefs.setString('baseURL', baseURL);
+                              final box = await Hive.openBox(cachedConfigBoxId);
+                              box.put('baseURL', baseURL);
                             },
                           ),
                           SizedBox(

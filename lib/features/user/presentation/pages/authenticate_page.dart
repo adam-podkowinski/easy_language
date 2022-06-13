@@ -6,8 +6,8 @@ import 'package:easy_language/features/user/presentation/manager/user_provider.d
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthenticatePage extends StatelessWidget {
   final bool signUp;
@@ -36,9 +36,7 @@ class AuthenticatePage extends StatelessWidget {
         TextEditingController();
     final formKey = GlobalKey<FormState>();
 
-    SharedPreferences.getInstance().then(
-      (value) => value.setBool(isStartupId, false),
-    );
+    Hive.openBox(cachedConfigBoxId).then((Box box) => box.put(isStartupId, false));
 
     final failure = context.watch<UserProvider>().userFailure;
     showFailure(
