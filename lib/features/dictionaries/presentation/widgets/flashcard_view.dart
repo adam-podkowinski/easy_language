@@ -58,9 +58,9 @@ class _FlashcardViewState extends State<FlashcardView> {
 
     widget.state.editWord(widget.flashcard, {
       Word.timesReviewedId: newTimesReviewed,
-      Word.learningStatusId: LearningStatusExtension.fromTimesReviewed(
+      Word.learningStatusId: LearningStatus.fromTimesReviewed(
         newTimesReviewed,
-      ).statusToString,
+      ).value,
     });
   }
 

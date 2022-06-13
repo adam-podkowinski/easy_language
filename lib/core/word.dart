@@ -2,29 +2,23 @@ import 'package:dartz/dartz.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:equatable/equatable.dart';
 
-enum LearningStatus { reviewing, learning, mastered }
+enum LearningStatus {
+  reviewing(_reviewingId),
+  learning(_learningId),
+  mastered(_masteredId);
 
-extension LearningStatusExtension on LearningStatus {
-  static const learningId = 'learning';
-  static const reviewingId = 'reviewing';
-  static const masteredId = 'mastered';
+  final String value;
+  const LearningStatus(this.value);
 
-  String get statusToString {
-    switch (this) {
-      case LearningStatus.learning:
-        return learningId;
-      case LearningStatus.reviewing:
-        return reviewingId;
-      case LearningStatus.mastered:
-        return masteredId;
-    }
-  }
+  static const _reviewingId = 'reviewing';
+  static const _learningId = 'learning';
+  static const _masteredId = 'mastered';
 
   static LearningStatus fromString(String? value) {
     switch (value) {
-      case learningId:
+      case _learningId:
         return LearningStatus.learning;
-      case masteredId:
+      case _masteredId:
         return LearningStatus.mastered;
       default:
         return LearningStatus.reviewing;
@@ -81,7 +75,7 @@ class Word extends Equatable {
       id: cast(map[idId]) ?? 0,
       wordForeign: cast(map[Word.wordForeignId]) ?? '',
       wordTranslation: cast(map[Word.wordTranslationId]) ?? '',
-      learningStatus: LearningStatusExtension.fromString(
+      learningStatus: LearningStatus.fromString(
         cast(map[Word.learningStatusId]),
       ),
       timesReviewed: cast(map[Word.timesReviewedId]) ?? 0,
@@ -101,7 +95,7 @@ class Word extends Equatable {
         updatedAtId: updatedAt.toIso8601String(),
         Word.wordForeignId: wordForeign,
         Word.wordTranslationId: wordTranslation,
-        Word.learningStatusId: learningStatus.statusToString,
+        Word.learningStatusId: learningStatus.value,
         Word.timesReviewedId: timesReviewed,
         Word.favoriteId: favorite,
       };
