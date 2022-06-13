@@ -28,20 +28,21 @@ class UserModel extends User {
         );
 
   /// Takes map and returns a [UserModel]
+  /// TODO: move tokens to auth_repository
   factory UserModel.fromMap(Map map) {
-    final Map data = cast(map['user']);
+    final Map userData = cast(map['user']);
     return UserModel(
-      id: cast(data[idId]) ?? 0,
-      themeMode: mapStringToThemeMode(cast(data[User.themeModeId])),
-      email: cast(data[User.emailId]) ?? '',
-      currentDictionaryId: cast(data[User.currentDictionaryIdId]) ?? 0,
+      id: cast(userData[idId]) ?? 0,
+      themeMode: mapStringToThemeMode(cast(userData[User.themeModeId])),
+      email: cast(userData[User.emailId]) ?? '',
+      currentDictionaryId: cast(userData[User.currentDictionaryIdId]) ?? 0,
       token: cast(map[User.tokenId]),
       refreshToken: cast(map[User.refreshTokenId]),
-      updatedAt: DateTime.parse(cast(data[updatedAtId])),
+      updatedAt: DateTime.parse(cast(userData[updatedAtId])),
       isRegisteredWithGoogle:
-          cast(data[User.isRegisteredWithGoogleId]) ?? false,
+          cast(userData[User.isRegisteredWithGoogleId]) ?? false,
       nativeLanguage: Language.fromIsoCode(
-        cast(data[User.nativeLanguageId]) ?? Languages.english.isoCode,
+        cast(userData[User.nativeLanguageId]) ?? Languages.english.isoCode,
       ),
     );
   }

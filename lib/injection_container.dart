@@ -78,7 +78,7 @@ Future registerDictionaries() async {
 Future registerOthersFirst() async {
   final box = await Hive.openBox(cachedApiBoxId);
   sl.registerSingleton<ApiRepository>(
-    ApiRepositoryImpl(
+    ApiRepository(
       Dio(),
       box,
     ),

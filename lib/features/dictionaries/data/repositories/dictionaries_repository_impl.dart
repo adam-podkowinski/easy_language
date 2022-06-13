@@ -18,6 +18,7 @@ import 'package:http/http.dart' as http;
 import 'package:language_picker/languages.dart';
 import 'package:logger/logger.dart';
 
+// TODO: use dio instead of http
 class DictionariesRepositoryImpl implements DictionariesRepository {
   @override
   DictionariesModel dictionaries = {};

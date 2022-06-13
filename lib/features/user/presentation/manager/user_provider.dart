@@ -5,6 +5,7 @@ import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/user/domain/repositories/user_repository.dart';
 import 'package:flutter/material.dart';
 
+// TODO: move tokens to api provider, update user provider when api provider updates (i.e new user on login)
 class UserProvider extends ChangeNotifier {
   bool loading = true;
 

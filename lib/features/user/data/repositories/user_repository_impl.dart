@@ -19,6 +19,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
+// TODO: Use dio instead of http
 class UserRepositoryImpl implements UserRepository {
   bool _initial = true;
 

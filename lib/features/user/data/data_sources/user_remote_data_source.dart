@@ -8,6 +8,7 @@ import 'package:easy_language/features/user/data/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
+// TODO: move remote data source to repository (for simplicity) and use dio instead of http
 abstract class UserRemoteDataSource {
   Future<UserModel> fetchUser({required UserModel userToFetch});
 
