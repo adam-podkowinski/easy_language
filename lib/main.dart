@@ -47,28 +47,17 @@ class EasyLanguage extends StatelessWidget {
         designSize: screenSize,
         minTextAdapt: true,
         splitScreenMode: true,
-        builder: (context, _) => FutureBuilder<Box>(
-          future: Hive.openBox(cachedConfigBoxId),
-          builder: (context, snapshot) {
+        builder: (context, _) => Builder(
+          builder: (context) {
             final state = context.watch<UserProvider>();
-            if (!snapshot.hasData) {
-              return const LoadingApp();
-            }
-            final Box box = snapshot.data!;
-
-            if (state.loggedIn) {
-              return MainApp(
-                state.user?.themeMode,
-                failure: state.userFailure,
-              );
-            }
 
             if (state.loading) {
               return const LoadingApp();
             }
 
-            return WelcomeApp(
-              showIntroduction: cast(box.get(isStartupId)) ?? true,
+            return MainApp(
+              state.user?.themeMode,
+              authenticate: !state.loggedIn,
             );
           },
         ),

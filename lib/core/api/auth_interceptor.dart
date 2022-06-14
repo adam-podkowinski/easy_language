@@ -2,7 +2,9 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/main_app.dart';
+import 'package:easy_language/features/user/domain/repositories/user_repository.dart';
 import 'package:easy_language/features/user/presentation/pages/authenticate_page.dart';
+import 'package:easy_language/injection_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -54,7 +56,7 @@ class AuthInterceptor extends QueuedInterceptor {
     final refreshToken = _getRefreshToken();
 
     if (accessToken == null || refreshToken == null) {
-      Logger().e('Token not found');
+      Logger().e('Token not found: acceessToken: ($accessToken), refreshToken: ($refreshToken)');
       _performLogout(_dio);
 
       // create custom dio error
@@ -67,6 +69,7 @@ class AuthInterceptor extends QueuedInterceptor {
     // check if tokens have already expired or not
     // I use jwt_decoder package
     // Note: ensure your tokens has "exp" claim
+    Logger().i('Checking if token is expired: $accessToken');
     final accessTokenHasExpired = JwtDecoder.isExpired(accessToken);
     final refreshTokenHasExpired = JwtDecoder.isExpired(refreshToken);
 
@@ -115,8 +118,11 @@ class AuthInterceptor extends QueuedInterceptor {
     return handler.next(err);
   }
 
+  // TODO: check if it works
   Future _performLogout(Dio dio) async {
     await _removeTokens(); // remove token from local storage
+
+    sl<UserRepository>().logout();
 
     // back to login page without using context
     navigatorKey.currentState?.pushReplacement(

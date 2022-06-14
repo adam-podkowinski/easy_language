@@ -19,6 +19,7 @@ const dictionariesPageId = '/dictionaries';
 const introductionPageId = '/introduction';
 const flashcardsPageId = '/flashcards';
 const settingsPageId = '/settings';
+const authenticatePageId = '/authenticate';
 
 const Map<String, String> pageTitlesFromIds = {
   dictionariesPageId: 'Word Bank',
