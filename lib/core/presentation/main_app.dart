@@ -14,17 +14,16 @@ import 'package:provider/provider.dart';
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class MainApp extends StatelessWidget {
-  final ThemeMode? themeMode;
-  final bool authenticate;
-
-  const MainApp(
-    this.themeMode, {
+  const MainApp({
     Key? key,
-    required this.authenticate,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final state = context.watch<UserProvider>();
+    if (state.loading) {
+      return const LoadingApp();
+    }
     return ChangeNotifierProvider<DictionariesProvider>(
       create: (context) {
         final provider = sl<DictionariesProvider>();
@@ -33,11 +32,11 @@ class MainApp extends StatelessWidget {
       },
       child: MaterialApp(
         title: 'Easy Language',
-        themeMode: themeMode,
+        themeMode: state.user?.themeMode,
         theme: buildLight(context),
         darkTheme: buildDark(context),
         debugShowCheckedModeBanner: false,
-        initialRoute: authenticate ? authenticatePageId : dictionariesPageId,
+        initialRoute: state.loggedIn ? dictionariesPageId : authenticatePageId,
         key: navigatorKey,
         routes: {
           dictionariesPageId: (context) => const DictionariesPage(),

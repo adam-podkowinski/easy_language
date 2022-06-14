@@ -3,9 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/presentation/main_app.dart';
 import 'package:easy_language/features/user/domain/repositories/user_repository.dart';
-import 'package:easy_language/features/user/presentation/pages/authenticate_page.dart';
 import 'package:easy_language/injection_container.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:logger/logger.dart';
@@ -120,16 +118,11 @@ class AuthInterceptor extends QueuedInterceptor {
 
   // TODO: check if it works
   Future _performLogout(Dio dio) async {
-    await _removeTokens(); // remove token from local storage
+    await _removeTokens(); // remove token from Hive
 
-    sl<UserRepository>().logout();
+    await sl<UserRepository>().logout();
 
-    // back to login page without using context
-    navigatorKey.currentState?.pushReplacement(
-      CupertinoPageRoute(
-        builder: (context) => const AuthenticatePage(),
-      ),
-    );
+    navigatorKey.currentState?.pushReplacementNamed(authenticatePageId);
   }
 
   /// return true if it is successfully regenerate the access token

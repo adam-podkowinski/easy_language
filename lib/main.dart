@@ -47,20 +47,7 @@ class EasyLanguage extends StatelessWidget {
         designSize: screenSize,
         minTextAdapt: true,
         splitScreenMode: true,
-        builder: (context, _) => Builder(
-          builder: (context) {
-            final state = context.watch<UserProvider>();
-
-            if (state.loading) {
-              return const LoadingApp();
-            }
-
-            return MainApp(
-              state.user?.themeMode,
-              authenticate: !state.loggedIn,
-            );
-          },
-        ),
+        builder: (context, _) => const MainApp(),
       ),
     );
   }
