@@ -3,7 +3,6 @@ import 'package:easy_language/features/dictionaries/data/models/dictionary_model
 import 'package:easy_language/features/dictionaries/domain/entities/dictionary.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:language_picker/languages.dart';
 
 // Networking
@@ -20,6 +19,7 @@ const introductionPageId = '/introduction';
 const flashcardsPageId = '/flashcards';
 const settingsPageId = '/settings';
 const authenticatePageId = '/authenticate';
+const welcomePageId = '/welcome';
 
 const Map<String, String> pageTitlesFromIds = {
   dictionariesPageId: 'Word Bank',
@@ -63,12 +63,6 @@ typedef Dictionaries = Map<Language, Dictionary>;
 typedef DictionariesModel = Map<Language, DictionaryModel>;
 
 // Extensions
-extension IsOk on http.Response {
-  bool get ok {
-    return (statusCode ~/ 100) == 2;
-  }
-}
-
 extension IsOkDio on Response {
   bool get ok {
     if (statusCode == null) return false;

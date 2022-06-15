@@ -72,7 +72,12 @@ class AuthInterceptor extends QueuedInterceptor {
 
       Logger().e('Refresh token has expired');
 
-      return handler.reject(DioError(requestOptions: options));
+      return handler.reject(
+        DioError(
+          requestOptions: options,
+          error: 'Refresh token has expired. Log in again.',
+        ),
+      );
     } else if (accessTokenHasExpired) {
       // regenerate access token
       accessToken = await _regenerateAccessToken();
@@ -94,7 +99,7 @@ class AuthInterceptor extends QueuedInterceptor {
 
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) {
-    Logger().i('Error: $err ; Access token: $_getAccessToken()');
+    Logger().i('Error: $err');
     _performLogout(_dio);
     if (err.response?.statusCode == 403 || err.response?.statusCode == 401) {
       _performLogout(_dio);
@@ -109,7 +114,10 @@ class AuthInterceptor extends QueuedInterceptor {
 
     await sl<UserRepository>().logout();
 
-    navigatorKey.currentState?.pushReplacementNamed(authenticatePageId);
+    navigatorKey.currentState?.pushNamedAndRemoveUntil(
+      authenticatePageId,
+      (_) => false,
+    );
   }
 
   /// return new access token if it is successfully regeneratated (otherwise return null)

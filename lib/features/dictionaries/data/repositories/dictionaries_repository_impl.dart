@@ -5,7 +5,6 @@ import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/dictionaries/data/data_sources/dictionary_local_data_source.dart';
-import 'package:easy_language/features/dictionaries/data/data_sources/dictionary_remote_data_source.dart';
 import 'package:easy_language/features/dictionaries/data/models/dictionary_model.dart';
 import 'package:easy_language/features/dictionaries/domain/entities/dictionary.dart';
 import 'package:easy_language/features/dictionaries/domain/repositories/dictionaries_repository.dart';
@@ -25,12 +24,10 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
   DictionaryModel? get currentDictionary => dictionaries[currentLanguage];
 
   final DictionariesLocalDataSource localDataSource;
-  final DictionariesRemoteDataSource remoteDataSource;
   final ApiRepository dio;
 
   DictionariesRepositoryImpl({
     required this.localDataSource,
-    required this.remoteDataSource,
     required this.dio,
   });
 

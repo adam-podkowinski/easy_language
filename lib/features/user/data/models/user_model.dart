@@ -24,7 +24,6 @@ class UserModel extends User {
         );
 
   /// Takes map and returns a [UserModel]
-  /// TODO: move tokens to auth_repository
   factory UserModel.fromMap(Map userData) {
     return UserModel(
       id: cast(userData[idId]) ?? 0,

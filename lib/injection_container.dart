@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:easy_language/core/api/api_repository.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/features/dictionaries/data/data_sources/dictionary_local_data_source.dart';
-import 'package:easy_language/features/dictionaries/data/data_sources/dictionary_remote_data_source.dart';
 import 'package:easy_language/features/dictionaries/data/repositories/dictionaries_repository_impl.dart';
 import 'package:easy_language/features/dictionaries/domain/repositories/dictionaries_repository.dart';
 import 'package:easy_language/features/dictionaries/presentation/manager/dictionaries_provider.dart';
@@ -60,7 +59,6 @@ Future registerDictionaries() async {
   sl.registerLazySingleton<DictionariesRepository>(
     () => DictionariesRepositoryImpl(
       localDataSource: sl(),
-      remoteDataSource: sl(),
       dio: sl(),
     ),
   );
@@ -69,9 +67,6 @@ Future registerDictionaries() async {
   final dictionariesBox = await Hive.openBox(cachedDictionariesBoxId);
   sl.registerLazySingleton<DictionariesLocalDataSource>(
     () => DictionariesLocalDataSourceImpl(dictionariesBox: dictionariesBox),
-  );
-  sl.registerLazySingleton<DictionariesRemoteDataSource>(
-    () => DictionariesRemoteDataSourceImpl(),
   );
 }
 

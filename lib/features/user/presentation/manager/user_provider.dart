@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
+import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
+import 'package:easy_language/core/presentation/main_app.dart';
 import 'package:easy_language/features/user/data/models/user_model.dart';
 import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/user/domain/repositories/user_repository.dart';
@@ -12,6 +14,7 @@ class UserProvider extends ChangeNotifier {
   final UserRepository userRepository;
 
   bool get loggedIn => userRepository.loggedIn;
+
   User? get user => userRepository.user;
 
   InfoFailure? userFailure;
@@ -95,6 +98,11 @@ class UserProvider extends ChangeNotifier {
     _prepareMethod();
 
     userFailure = await userRepository.logout();
+
+    navigatorKey.currentState?.pushNamedAndRemoveUntil(
+      authenticatePageId,
+      (_) => false,
+    );
 
     _finishMethod();
 
