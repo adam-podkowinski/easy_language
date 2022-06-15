@@ -41,10 +41,3 @@ Map<String, String> headers([String? token]) {
     if (token != null) 'Authorization': 'Bearer $token'
   };
 }
-
-// TODO: to implement (check before each request jwt expires at) and add to dio interceptors
-Future<Response> handleRefreshToken(
-  Future<Response> Function() function,
-) {
-  return function();
-}

@@ -15,7 +15,6 @@ enum TokenErrorType {
   failedToRegenerateAccessToken
 }
 
-//TODO: show error when token is blank and requiresToken header is not set to false
 class AuthInterceptor extends QueuedInterceptor {
   final Dio _dio;
   final Box _box;
@@ -44,29 +43,24 @@ class AuthInterceptor extends QueuedInterceptor {
     RequestInterceptorHandler handler,
   ) async {
     if (options.headers["requiresToken"] == false) {
-      // if the request doesn't need token, then just continue to the next interceptor
-      options.headers.remove("requiresToken"); //remove the auxiliary header
+      // If the request doesn't need an accessToken just continue
+      options.headers.remove("requiresToken");
       return handler.next(options);
     }
 
-    // get tokens from local storage, you can use Hive or flutter_secure_storage
-    final accessToken = _getAccessToken();
+    var accessToken = _getAccessToken();
     final refreshToken = _getRefreshToken();
 
     if (accessToken == null || refreshToken == null) {
-      Logger().e('Token not found: acceessToken: ($accessToken), refreshToken: ($refreshToken)');
+      Logger().e(
+        'Token not found: acceessToken: ($accessToken), refreshToken: ($refreshToken)',
+      );
       _performLogout(_dio);
 
-      // create custom dio error
-      options.extra["tokenErrorType"] = TokenErrorType
-          .tokenNotFound; // I use enum type, you can chage it to string
       final error = DioError(requestOptions: options);
       return handler.reject(error);
     }
 
-    // check if tokens have already expired or not
-    // I use jwt_decoder package
-    // Note: ensure your tokens has "exp" claim
     Logger().i('Checking if token is expired: $accessToken');
     final accessTokenHasExpired = JwtDecoder.isExpired(accessToken);
     final refreshTokenHasExpired = JwtDecoder.isExpired(refreshToken);
@@ -76,24 +70,23 @@ class AuthInterceptor extends QueuedInterceptor {
     if (refreshTokenHasExpired) {
       _performLogout(_dio);
 
-      // create custom dio error
-      options.extra["tokenErrorType"] = TokenErrorType.refreshTokenHasExpired;
-      final error = DioError(requestOptions: options);
+      Logger().e('Refresh token has expired');
 
-      return handler.reject(error);
+      return handler.reject(DioError(requestOptions: options));
     } else if (accessTokenHasExpired) {
       // regenerate access token
-      _refreshed = await _regenerateAccessToken();
+      accessToken = await _regenerateAccessToken();
     }
+
+    _refreshed = accessToken != null;
 
     if (_refreshed) {
       // add access token to the request header
+      Logger().i('Adding access token to the request header: $accessToken');
       options.headers["Authorization"] = "Bearer $accessToken";
       return handler.next(options);
     } else {
-      // create custom dio error
-      options.extra["tokenErrorType"] =
-          TokenErrorType.failedToRegenerateAccessToken;
+      Logger().e('Failed to regenerate access token.');
       final error = DioError(requestOptions: options);
       return handler.reject(error);
     }
@@ -101,63 +94,57 @@ class AuthInterceptor extends QueuedInterceptor {
 
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) {
+    Logger().i('Error: $err ; Access token: $_getAccessToken()');
+    _performLogout(_dio);
     if (err.response?.statusCode == 403 || err.response?.statusCode == 401) {
-      // for some reasons the token can be invalidated before it is expired by the backend.
-      // then we should navigate the user back to login page
-
       _performLogout(_dio);
-
-      // create custom dio error
-      err.type = DioErrorType.other;
-      err.requestOptions.extra["tokenErrorType"] =
-          TokenErrorType.invalidAccessToken;
     }
 
     return handler.next(err);
   }
 
-  // TODO: check if it works
   Future _performLogout(Dio dio) async {
-    await _removeTokens(); // remove token from Hive
+    Logger().i('Logging out...');
+    await _removeTokens();
 
     await sl<UserRepository>().logout();
 
     navigatorKey.currentState?.pushReplacementNamed(authenticatePageId);
   }
 
-  /// return true if it is successfully regenerate the access token
-  Future<bool> _regenerateAccessToken() async {
+  /// return new access token if it is successfully regeneratated (otherwise return null)
+  Future<String?> _regenerateAccessToken() async {
     try {
-      final dio =
-          Dio(); // should create new dio instance because the request interceptor is being locked
+      Logger().i('Regenerating access token');
+      // should create new dio instance because the interceptor is locked
+      final dio = Dio();
 
-      // get refresh token from local storage
       final refreshToken = _getRefreshToken();
 
-      // make request to server to get the new access token from server using refresh token
       final Response<Map> response = await dio.get(
         "$api/authentication/refresh",
         options: Options(headers: {"Authorization": "Bearer $refreshToken"}),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        Logger().i('Saving new acceess token ${response.data!['accessToken']}');
         final String? newAccessToken = cast(
           response.data!["accessToken"],
-        ); // parse data based on your JSON structure
-        _saveAccessToken(newAccessToken); // save to local storage
-        return true;
+        );
+        await _saveAccessToken(newAccessToken);
+        return newAccessToken;
       } else if (response.statusCode == 401 || response.statusCode == 403) {
-        // it means your refresh token no longer valid now, it may be revoked by the backend
+        Logger().e('Could not refresh token!');
         _performLogout(_dio);
-        return false;
+        return null;
       } else {
         Logger().e(response.statusCode);
-        return false;
+        return null;
       }
     } on DioError {
-      return false;
+      return null;
     } catch (e) {
-      return false;
+      return null;
     }
   }
 }

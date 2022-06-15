@@ -1,10 +1,8 @@
-import 'dart:convert';
-
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:easy_language/core/api/api_repository.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
-import 'package:easy_language/core/utils.dart';
 import 'package:easy_language/core/word.dart';
 import 'package:easy_language/features/dictionaries/data/data_sources/dictionary_local_data_source.dart';
 import 'package:easy_language/features/dictionaries/data/data_sources/dictionary_remote_data_source.dart';
@@ -14,7 +12,6 @@ import 'package:easy_language/features/dictionaries/domain/repositories/dictiona
 import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/user/domain/repositories/user_repository.dart';
 import 'package:easy_language/injection_container.dart';
-import 'package:http/http.dart' as http;
 import 'package:language_picker/languages.dart';
 import 'package:logger/logger.dart';
 
@@ -51,22 +48,24 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
         throw 'currentDictionary is null';
       }
 
-      final response = await http.get(
-        Uri.parse('$api/dictionaries/${currentDictionary!.id}/words'),
-        headers: headers(user.token),
+      final Response<Map> response = await dio().get(
+        '$api/dictionaries/${currentDictionary!.id}/words',
       );
 
-      if (!response.ok) {
-        Logger().e(response.body);
+      if (!response.ok || response.data == null) {
+        Logger().e(response.data);
         throw response;
       }
 
-      final Map dictMap = cast(jsonDecode(response.body));
+      final Map dictMap = response.data!;
 
       final List wordListJSON = cast(dictMap['words']);
 
-      final List<Word> wordList =
-          wordListJSON.map((e) => Word.fromMap(cast(e))).toList();
+      final List<Word> wordList = wordListJSON
+          .map(
+            (m) => Word.fromMap(cast(m)),
+          )
+          .toList();
 
       dictionaries[currentLanguage!] = currentDictionary!.copyWith(
         {},
@@ -74,8 +73,9 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
       );
 
       return wordList;
-    } catch (e) {
+    } catch (e, stacktrace) {
       Logger().e(e);
+      Logger().e(stacktrace);
       return [];
     }
   }
@@ -115,10 +115,9 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
 
       dictionaries.removeWhere((key, value) => key == language);
       // TODO: Get new current dictionary from http delete response
-      await http.delete(
-        Uri.parse('$api/dictionaries/${toRemove.id}'),
-        headers: headers(user.token),
-      );
+      final response = await dio().delete('$api/dictionaries/${toRemove.id}');
+
+      if (!response.ok) throw response;
 
       if (dictionaries.isNotEmpty) {
         await changeCurrentDictionary(user, dictionaries.keys.first);
@@ -129,8 +128,9 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
       localDataSource.cacheDictionaries(dictionaries);
 
       return null;
-    } catch (e) {
+    } catch (e, stacktrace) {
       Logger().e(e);
+      Logger().e(stacktrace);
       return InfoFailure(errorMessage: e.toString());
     }
   }
@@ -209,16 +209,14 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
 
       dictionaries = cachedDictionaries;
 
-      final response = await http.get(
-        Uri.parse('$api/dictionaries'),
-        headers: headers(user.token),
-      );
+      final Response<List> response = await dio().get('$api/dictionaries');
 
-      if (!response.ok) {
-        Logger().e(response.body);
+      if (!response.ok || response.data == null) {
+        Logger().e(response.data);
+        throw response.data ?? 'No response data from $api/dictionaries';
       }
 
-      final Iterable remoteDictsIterable = cast(jsonDecode(response.body));
+      final Iterable remoteDictsIterable = response.data!;
       final List<Map> remoteDicts = List<Map>.from(remoteDictsIterable);
 
       var shouldCache = false;
@@ -274,18 +272,17 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
         Word.dictionaryIdId: currentDictionary!.id.toString(),
       };
 
-      final response = await http.post(
-        Uri.parse('$api/words'),
-        headers: headers(user.token),
-        body: jsonEncode(postMap),
+      final Response<Map> response = await dio().post(
+        '$api/words',
+        data: postMap,
       );
 
-      if (!response.ok) {
-        Logger().e(response.body);
+      if (!response.ok || response.data == null) {
+        Logger().e(response.data);
         throw response;
       }
 
-      final Map newWordMap = cast(jsonDecode(response.body));
+      final Map newWordMap = response.data!;
 
       final newWord = Word.fromMap(newWordMap);
 
@@ -311,18 +308,17 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
         throw Error();
       }
 
-      final response = await http.patch(
-        Uri.parse('$api/words/$id'),
-        headers: headers(user.token),
-        body: jsonEncode(editMap),
+      final Response<Map> response = await dio().patch(
+        '$api/words/$id',
+        data: editMap,
       );
 
-      if (!response.ok) {
-        Logger().e(response.body);
+      if (!response.ok || response.data == null) {
+        Logger().e(response.data);
         throw response;
       }
 
-      final Map newWordMap = cast(jsonDecode(response.body));
+      final Map newWordMap = response.data!;
 
       final Word newWord = Word.fromMap(newWordMap);
 
@@ -355,13 +351,10 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
 
       currentDictionary!.words.remove(wordToRemove);
 
-      final response = await http.delete(
-        Uri.parse('$api/words/$idToRemove'),
-        headers: headers(user.token),
-      );
+      final response = await dio().delete('$api/words/$idToRemove');
 
       if (!response.ok) {
-        Logger().e(response.body);
+        Logger().e(response.data);
         throw response;
       }
 
@@ -448,28 +441,29 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
   }
 
   // TODO: Move helper methods to the remote data source.
-  Future<String> _updateCurrentDictionaryRemotely(User user, Map body) async {
-    final res = await http.patch(
-      Uri.parse('$api/dictionaries/${currentDictionary!.id}'),
-      headers: headers(user.token),
-      body: jsonEncode(body),
+  Future _updateCurrentDictionaryRemotely(User user, Map body) async {
+    final Response<String> res = await dio().patch(
+      '$api/dictionaries/${currentDictionary!.id}',
+      data: body,
     );
-    if (!res.ok) Logger().e(res.body);
-
-    return res.body;
+    if (!res.ok || res.data == null) Logger().e(res.data);
   }
 
   Future<DictionaryModel> _addDictionaryRemote(
     User user,
     Language language,
   ) async {
-    final response = await http.post(
-      Uri.parse('$api/dictionaries'),
-      body: jsonEncode({'language': language.isoCode}),
-      headers: headers(user.token),
+    final Response<Map> response = await dio().post(
+      '$api/dictionaries',
+      data: {'language': language.isoCode},
     );
 
-    final Map dictJSON = cast(jsonDecode(response.body));
+    if (!response.ok || response.data == null) {
+      Logger().e(response.data);
+      throw response;
+    }
+
+    final Map dictJSON = response.data!;
 
     return DictionaryModel.fromMap(dictJSON, shouldFetch: false);
   }

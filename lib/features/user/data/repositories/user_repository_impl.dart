@@ -1,22 +1,17 @@
-import 'dart:convert';
-
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_language/core/api/api_repository.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
-import 'package:easy_language/core/utils.dart';
 import 'package:easy_language/features/dictionaries/domain/repositories/dictionaries_repository.dart';
 import 'package:easy_language/features/user/data/data_sources/user_local_data_source.dart';
 import 'package:easy_language/features/user/data/data_sources/user_remote_data_source.dart';
 import 'package:easy_language/features/user/data/models/user_model.dart';
-import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/user/domain/repositories/user_repository.dart';
 import 'package:easy_language/injection_container.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
 // TODO: Use dio instead of http
@@ -38,12 +33,6 @@ class UserRepositoryImpl implements UserRepository {
     required this.remoteDataSource,
     required this.dio,
   });
-
-  Future _ensureInitialized() async {
-    if (_initial) {
-      await initUser();
-    }
-  }
 
   @override
   Future<InfoFailure?> editUser({
@@ -121,8 +110,8 @@ class UserRepositoryImpl implements UserRepository {
       }
       final accToken = (await gAcc.authentication).accessToken;
 
-      final Response response = await dio()
-          .post(
+      final Response<Map> response = await dio()
+          .post<Map>(
         '$api/authentication/google-authentication',
         data: {'token': accToken},
         options: Options(headers: {'requiresToken': false}),
@@ -132,18 +121,15 @@ class UserRepositoryImpl implements UserRepository {
         throw Exception(error);
       });
 
-      final Map bodyMap = cast(response.data);
-
       if (!response.ok) {
         Logger().e(response.data);
         Logger().e(response.statusCode);
         return InfoFailure(
-          errorMessage: "Couldn't register: ${bodyMap['message']}",
+          errorMessage: "Couldn't register: ${response.data?['message']}",
         );
       }
 
-      user = UserModel.fromMap(bodyMap);
-      localDataSource.cacheUser(user!);
+      await _handleUserResponse(response.data!);
 
       return null;
     } catch (e) {
@@ -155,24 +141,21 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<InfoFailure?> login({required Map formMap}) async {
     try {
-      final response = await dio().post(
+      final Response<Map> response = await dio().post(
         '$api/authentication/login',
-        data: jsonEncode(formMap),
+        data: formMap,
         options: Options(headers: {'requiresToken': false}),
       );
 
-      final Map bodyMap = cast(response.data);
-
-      if (!response.ok) {
+      if (!response.ok || response.data == null) {
         Logger().e(response.data);
         Logger().e(response.statusCode);
         return InfoFailure(
-          errorMessage: "Couldn't log in: ${bodyMap['message']}",
+          errorMessage: "Couldn't log in: ${response.data?['message']}",
         );
       }
 
-      user = UserModel.fromMap(bodyMap);
-      localDataSource.cacheUser(user!);
+      await _handleUserResponse(response.data!);
 
       return null;
     } catch (e) {
@@ -184,24 +167,20 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<InfoFailure?> register({required Map formMap}) async {
     try {
-      final response = await http.post(
-        Uri.parse('$api/authentication/register'),
-        body: jsonEncode(formMap),
-        headers: headers(),
+      final Response<Map> response = await dio().post(
+        '$api/authentication/register',
+        data: formMap,
       );
 
-      final Map bodyMap = cast(jsonDecode(response.body));
-
-      if (!response.ok) {
-        Logger().e(response.body);
+      if (!response.ok || response.data == null) {
+        Logger().e(response.data);
         Logger().e(response.statusCode);
         return InfoFailure(
-          errorMessage: "Couldn't register: ${bodyMap['message']}",
+          errorMessage: "Couldn't register: ${response.data?['message']}",
         );
       }
 
-      user = UserModel.fromMap(bodyMap);
-      localDataSource.cacheUser(user!);
+      await _handleUserResponse(response.data!);
 
       return null;
     } catch (e) {
@@ -217,25 +196,19 @@ class UserRepositoryImpl implements UserRepository {
     }
 
     try {
-      final String? token = user?.token;
-
       user = null;
 
       await GoogleSignIn.standard().signOut();
 
       localDataSource.clearUser();
 
-      final response = await http.get(
-        Uri.parse('$api/user/logout'),
-        headers: headers(token),
-      );
+      final Response<Map> response = await dio().get('$api/user/logout');
 
       if (!response.ok) {
-        final Map bodyMap = cast(jsonDecode(response.body));
-        Logger().e(response.body);
+        Logger().e(response.data);
         Logger().e(response.statusCode);
         return InfoFailure(
-          errorMessage: "Couldn't logout: ${bodyMap['message']}",
+          errorMessage: "Couldn't logout: ${response.data?['message']}",
           showErrorMessage: false,
         );
       }
@@ -249,13 +222,6 @@ class UserRepositoryImpl implements UserRepository {
     }
   }
 
-  @override
-  Future<InfoFailure?> refreshToken({required String token}) async {
-    if (user == null) return InfoFailure(errorMessage: 'User is null');
-    user = user!.copyWithMap({User.tokenId: token});
-    return null;
-  }
-
   // TODO: remove account when it's linked with google
   @override
   Future<InfoFailure?> removeAccount({
@@ -267,14 +233,13 @@ class UserRepositoryImpl implements UserRepository {
         throw 'User is null';
       }
 
-      final response = await http.delete(
-        Uri.parse('$api/user'),
-        headers: headers(user!.token),
-        body: jsonEncode({'email': email, 'password': password}),
+      final Response<Map> response = await dio().delete(
+        '$api/user',
+        data: {'email': email, 'password': password},
       );
 
       if (!response.ok) {
-        throw response.body;
+        throw response.data ?? 'No data from removeAccount response.';
       }
 
       localDataSource.clearUser();
@@ -286,6 +251,24 @@ class UserRepositoryImpl implements UserRepository {
     } catch (e) {
       Logger().e(e);
       return InfoFailure(errorMessage: e.toString());
+    }
+  }
+
+  // Helper methods
+  Future _handleUserResponse(Map bodyMap) async {
+    final String accessToken = cast(bodyMap[accessTokenId]);
+    final String refreshToken = cast(bodyMap[refreshTokenId]);
+    final Map userMap = cast(bodyMap['user']);
+
+    await dio.apiBox.put(accessTokenId, accessToken);
+    await dio.apiBox.put(refreshTokenId, refreshToken);
+    user = UserModel.fromMap(userMap);
+    await localDataSource.cacheUser(user!);
+  }
+
+  Future _ensureInitialized() async {
+    if (_initial) {
+      await initUser();
     }
   }
 }

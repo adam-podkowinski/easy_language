@@ -1,15 +1,16 @@
-import 'dart:convert';
-
-import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
+import 'package:easy_language/core/api/api_repository.dart';
 import 'package:easy_language/core/constants.dart';
 import 'package:easy_language/core/error/failures.dart';
-import 'package:easy_language/core/utils.dart';
 import 'package:easy_language/features/user/data/models/user_model.dart';
-import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
 // TODO: move remote data source to repository (for simplicity) and use dio instead of http
 abstract class UserRemoteDataSource {
+  final ApiRepository dio;
+
+  UserRemoteDataSource(this.dio);
+
   Future<UserModel> fetchUser({required UserModel userToFetch});
 
   Future<UserModel> editUser({
@@ -20,20 +21,24 @@ abstract class UserRemoteDataSource {
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   @override
+  final ApiRepository dio;
+
+  UserRemoteDataSourceImpl(this.dio);
+
+  @override
   Future<UserModel> fetchUser({required UserModel userToFetch}) async {
     try {
-      final response = await http.get(
-        Uri.parse('$api/user'),
-        headers: headers(userToFetch.token),
-      );
+      final Response<Map> response = await dio().get('$api/user');
 
-      if (!response.ok) {
-        Logger().e(response.body);
+      if (!response.ok || response.data == null) {
+        Logger().e(response.data);
         Logger().e(response.statusCode);
-        throw InfoFailure(errorMessage: response.body);
+        throw InfoFailure(
+          errorMessage: (response.data ?? 'No data').toString(),
+        );
       }
 
-      final Map bodyMap = cast(jsonDecode(response.body));
+      final Map bodyMap = response.data!;
 
       return userToFetch.copyWithMap({'user': bodyMap});
     } catch (e, stacktrace) {
@@ -48,20 +53,19 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     required UserModel userToEdit,
     required Map<dynamic, dynamic> editMap,
   }) async {
-    final response = await http.patch(
-      Uri.parse('$api/user'),
-      body: jsonEncode(editMap),
-      headers: headers(userToEdit.token),
+    final Response<Map> response = await dio().patch(
+      '$api/user',
+      data: editMap,
     );
 
-    final Map bodyMap = cast(jsonDecode(response.body));
-
-    if (!response.ok) {
-      Logger().e(response.body);
+    if (!response.ok || response.data == null) {
+      Logger().e(response.data);
       Logger().e(response.statusCode);
-      throw InfoFailure(errorMessage: response.body);
+      throw InfoFailure(errorMessage: (response.data ?? 'No data').toString());
     }
 
-    return userToEdit.copyWithMap({'user': bodyMap});
+    final Map bodyMap = response.data!;
+
+    return userToEdit.copyWithMap(bodyMap);
   }
 }

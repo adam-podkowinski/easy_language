@@ -43,6 +43,8 @@ const idId = 'id';
 const userIdId = 'useraId';
 const languageId = 'language';
 const updatedAtId = 'updatedAt';
+const accessTokenId = 'accessToken';
+const refreshTokenId = 'refreshToken';
 
 // Other
 const Size screenSize = Size(393, 781);

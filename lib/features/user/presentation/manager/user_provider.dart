@@ -91,12 +91,14 @@ class UserProvider extends ChangeNotifier {
     _finishMethod();
   }
 
-  Future logout() async {
+  Future<bool> logout() async {
     _prepareMethod();
 
     userFailure = await userRepository.logout();
 
     _finishMethod();
+
+    return userFailure == null;
   }
 
   Future<bool> removeAccount({

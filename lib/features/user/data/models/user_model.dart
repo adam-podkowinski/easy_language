@@ -9,8 +9,6 @@ class UserModel extends User {
     required int id,
     required Language nativeLanguage,
     required String email,
-    required String token,
-    required String refreshToken,
     required DateTime updatedAt,
     int currentDictionaryId = 0,
     ThemeMode themeMode = ThemeMode.system,
@@ -21,23 +19,18 @@ class UserModel extends User {
           nativeLanguage: nativeLanguage,
           email: email,
           currentDictionaryId: currentDictionaryId,
-          token: token,
-          refreshToken: refreshToken,
           updatedAt: updatedAt,
           isRegisteredWithGoogle: isRegisteredWithGoogle,
         );
 
   /// Takes map and returns a [UserModel]
   /// TODO: move tokens to auth_repository
-  factory UserModel.fromMap(Map map) {
-    final Map userData = cast(map['user']);
+  factory UserModel.fromMap(Map userData) {
     return UserModel(
       id: cast(userData[idId]) ?? 0,
       themeMode: mapStringToThemeMode(cast(userData[User.themeModeId])),
       email: cast(userData[User.emailId]) ?? '',
       currentDictionaryId: cast(userData[User.currentDictionaryIdId]) ?? 0,
-      token: cast(map[User.tokenId]),
-      refreshToken: cast(map[User.refreshTokenId]),
       updatedAt: DateTime.parse(cast(userData[updatedAtId])),
       isRegisteredWithGoogle:
           cast(userData[User.isRegisteredWithGoogleId]) ?? false,
@@ -52,17 +45,13 @@ class UserModel extends User {
   }
 
   Map<String, dynamic> toMap() => {
-        User.tokenId: token,
-        User.refreshTokenId: refreshToken,
-        'user': {
-          idId: this.id,
-          updatedAtId: updatedAt.toIso8601String(),
-          User.themeModeId: mapThemeModeToString(themeMode),
-          User.nativeLanguageId: nativeLanguage.isoCode,
-          User.emailId: email,
-          User.currentDictionaryIdId: currentDictionaryId,
-          User.isRegisteredWithGoogleId: isRegisteredWithGoogle,
-        }
+        idId: this.id,
+        updatedAtId: updatedAt.toIso8601String(),
+        User.themeModeId: mapThemeModeToString(themeMode),
+        User.nativeLanguageId: nativeLanguage.isoCode,
+        User.emailId: email,
+        User.currentDictionaryIdId: currentDictionaryId,
+        User.isRegisteredWithGoogleId: isRegisteredWithGoogle,
       };
 
   static ThemeMode mapStringToThemeMode(String? theme) {
