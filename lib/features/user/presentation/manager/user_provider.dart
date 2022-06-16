@@ -5,7 +5,10 @@ import 'package:easy_language/core/presentation/main_app.dart';
 import 'package:easy_language/features/user/data/models/user_model.dart';
 import 'package:easy_language/features/user/domain/entities/user.dart';
 import 'package:easy_language/features/user/domain/repositories/user_repository.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class UserProvider extends ChangeNotifier {
   bool loading = true;
@@ -112,14 +115,32 @@ class UserProvider extends ChangeNotifier {
     required BuildContext context,
     String? email,
     String? password,
-    String? googleToken,
+    bool withGoogle = false,
   }) async {
     _prepareMethod();
-    userFailure = await userRepository.removeAccount(
-      email: email,
-      password: password,
-      googleToken: googleToken,
-    );
+    if (withGoogle) {
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        scopes: ['email'],
+        clientId: kIsWeb ? dotenv.env[oauthClientIdWeb] : null,
+      );
+      await googleSignIn.signOut();
+      final GoogleSignInAccount? gAcc = await googleSignIn.signIn();
+      if (gAcc == null) {
+        return false;
+      }
+      final accToken = (await gAcc.authentication).accessToken;
+      userFailure = await userRepository.removeAccount(
+        email: email,
+        password: password,
+        googleToken: accToken,
+      );
+      await googleSignIn.signOut();
+    } else {
+      userFailure = await userRepository.removeAccount(
+        email: email,
+        password: password,
+      );
+    }
 
     _finishMethod();
     return userFailure == null;

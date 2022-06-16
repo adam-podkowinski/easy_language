@@ -36,7 +36,8 @@ class AuthenticatePage extends StatelessWidget {
         TextEditingController();
     final formKey = GlobalKey<FormState>();
 
-    Hive.openBox(cachedConfigBoxId).then((Box box) => box.put(isStartupId, false));
+    Hive.openBox(cachedConfigBoxId)
+        .then((Box box) => box.put(isStartupId, false));
 
     final failure = context.watch<UserProvider>().userFailure;
     showFailure(

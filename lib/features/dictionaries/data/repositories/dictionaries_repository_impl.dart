@@ -306,7 +306,8 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
     } catch (e) {
       Logger().e(e);
       return InfoFailure(
-        errorMessage: 'Error: could not add a word. Check your internet connection!',
+        errorMessage:
+            'Error: could not add a word. Check your internet connection!',
       );
     }
   }

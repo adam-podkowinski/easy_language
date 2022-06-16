@@ -42,8 +42,7 @@ class MainApp extends StatelessWidget {
             theme: buildLight(context),
             darkTheme: buildDark(context),
             debugShowCheckedModeBanner: false,
-            initialRoute:
-                state.loggedIn ? dictionariesPageId : welcomePageId,
+            initialRoute: state.loggedIn ? dictionariesPageId : welcomePageId,
             navigatorKey: navigatorKey,
             routes: {
               dictionariesPageId: (context) => const DictionariesPage(),
