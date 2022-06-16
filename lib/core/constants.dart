@@ -8,7 +8,7 @@ import 'package:language_picker/languages.dart';
 // Networking
 String defaultURL = kDebugMode
     ? 'http://192.168.3.23:3000'
-    : 'https://easy-language.herokuapp.com';
+    : 'https://easylanguage.herokuapp.com';
 String baseURL = defaultURL;
 
 String get api => baseURL;
