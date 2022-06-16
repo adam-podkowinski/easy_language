@@ -10,5 +10,6 @@ class ApiRepository {
 
   ApiRepository(this.api, this.apiBox) {
     api.interceptors.add(AuthInterceptor(api, apiBox));
+    api.interceptors.add(LogInterceptor());
   }
 }

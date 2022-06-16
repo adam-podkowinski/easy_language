@@ -1,2 +1,2 @@
-// TODO: write tests for user model
+// write tests for user model
 void main() {}

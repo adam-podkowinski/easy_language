@@ -1,7 +1,6 @@
 import 'package:easy_language/core/error/failures.dart';
 import 'package:easy_language/features/user/data/models/user_model.dart';
 
-// TODO: implement refresh token
 abstract class UserRepository {
   UserModel? user;
   bool get loggedIn;

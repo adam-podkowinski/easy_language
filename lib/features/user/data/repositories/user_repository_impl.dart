@@ -14,7 +14,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 
-// TODO: Use dio instead of http
 class UserRepositoryImpl implements UserRepository {
   bool _initial = true;
 
@@ -54,7 +53,10 @@ class UserRepositoryImpl implements UserRepository {
       return null;
     } catch (e) {
       Logger().e(e);
-      return InfoFailure(errorMessage: e.toString());
+      return InfoFailure(
+        errorMessage:
+            'Error: could not edit a user. Check your internet connection!',
+      );
     }
   }
 
@@ -70,7 +72,11 @@ class UserRepositoryImpl implements UserRepository {
     } catch (e) {
       _initial = false;
       Logger().e(e);
-      return InfoFailure(errorMessage: e.toString(), showErrorMessage: false);
+      return InfoFailure(
+        errorMessage:
+            'Error: could not init a user. Check your internet connection!',
+        showErrorMessage: false,
+      );
     }
   }
 
@@ -93,7 +99,10 @@ class UserRepositoryImpl implements UserRepository {
       return null;
     } catch (e) {
       Logger().e(e);
-      return InfoFailure(errorMessage: e.toString());
+      return InfoFailure(
+        errorMessage:
+            'Error: could not fetch a user. Check your internet connection!',
+      );
     }
   }
 
@@ -250,7 +259,10 @@ class UserRepositoryImpl implements UserRepository {
       return null;
     } catch (e) {
       Logger().e(e);
-      return InfoFailure(errorMessage: e.toString());
+      return InfoFailure(
+        errorMessage:
+            'Error: could not remove an account. Check your internet connection!',
+      );
     }
   }
 

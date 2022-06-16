@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_language/core/constants.dart';
@@ -42,6 +43,14 @@ class AuthInterceptor extends QueuedInterceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      Logger().e('No internet connection!');
+      return handler.reject(
+        DioError(requestOptions: options, error: 'No internet connection!'),
+      );
+    }
+
     if (options.headers["requiresToken"] == false) {
       // If the request doesn't need an accessToken just continue
       options.headers.remove("requiresToken");

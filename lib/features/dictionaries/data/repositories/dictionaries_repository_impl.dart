@@ -14,7 +14,6 @@ import 'package:easy_language/injection_container.dart';
 import 'package:language_picker/languages.dart';
 import 'package:logger/logger.dart';
 
-// TODO: use dio instead of http
 class DictionariesRepositoryImpl implements DictionariesRepository {
   @override
   DictionariesModel dictionaries = {};
@@ -95,7 +94,10 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
       return null;
     } catch (e) {
       Logger().e(e);
-      return InfoFailure(errorMessage: e.toString());
+      return InfoFailure(
+        errorMessage:
+            'Error: could not add a dictionary. Check your internet connection!',
+      );
     }
   }
 
@@ -128,7 +130,10 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
     } catch (e, stacktrace) {
       Logger().e(e);
       Logger().e(stacktrace);
-      return InfoFailure(errorMessage: e.toString());
+      return InfoFailure(
+        errorMessage:
+            'Error: could not remove a dictionary. Check your internet connection!',
+      );
     }
   }
 
@@ -156,7 +161,10 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
       );
     } catch (e) {
       Logger().e(e);
-      return InfoFailure(errorMessage: e.toString());
+      return InfoFailure(
+        errorMessage:
+            'Error: could not change current dictionary. Check your internet connection!',
+      );
     }
     return null;
   }
@@ -192,7 +200,11 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
       }
     } catch (e) {
       Logger().e(e);
-      return InfoFailure(errorMessage: e.toString(), showErrorMessage: false);
+      return InfoFailure(
+        errorMessage:
+            'Error: could not init current dictionary. Check your internet connection!',
+        showErrorMessage: false,
+      );
     }
 
     return null;
@@ -248,7 +260,10 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
       }
     } catch (e) {
       Logger().e(e);
-      return InfoFailure(errorMessage: e.toString());
+      return InfoFailure(
+        errorMessage:
+            'Error: could not init dictionaries. Check your internet connection!',
+      );
     }
 
     return null;
@@ -290,7 +305,9 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
       return null;
     } catch (e) {
       Logger().e(e);
-      return InfoFailure(errorMessage: e.toString());
+      return InfoFailure(
+        errorMessage: 'Error: could not add a word. Check your internet connection!',
+      );
     }
   }
 
@@ -330,7 +347,10 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
       return null;
     } catch (e) {
       Logger().e(e);
-      return InfoFailure(errorMessage: e.toString());
+      return InfoFailure(
+        errorMessage:
+            'Error: could not edit word. Check your internet connection!',
+      );
     }
   }
 
@@ -360,7 +380,10 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
       return null;
     } catch (e) {
       Logger().e(e);
-      return InfoFailure(errorMessage: e.toString());
+      return InfoFailure(
+        errorMessage:
+            'Error: could not remove a word. Check your internet connection!',
+      );
     }
   }
 
@@ -437,7 +460,6 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
     return flashcard;
   }
 
-  // TODO: Move helper methods to the remote data source.
   Future _updateCurrentDictionaryRemotely(User user, Map body) async {
     final Response<String> res = await dio().patch(
       '$api/dictionaries/${currentDictionary!.id}',

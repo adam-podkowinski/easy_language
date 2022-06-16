@@ -53,19 +53,27 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     required UserModel userToEdit,
     required Map<dynamic, dynamic> editMap,
   }) async {
-    final Response<Map> response = await dio().patch(
-      '$api/user',
-      data: editMap,
-    );
+    try {
+      final Response<Map> response = await dio().patch(
+        '$api/user',
+        data: editMap,
+      );
 
-    if (!response.ok || response.data == null) {
-      Logger().e(response.data);
-      Logger().e(response.statusCode);
-      throw InfoFailure(errorMessage: (response.data ?? 'No data').toString());
+      if (!response.ok || response.data == null) {
+        Logger().e(response.data);
+        Logger().e(response.statusCode);
+        throw InfoFailure(
+          errorMessage: (response.data ?? 'No data').toString(),
+        );
+      }
+
+      final Map bodyMap = response.data!;
+
+      return userToEdit.copyWithMap(bodyMap);
+    } catch (e, stacktrace) {
+      Logger().e(e);
+      Logger().e(stacktrace);
+      rethrow;
     }
-
-    final Map bodyMap = response.data!;
-
-    return userToEdit.copyWithMap(bodyMap);
   }
 }
