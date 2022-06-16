@@ -179,6 +179,7 @@ class UserRepositoryImpl implements UserRepository {
       final Response<Map> response = await dio().post(
         '$api/authentication/register',
         data: formMap,
+        options: Options(headers: {'requiresToken': false}),
       );
 
       if (!response.ok || response.data == null) {
@@ -209,7 +210,7 @@ class UserRepositoryImpl implements UserRepository {
 
       await GoogleSignIn.standard().signOut();
 
-      localDataSource.clearUser();
+      await localDataSource.clearUser();
 
       final Response<Map> response = await dio().get('$api/user/logout');
 
@@ -234,24 +235,29 @@ class UserRepositoryImpl implements UserRepository {
   // TODO: remove account when it's linked with google
   @override
   Future<InfoFailure?> removeAccount({
-    required String email,
-    required String password,
+    String? email,
+    String? password,
+    String? googleToken,
   }) async {
     try {
       if (user == null) {
         throw 'User is null';
       }
 
-      final Response<Map> response = await dio().delete(
+      final Response<bool> response = await dio().delete(
         '$api/user',
-        data: {'email': email, 'password': password},
+        data: {
+          if (email != null) 'email': email,
+          if (password != null) 'password': password,
+          if (googleToken != null) 'googleToken': googleToken,
+        },
       );
 
       if (!response.ok) {
         throw response.data ?? 'No data from removeAccount response.';
       }
 
-      localDataSource.clearUser();
+      await localDataSource.clearUser();
       user = null;
 
       sl<DictionariesRepository>().logout();

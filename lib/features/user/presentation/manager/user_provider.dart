@@ -110,13 +110,15 @@ class UserProvider extends ChangeNotifier {
 
   Future<bool> removeAccount({
     required BuildContext context,
-    required String email,
-    required String password,
+    String? email,
+    String? password,
+    String? googleToken,
   }) async {
     _prepareMethod();
     userFailure = await userRepository.removeAccount(
       email: email,
       password: password,
+      googleToken: googleToken,
     );
 
     _finishMethod();

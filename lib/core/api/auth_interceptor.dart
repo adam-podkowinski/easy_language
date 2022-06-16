@@ -44,7 +44,9 @@ class AuthInterceptor extends QueuedInterceptor {
     RequestInterceptorHandler handler,
   ) async {
     final connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult != ConnectivityResult.wifi &&
+        connectivityResult != ConnectivityResult.mobile &&
+        connectivityResult != ConnectivityResult.ethernet) {
       Logger().e('No internet connection!');
       return handler.reject(
         DioError(requestOptions: options, error: 'No internet connection!'),
@@ -109,10 +111,6 @@ class AuthInterceptor extends QueuedInterceptor {
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) {
     Logger().i('Error: $err');
-    _performLogout(_dio);
-    if (err.response?.statusCode == 403 || err.response?.statusCode == 401) {
-      _performLogout(_dio);
-    }
 
     return handler.next(err);
   }

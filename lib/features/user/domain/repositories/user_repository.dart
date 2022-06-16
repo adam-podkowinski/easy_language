@@ -20,7 +20,8 @@ abstract class UserRepository {
   Future<InfoFailure?> logout();
 
   Future<InfoFailure?> removeAccount({
-    required String email,
-    required String password,
+    String? email,
+    String? password,
+    String? googleToken,
   });
 }
