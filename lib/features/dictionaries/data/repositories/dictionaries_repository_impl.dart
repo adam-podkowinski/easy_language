@@ -114,7 +114,11 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
 
       dictionaries.removeWhere((key, value) => key == language);
       // TODO: Get new current dictionary from http delete response
-      final response = await dio().delete('$api/dictionaries/${toRemove.id}');
+      // Data mandatory (because dio sets content-type to application/json)
+      final response = await dio().delete(
+        '$api/dictionaries/${toRemove.id}',
+        data: {},
+      );
 
       if (!response.ok) throw response;
 
@@ -369,7 +373,10 @@ class DictionariesRepositoryImpl implements DictionariesRepository {
 
       currentDictionary!.words.remove(wordToRemove);
 
-      final response = await dio().delete('$api/words/$idToRemove');
+      final response = await dio().delete(
+        '$api/words/$idToRemove',
+        data: {},
+      );
 
       if (!response.ok) {
         Logger().e(response.data);
